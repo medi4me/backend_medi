@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: {jdbc:mysql://localhost:3306/mediforme}
-    username: {rds root user name}
-    password: {rds user password}
+    url: jdbc:mysql://localhost:3306/medi_test
+    username: root
+    password: ghwns5120
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
@@ -14,6 +14,11 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-        hbm2ddl:
-          auto: create # rds 연결 후, update로 변경
-        default_batch_fetch_size: 1000
+    hibernate:
+      ddl:
+        auto: create # rds 연결 후, update로 변경
+      default_batch_fetch_size: 1000
+  api:
+    drug:
+      service-url: "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList"
+      service-key: "VXUr9ZgIWyu52aPoeEh4cIxqor7wMAObpey2FxGU4VHyJsFSZWGzWPgz4yYvPtbZPrfgWqemnwLpyYpIrB6xDQ%3D%3D"

@@ -1,16 +1,9 @@
 package com.mediforme.mediforme.service;
 
 import com.mediforme.mediforme.config.ApiConfig;
-import com.mediforme.mediforme.domain.Medicine;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.mediforme.mediforme.converter.MedicineConverter;
+import com.mediforme.mediforme.repository.MedicineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 
@@ -20,17 +13,24 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
-public class TestService {
-
+public class MedicineService {
+    private final MedicineRepository medicineRepository;
+    private final MedicineConverter medicineConverter;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
+/*    @Autowired
+    public MedicineService(ApiConfig apiConfig) {
+        this.SERVICE_URL = apiConfig.getSERVICE_URL();
+        this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
+    }*/
+
     @Autowired
-    public TestService(ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository,MedicineConverter medicineConverter, ApiConfig apiConfig) {
+        this.medicineRepository = medicineRepository;
+        this.medicineConverter = medicineConverter;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
     }
@@ -45,6 +45,8 @@ public class TestService {
         return getMedicineInfo(itemName);
     }
 
+
+    // API를 통해 약물 정보 조회
     private String getMedicineInfo(String itemName) throws IOException {
         StringBuilder result = new StringBuilder();
 

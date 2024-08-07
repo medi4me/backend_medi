@@ -28,6 +28,6 @@ public class RegisterServiceImpl implements RegisterService {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
 
         // 사용자 저장
-        return RegisterRepository.save(member);
+        return registerRepository.save(member);
     }
 }

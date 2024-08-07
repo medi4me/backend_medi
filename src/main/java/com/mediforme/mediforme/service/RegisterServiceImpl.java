@@ -20,7 +20,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public Member registerUser(Member member) {
         // 사용자 이름 중복 확인
-        if (RegisterRepository.findByName(member.getName()) != null) {
+        if (registerRepository.findByName(member.getName()) != null) {
             throw new IllegalArgumentException("Username already exists");
         }
 

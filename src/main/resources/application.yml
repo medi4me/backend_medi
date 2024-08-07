@@ -17,7 +17,3 @@ spring:
         hbm2ddl:
           auto: create # rds 연결 후, update로 변경
         default_batch_fetch_size: 1000
-  api:
-    drug:
-      service-url: "https://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList"
-      service-key: "VXUr9ZgIWyu52aPoeEh4cIxqor7wMAObpey2FxGU4VHyJsFSZWGzWPgz4yYvPtbZPrfgWqemnwLpyYpIrB6xDQ%3D%3D"

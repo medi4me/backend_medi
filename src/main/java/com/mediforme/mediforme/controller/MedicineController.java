@@ -1,6 +1,9 @@
 package com.mediforme.mediforme.controller;
 
+import com.mediforme.mediforme.dto.OnboardingDto;
 import com.mediforme.mediforme.service.MedicineService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,22 +12,17 @@ import java.io.IOException;
 
 
 @RestController
-public class TestController {
+public class MedicineController {
     private final MedicineService medicineService;
 
-    public TestController(MedicineService medicineService) {
+    public MedicineController(MedicineService medicineService) {
         this.medicineService = medicineService;
     }
 
-    // 기본 호출
-    @GetMapping("/api/medi")
-    public String callApi() throws IOException {
-        return medicineService.getDefaultMedicineInfo(); // 기본값 호출
-    }
 
-    // 약 이름으로 검색
+    @Operation(summary = "이름으로 약 검색하기")
     @GetMapping("/api/medi/itemName")
-    public String getMedicineByItemName(@RequestParam String itemName) throws IOException {
+    public OnboardingDto.OnboardingResponseDto getMedicineByItemName(@RequestParam String itemName) throws IOException, ParseException {
         return medicineService.getMedicineInfoByName(itemName);
     }
 

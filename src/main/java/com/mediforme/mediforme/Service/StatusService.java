@@ -1,0 +1,53 @@
+package com.mediforme.mediforme.Service;
+
+import com.mediforme.mediforme.DTO.StatusDto;
+import com.mediforme.mediforme.domain.Status;
+import com.mediforme.mediforme.Repository.StatusRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class StatusService {
+
+    @Autowired
+    private StatusRepository statusRepository;
+
+    public StatusDto saveStatus(StatusDto statusDto) {
+        Status status = toEntity(statusDto);
+        Status savedStatus = statusRepository.save(status);
+        return toDto(savedStatus);
+    }
+
+    public List<StatusDto> getAllStatuses() {
+        return statusRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public StatusDto getStatusById(Long id) {
+        return statusRepository.findById(id).map(this::toDto).orElse(null);
+    }
+
+    public void deleteStatus(Long id) {
+        statusRepository.deleteById(id);
+    }
+
+    private Status toEntity(StatusDto statusDto) {
+        return Status.builder()
+                .status(statusDto.getStatus())
+                .drink(statusDto.getDrink())
+                .condition(statusDto.getCondition())
+                .memo(statusDto.getMemo())
+                .build();
+    }
+
+    private StatusDto toDto(Status status) {
+        StatusDto statusDto = new StatusDto();
+        statusDto.setStatus(status.getStatus());
+        statusDto.setDrink(status.getDrink());
+        statusDto.setCondition(status.getCondition());
+        statusDto.setMemo(status.getMemo());
+        return statusDto;
+    }
+}

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.time.LocalDate;
+
 
 @Getter
 @Setter
@@ -24,4 +26,7 @@ public class StatusDto {
 
     @Size(max = 255)
     private String memo;
+
+    @NotNull
+    private LocalDate date; //캘린더
 }

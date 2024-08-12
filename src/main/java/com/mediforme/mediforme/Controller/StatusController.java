@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "상태 API", description = "상태 관련 API")
@@ -41,4 +42,13 @@ public class StatusController {
     public void deleteStatus(@PathVariable Long id) {
         statusService.deleteStatus(id);
     }
+
+    @GetMapping("/date/{date}")
+    public StatusDto getStatusByDate(@PathVariable String date) {
+        LocalDate localDate = LocalDate.parse(date);
+        return statusService.getStatusByDate(localDate);
+    }
 }
+
+
+

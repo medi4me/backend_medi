@@ -8,6 +8,7 @@ import com.mediforme.mediforme.domain.mapping.Calendar;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,4 +39,7 @@ public class Status extends BaseEntity {
 
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<Calendar> StatusList = new ArrayList<>();
+
+    @Column(nullable = false)
+    private LocalDate date; //캘린더
 }

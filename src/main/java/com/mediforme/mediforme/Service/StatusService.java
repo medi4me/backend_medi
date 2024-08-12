@@ -6,6 +6,7 @@ import com.mediforme.mediforme.Repository.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,11 @@ public class StatusService {
 
     public void deleteStatus(Long id) {
         statusRepository.deleteById(id);
+    }
+
+
+    public StatusDto getStatusByDate(LocalDate date) {
+        return statusRepository.findByDate(date).map(this::toDto).orElse(null);
     }
 
     private Status toEntity(StatusDto statusDto) {

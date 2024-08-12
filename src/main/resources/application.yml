@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/mediforme
+    username: root
+    password: pjs507703!!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: update # rds 연결 후, update로 변경
+        default_batch_fetch_size: 1000
+  coolsms:
+    api:
+      key: "NCSB6SRUZRUWBIBZ"
+      secret: "JIP96XAXUCSNFFSDMQO4SNJRLB7VXL29"

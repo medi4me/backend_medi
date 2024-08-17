@@ -34,7 +34,6 @@ public class StatusService {
         statusRepository.deleteById(id);
     }
 
-
     public StatusDto getStatusByDate(LocalDate date) {
         return statusRepository.findByDate(date).map(this::toDto).orElse(null);
     }
@@ -43,8 +42,9 @@ public class StatusService {
         return Status.builder()
                 .status(statusDto.getStatus())
                 .drink(statusDto.getDrink())
-                .condition(statusDto.getCondition())
+                .statusCondition(statusDto.getStatusCondition())
                 .memo(statusDto.getMemo())
+                .date(statusDto.getDate()) // date 필드를 포함시킴
                 .build();
     }
 
@@ -52,8 +52,9 @@ public class StatusService {
         StatusDto statusDto = new StatusDto();
         statusDto.setStatus(status.getStatus());
         statusDto.setDrink(status.getDrink());
-        statusDto.setCondition(status.getCondition());
+        statusDto.setStatusCondition(status.getStatusCondition());
         statusDto.setMemo(status.getMemo());
+        statusDto.setDate(status.getDate()); // date 필드를 포함시킴
         return statusDto;
     }
 }

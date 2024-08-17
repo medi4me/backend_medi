@@ -1,6 +1,7 @@
 package com.mediforme.mediforme.domain.mapping;
 
 import com.mediforme.mediforme.domain.Medicine;
+import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.common.BaseEntity;
 import com.mediforme.mediforme.domain.enums.UserMedicineMeal;
 import jakarta.persistence.*;
@@ -31,7 +32,7 @@ public class UserMedicine extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Medicine member;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicine_id")

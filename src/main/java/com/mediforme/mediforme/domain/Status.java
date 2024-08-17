@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "status_table")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,7 +33,7 @@ public class Status extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 15)
-    private StatusCondition condition;          // Good, notBad, bad
+    private StatusCondition statusCondition;          // Good, notBad, bad
 
 
     private String memo;        // 상태 메모

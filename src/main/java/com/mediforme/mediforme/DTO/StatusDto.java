@@ -22,7 +22,7 @@ public class StatusDto {
     private StatusDrink drink;
 
     @NotNull
-    private StatusCondition condition;
+    private StatusCondition statusCondition;
 
     @Size(max = 255)
     private String memo;

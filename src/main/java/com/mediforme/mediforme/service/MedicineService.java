@@ -2,8 +2,12 @@ package com.mediforme.mediforme.service;
 
 import com.mediforme.mediforme.config.ApiConfig;
 import com.mediforme.mediforme.converter.MedicineConverter;
+import com.mediforme.mediforme.domain.Medicine;
+import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import com.mediforme.mediforme.dto.OnboardingDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
+import com.mediforme.mediforme.repository.MemberRepository;
+import com.mediforme.mediforme.repository.UserMedicineRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,18 +23,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class MedicineService {
     private final MedicineRepository medicineRepository;
+    private final MemberRepository memberRepository;
+    private final UserMedicineRepository userMedicineRepository;
     private final MedicineConverter medicineConverter;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
     @Autowired
-    public MedicineService(MedicineRepository medicineRepository,MedicineConverter medicineConverter, ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, ApiConfig apiConfig) {
         this.medicineRepository = medicineRepository;
+        this.memberRepository = memberRepository;
+        this.userMedicineRepository = userMedicineRepository;
         this.medicineConverter = medicineConverter;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
@@ -91,6 +100,81 @@ public class MedicineService {
 
         return OnboardingDto.OnboardingResponseDto.builder()
                 .medicines(medicines)
+                .build();
+    }
+
+    public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto, Long memberId) throws IOException, ParseException {
+        StringBuilder result = new StringBuilder();
+
+        StringBuilder urlStr = new StringBuilder(SERVICE_URL + "?");
+        urlStr.append("serviceKey=").append(SERVICE_KEY);
+
+        if (requestDto.getItemName() != null) {
+            urlStr.append("&itemName=").append(URLEncoder.encode(requestDto.getItemName(), "UTF-8"));
+        }
+
+        urlStr.append("&pageNo=1");
+        urlStr.append("&numOfRows=1");
+        urlStr.append("&type=json");
+
+        URL url = new URL(urlStr.toString());
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"))) {
+            String returnLine;
+            while ((returnLine = br.readLine()) != null) {
+                result.append(returnLine).append("\n");
+            }
+        } finally {
+            urlConnection.disconnect();
+        }
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(result.toString());
+
+        JSONObject jsonBody = (JSONObject) jsonObject.get("body");
+        JSONArray jsonItems = (JSONArray) jsonBody.get("items");
+
+        if (jsonItems.isEmpty()) {
+            throw new RuntimeException("No medicine found for the given name.");
+        }
+
+        JSONObject item = (JSONObject) jsonItems.get(0);
+
+        Medicine medicine = Medicine.builder()
+                .name((String) item.get("itemName"))
+                .description((String) item.get("useMethodQesitm"))
+                .benefit((String) item.get("efcyQesitm"))
+                .drugInteraction((String) item.get("intrcQesitm"))
+                .itemImage((String) item.get("itemImage"))
+                .build();
+
+        medicine = medicineRepository.save(medicine);
+
+        UserMedicine userMedicine = UserMedicine.builder()
+                .meal(requestDto.getMeal())
+                .time(requestDto.getTime())
+                .dosage(requestDto.getDosage())
+                .member(memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"))) // 사용자 정보
+                .medicine(medicine)
+                .build();
+
+        userMedicineRepository.save(userMedicine);
+
+        OnboardingDto.MedicineInfoDto savedMedicineInfo = OnboardingDto.MedicineInfoDto.builder()
+                .itemName(medicine.getName())
+                .itemImage(medicine.getItemImage())
+                .description(medicine.getDescription())
+                .benefit(medicine.getBenefit())
+                .drugInteraction(medicine.getDrugInteraction())
+                .meal(requestDto.getMeal())
+                .time(requestDto.getTime())
+                .dosage(requestDto.getDosage())
+                .build();
+
+        return OnboardingDto.OnboardingResponseDto.builder()
+                .medicines(Collections.singletonList(savedMedicineInfo))
                 .build();
     }
 

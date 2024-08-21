@@ -17,8 +17,8 @@ public class UserMedicine extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
-    private String day;             // 복용 날짜
+//    @Column(nullable = false, length = 30)
+//    private String day;             // 복용 날짜
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(15)")

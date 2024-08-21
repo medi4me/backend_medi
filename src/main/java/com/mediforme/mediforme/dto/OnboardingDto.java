@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.dto;
 
+import com.mediforme.mediforme.domain.enums.UserMedicineMeal;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,6 +12,9 @@ public class OnboardingDto {
     @Builder
     public static class OnboardingRequestDto {
         private String itemName;
+        private UserMedicineMeal meal;
+        private String time;
+        private String dosage;
     }
 
     @Getter
@@ -24,5 +28,11 @@ public class OnboardingDto {
     public static class MedicineInfoDto {
         private String itemName;
         private String itemImage;
+        private String description;
+        private String benefit;
+        private String drugInteraction;
+        private UserMedicineMeal meal;
+        private String time;
+        private String dosage;
     }
 }

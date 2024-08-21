@@ -28,14 +28,17 @@ public class Medicine extends BaseEntity {
     @Column(nullable = false, columnDefinition = "Text")
     private String benefit;                 // 약 효능
 
-    @Column(nullable = false, columnDefinition = "Text")
+//    @Column(nullable = false, columnDefinition = "Text")
     private String drugInteraction;         // 약물 상호작용
 
-    @Column(nullable = false, length = 50)
-    private String component;               // 성분명
+    @Column(name = "image_url")
+    private String itemImage;
+
+//    @Column(nullable = false, length = 50)
+//    private String component;               // 성분명
 
 
-    private Integer amount;                     // 함량
+//    private Integer amount;                     // 함량
 
     @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<UserMedicine> UserMedicineList = new ArrayList<>();

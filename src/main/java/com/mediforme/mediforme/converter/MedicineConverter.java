@@ -14,8 +14,8 @@ public class MedicineConverter {
                 .description(medicine.getDescription())
                 .benefit(medicine.getBenefit())
                 .drugInteraction(medicine.getDrugInteraction())
-                .component(medicine.getComponent())
-                .amount(medicine.getAmount())
+//                .component(medicine.getComponent())
+//                .amount(medicine.getAmount())
                 .build();
     }
 
@@ -27,8 +27,8 @@ public class MedicineConverter {
                 .description(medicineDto.getDescription())
                 .benefit(medicineDto.getBenefit())
                 .drugInteraction(medicineDto.getDrugInteraction())
-                .component(medicineDto.getComponent())
-                .amount(medicineDto.getAmount())
+//                .component(medicineDto.getComponent())
+//                .amount(medicineDto.getAmount())
                 .build();
     }
 }

@@ -14,10 +14,13 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-    hibernate:
-      ddl:
-        auto: create # rds 연결 후, update로 변경
-      default_batch_fetch_size: 1000
+        hbm2ddl:
+          auto: update
+          default_batch_fetch_size: 1000
+#    hibernate:
+#      ddl:
+#        auto: create # rds 연결 후, update로 변경
+#      default_batch_fetch_size: 1000
   api:
     drug:
       service-url: "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList"

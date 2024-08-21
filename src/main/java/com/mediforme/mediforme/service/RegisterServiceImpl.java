@@ -3,10 +3,15 @@ package com.mediforme.mediforme.service;
 import com.mediforme.mediforme.Repository.RegisterRepository;
 import com.mediforme.mediforme.converter.RegisterConverter;
 import com.mediforme.mediforme.domain.Member;
+import com.mediforme.mediforme.domain.enums.Role;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
+
+import static com.mediforme.mediforme.domain.enums.Role.USER;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -27,7 +32,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         // 새로운 회원 생성
         Member newMember = RegisterConverter.toMember(joinDto);
-
+        newMember.setRole(Role.USER);
         // 회원 정보 저장
         return registerRepository.save(newMember);
     }

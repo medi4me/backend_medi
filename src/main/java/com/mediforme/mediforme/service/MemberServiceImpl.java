@@ -36,6 +36,16 @@ public class MemberServiceImpl implements MemberService {
         String memberID = request.getMemberID();
         String password = request.getPassword();
 
+        System.out.println(memberID);
+        System.out.println(password);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(memberID, password);
 
@@ -44,25 +54,36 @@ public class MemberServiceImpl implements MemberService {
 
         String authenticatedUserId = authentication.getName(); //  UserId
 
-        Member member = registerRepository.findById(Long.valueOf(authenticatedUserId))
+        Member member = registerRepository.findByMemberID(String.valueOf(authenticatedUserId))
                 .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND)); // id
         JwtToken jwtToken = jwtTokenProvider.generateToken(member.getId().toString());
 
-        return registerConverter.toMemberLoginResponse(member.getId(), jwtToken);
+        System.out.println(member.getMemberID());
+        System.out.println(member.getMemberID());
+        System.out.println(member.getMemberID());
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
+        return registerConverter.toMemberLoginResponse(member.getMemberID(), jwtToken);
     }
 
     // 기존 사용자에 대해 JWT 토큰을 생성하여 반환하는 메서드. 특히 리프레시 토큰을 사용해 새로운 액세스 토큰을 발급할 때 유용
     public MemberLoginResponseDTO getMemberLoginResponse(final Member member) {
         // TODO RefreshToken으로 AccessToken만 재발급 받도록 구현
         JwtToken jwtToken = authService.getToken(member);
-        return registerConverter.toMemberLoginResponse(member.getId(), jwtToken);
+        return registerConverter.toMemberLoginResponse(member.getMemberID(), jwtToken);
     }
 
     // 새로운 사용자에 대해 JWT 토큰을 생성하여 반환하는 메서드. 회원가입 후 첫 로그인 시 사용.
     public MemberLoginResponseDTO getNewMemberLoginResponse(final RegisterRequestDTO.JoinDto memberID) {
         Member member = registerRepository.save(registerConverter.toMember(memberID));
         JwtToken jwtToken = authService.getToken(member);
-        return registerConverter.toMemberLoginResponse(member.getId(), jwtToken);
+        return registerConverter.toMemberLoginResponse(member.getMemberID(), jwtToken);
     }
 
     /**

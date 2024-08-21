@@ -23,11 +23,16 @@ public class ResignController {
     @Operation(summary = "회원 탈퇴 API")
     @PostMapping
     public ApiResponse<String> resign(HttpServletRequest request) {
+        System.out.println("여긴가 여긴가");
         String token = jwtAuthenticationFilter.resolveToken(request); // 토큰 추출 (헤더에서)
-        String userId = jwtTokenProvider.getMemberIDFromToken(token); // 토큰에서 사용자 ID 추출
+        Long Id = Long.valueOf(jwtTokenProvider.getMemberIDFromToken(token)); // 토큰에서 사용자 ID 추출
+
+        System.out.println("제발 한번에 되줘 제발 제발");
+        System.out.println(token);
+        System.out.println(Id);
 
         try {
-            resignService.resignUser(userId, token);
+            resignService.resignUser(Id, token);
             return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
         } catch (CustomApiException e) {
             return ApiResponse.onFailure("USER_NOT_FOUND", "사용자를 찾을 수 없습니다.", null);

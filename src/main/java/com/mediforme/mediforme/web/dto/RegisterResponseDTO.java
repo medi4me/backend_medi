@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.web.dto;
 
+import com.mediforme.mediforme.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +16,6 @@ public class RegisterResponseDTO {
     public static class JoinResultDTO{
         Long memberId;
         LocalDateTime createdAt;
+        Role role;
     }
 }

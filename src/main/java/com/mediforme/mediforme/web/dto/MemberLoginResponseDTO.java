@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class MemberLoginResponseDTO {
-    private Long memberId;
+    private String memberID;
     private String accessToken;
     private String refreshToken;
 }

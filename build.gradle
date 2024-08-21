@@ -35,6 +35,7 @@ dependencies {
 
 	//Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 
 	//SMS Verification
 	implementation 'net.nurigo:sdk:4.3.0'

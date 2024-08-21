@@ -16,11 +16,11 @@ public class ResignServiceImpl implements ResignService{
     private final JwtTokenProvider jwtTokenProvider; // JwtTokenProvider
 
     @Transactional
-    public void resignUser(String memberID, String token) {
+    public void resignUser(Long Id, String token) {
         // JWT 토큰 검증 및 무효화 (선택적)
         if (token != null && jwtTokenProvider.validateToken(token)) {
             // 사용자 정보 삭제
-            Member member = registerRepository.findByMemberID(memberID)
+            Member member = registerRepository.findById(Id)
                     .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
             registerRepository.delete(member);
         } else {

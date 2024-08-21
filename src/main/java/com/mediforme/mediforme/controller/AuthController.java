@@ -32,6 +32,15 @@ public class AuthController {
         // Authorization 헤더에서 토큰 추출
         String token = jwtTokenProvider.parseBearerToken(request);
 
+        System.out.println(token);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
         if (token != null) {
             // 토큰 블랙리스트에 추가
             tokenBlacklistService.addToBlacklist(token);

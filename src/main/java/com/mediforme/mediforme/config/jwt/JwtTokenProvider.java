@@ -2,6 +2,7 @@ package com.mediforme.mediforme.config.jwt;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
+import com.mediforme.mediforme.domain.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -30,7 +31,7 @@ public class JwtTokenProvider {
     private static final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 15 * 1000; // 15 Days
     private final Key key;
 
-    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey) {
+    public JwtTokenProvider(@Value("${spring.jwt.secret_key}") String secretKey) {
         byte[] secretByteKey = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }
@@ -42,6 +43,7 @@ public class JwtTokenProvider {
         // Access Token 생성
         String accessToken = Jwts.builder()
                 .setSubject(memberId) // payload "sub" : name"
+                .claim(AUTHORITIES_KEY, Role.USER) // payload "auth" : "USER"
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_LENGTH))
                 .signWith(key, SignatureAlgorithm.HS512) // header "alg" : 해싱 알고리즘 HS512
                 .compact();
@@ -72,6 +74,14 @@ public class JwtTokenProvider {
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
+
+        System.out.println("살려주세요 제발");
+        System.out.println(claims);
+        System.out.println(claims.getSubject());
+        System.out.println(claims.get("role", String.class));
+        System.out.println(claims.get("authorities", String.class));
+        System.out.println(claims.get("auth"));;
+        System.out.println("--------------------------");
 
         if(claims.get("auth") == null) {
             throw new CustomApiException(ErrorCode.UNAUTHORIZED_JWT_TOKEN);

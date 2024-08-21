@@ -22,7 +22,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .findByMemberID(memberID)
                 .map(member -> User.builder()
                         .username(String.valueOf(member.getMemberID()))
-                        .password(passwordEncoder.encode(member.getPassword())) // 데이터베이스에 저장된 인코딩된 비밀번호 사용// 'ROLE_' 접두사가 포함된 권한 값 사용
+                        .password(passwordEncoder.encode(member.getPassword())) // 데이터베이스에 저장된 인코딩된 비밀번호 사용
+                        .roles(String.valueOf(member.getRole())) // 'ROLE_' 접두사가 포함된 권한 값 사용
                         .build())
                 .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
     }

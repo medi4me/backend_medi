@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.mediforme.mediforme.domain.common.BaseEntity;
 import com.mediforme.mediforme.domain.enums.MemberConsent;
 import com.mediforme.mediforme.domain.enums.MemberStatus;
+import com.mediforme.mediforme.domain.enums.Role;
 import com.mediforme.mediforme.domain.mapping.Calendar;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import jakarta.persistence.*;
@@ -47,6 +48,9 @@ public class Member extends BaseEntity {
     private LocalDate InactiveDate;             // 비활성화 시간 저장
 
     private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<UserMedicine> UserMedicineList = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.mediforme.mediforme.converter;
 import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.enums.MemberStatus;
+import com.mediforme.mediforme.domain.enums.Role;
 import com.mediforme.mediforme.web.dto.MemberLoginResponseDTO;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
 import com.mediforme.mediforme.web.dto.RegisterResponseDTO;
@@ -16,6 +17,7 @@ public class RegisterConverter {
     public static RegisterResponseDTO.JoinResultDTO toJoinResultDTO(Member member){
         return RegisterResponseDTO.JoinResultDTO.builder()
                 .memberId(member.getId())
+                .role(Role.USER)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
@@ -32,9 +34,9 @@ public class RegisterConverter {
                 .build();
     }
 
-    public MemberLoginResponseDTO toMemberLoginResponse(Long memberId, JwtToken jwtToken) {
+    public MemberLoginResponseDTO toMemberLoginResponse(String memberId, JwtToken jwtToken) {
         return MemberLoginResponseDTO.builder()
-                .memberId(memberId)
+                .memberID(memberId)
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
                 .build();

@@ -21,3 +21,5 @@ spring:
     api:
       key: "NCSB6SRUZRUWBIBZ"
       secret: "JIP96XAXUCSNFFSDMQO4SNJRLB7VXL29"
+  jwt:
+    secret_key: "AbCdEfGhIjKlMnOpQrStUvWxYz1234567890+AbCdEfGhIjKlMnOpQrStUvWxYz===AbCdEfGhIjKlMnOpQrStUvWxYz1234567890+AbCdEfGhIjKlMnOpQrStUvWxYz==="

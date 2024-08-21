@@ -46,6 +46,7 @@ public class Member extends BaseEntity {
 
     private LocalDate InactiveDate;             // 비활성화 시간 저장
 
+    private String refreshToken;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<UserMedicine> UserMedicineList = new ArrayList<>();
@@ -53,4 +54,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<Calendar> StatusList = new ArrayList<>();
 
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

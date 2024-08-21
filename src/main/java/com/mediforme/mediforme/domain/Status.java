@@ -33,9 +33,14 @@ public class Status extends BaseEntity {
     @Column(nullable = false, length = 15)
     private StatusCondition condition;          // Good, notBad, bad
 
+    private String refreshToken;
 
     private String memo;        // 상태 메모
 
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<Calendar> StatusList = new ArrayList<>();
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

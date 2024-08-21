@@ -2,8 +2,10 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.domain.enums.MemberConsent;
+import com.mediforme.mediforme.service.MemberService;
 import com.mediforme.mediforme.service.RegisterService;
 import com.mediforme.mediforme.util.SmsUtil;
+import com.mediforme.mediforme.web.dto.MemberLoginResponseDTO;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
 import com.mediforme.mediforme.web.dto.VerificationDTO;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +22,7 @@ public class RegisterController {
 
     private final RegisterService registerService;
     private final SmsUtil smsUtil;
+    private final MemberService memberService;
     private final ConcurrentHashMap<String, RegisterRequestDTO.JoinDto> tempDataMap = new ConcurrentHashMap<>();
 
     @PostMapping("/consent")
@@ -50,13 +53,6 @@ public class RegisterController {
 
         // Generate a verification code (e.g., 6-digit random number)
         String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
-
-        // Send the verification code via SMS
-        // smsUtil.sendOne(phone, verificationCode);
-
-        // Save phone number and verification code in session
-        // session.setAttribute("phone", phone);
-        // session.setAttribute("verificationCode", verificationCode);
 
         // Return verification code or success message
         return ApiResponse.onSuccess("Verification code sent successfully.");
@@ -101,7 +97,7 @@ public class RegisterController {
     }
 
     @PostMapping("/name")
-    public ApiResponse<String> submitName(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
+    public ApiResponse<MemberLoginResponseDTO> submitName(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
         String requestId = "UniqueId";
 
         // Retrieve and finalize the data
@@ -121,7 +117,10 @@ public class RegisterController {
             // Remove from temp data map
             tempDataMap.remove(requestId);
 
-            return ApiResponse.onSuccess("Member registered successfully.");
+            // Automatically log in the new member and generate JWT token
+            MemberLoginResponseDTO loginResponse = memberService.getNewMemberLoginResponse(newMember);
+
+            return ApiResponse.onSuccess(loginResponse);
         } else {
             return ApiResponse.onFailure("DATA_NOT_FOUND", "Previous data not found.", null);
         }

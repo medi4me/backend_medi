@@ -8,29 +8,24 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonPropertyOrder({"isSuccess", "code", "message", "result"})
+@JsonPropertyOrder( {"isSuccess", "code", "message", "result"} )
 public class ApiResponse<T> {
+
     @JsonProperty("isSuccess")
-    private final Boolean isSuccess;
-    private final String code;
-    private final String message;
+    private Boolean isSuccess;
+    private String code;
+    private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
-
 
     // 성공한 경우 응답 생성
 
     public static <T> ApiResponse<T> onSuccess(T result){
-        return new ApiResponse<>(true, SuccessStatus._OK.getCode() , SuccessStatus._OK.getMessage(), result);
+        return new ApiResponse<>(true, "200" , "요청에 성공하였습니다.", result);
     }
-
-    public static <T> ApiResponse<T> of(BaseCode code, T result){
-        return new ApiResponse<>(true, code.getReasonHttpStatus().getCode() , code.getReasonHttpStatus().getMessage(), result);
-    }
-
 
     // 실패한 경우 응답 생성
     public static <T> ApiResponse<T> onFailure(String code, String message, T data){
-        return new ApiResponse<>(true, code, message, data);
+        return new ApiResponse<>(false, code, message, data);
     }
 }

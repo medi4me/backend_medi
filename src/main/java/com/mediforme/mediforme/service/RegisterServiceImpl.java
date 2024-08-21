@@ -20,9 +20,10 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional
     public Member registerUser(RegisterRequestDTO.JoinDto joinDto) {
         // 사용자 이름 중복 확인
-        if (registerRepository.findByName(joinDto.getName()) != null) {
-            throw new IllegalArgumentException("Username already exists");
-        }
+        registerRepository.findByName(joinDto.getName())
+                .ifPresent(existingMember -> {
+                    throw new IllegalArgumentException("Username already exists");
+                });
 
         // 새로운 회원 생성
         Member newMember = RegisterConverter.toMember(joinDto);

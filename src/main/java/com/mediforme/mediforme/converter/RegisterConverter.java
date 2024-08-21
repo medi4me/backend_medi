@@ -1,12 +1,16 @@
 package com.mediforme.mediforme.converter;
 
+import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.enums.MemberStatus;
+import com.mediforme.mediforme.web.dto.MemberLoginResponseDTO;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
 import com.mediforme.mediforme.web.dto.RegisterResponseDTO;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 public class RegisterConverter {
 
     public static RegisterResponseDTO.JoinResultDTO toJoinResultDTO(Member member){
@@ -25,6 +29,14 @@ public class RegisterConverter {
                 .consent(request.getConsent())
                 .status(MemberStatus.ACTIVE)
                 .InactiveDate(null)
+                .build();
+    }
+
+    public MemberLoginResponseDTO toMemberLoginResponse(Long memberId, JwtToken jwtToken) {
+        return MemberLoginResponseDTO.builder()
+                .memberId(memberId)
+                .accessToken(jwtToken.getAccessToken())
+                .refreshToken(jwtToken.getRefreshToken())
                 .build();
     }
 }

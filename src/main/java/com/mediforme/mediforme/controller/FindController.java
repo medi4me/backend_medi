@@ -8,11 +8,9 @@ import com.mediforme.mediforme.web.dto.FindResponseDTO;
 import com.mediforme.mediforme.web.dto.VerificationDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
@@ -25,6 +23,8 @@ public class FindController {
 
     // 인증 코드를 임시 저장할 맵
     private final ConcurrentHashMap<String, VerificationDTO> verificationCodeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, FindResponseDTO> findIDResultMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, FindResponseDTO> findPasswordResultMap = new ConcurrentHashMap<>();
 
     @PostMapping("/send-verification-code")
     public ApiResponse<String> sendVerificationCode(@RequestBody @Valid VerificationDTO request) {
@@ -48,17 +48,24 @@ public class FindController {
         String requestId = "UniqueId";
         String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
-        if (ExpectedVerificationCode != null && ExpectedVerificationCode.equals(request.getVerificationCode())) {
-            Member member = registerRepository.findByPhone(verificationCodeMap.get(requestId).getPhone());
-            if (member != null) {
+        if (Optional.ofNullable(ExpectedVerificationCode)
+                .filter(code -> code.equals(request.getVerificationCode()))
+                .isPresent()) {
+
+            Optional<Member> optionalMember = Optional.ofNullable(
+                    registerRepository.findByPhone(verificationCodeMap.get(requestId).getPhone()));
+
+            return optionalMember.map(member -> {
                 FindResponseDTO responseDTO = new FindResponseDTO();
                 responseDTO.setMemberID(member.getMemberID());
 
+                // 결과를 맵에 저장하여 GetMapping에서 사용
+                findIDResultMap.put(requestId, responseDTO);
+
                 verificationCodeMap.remove(requestId);
                 return ApiResponse.onSuccess(responseDTO);
-            } else {
-                return ApiResponse.onFailure("ID_NOT_FOUND", "Member ID not found for the provided phone number.", null);
-            }
+            }).orElseGet(() ->
+                    ApiResponse.onFailure("ID_NOT_FOUND", "Member ID not found for the provided phone number.", null));
         } else {
             return ApiResponse.onFailure("VERIFICATION_FAILED", "Verification code is incorrect.", null);
         }
@@ -69,19 +76,55 @@ public class FindController {
         String requestId = "UniqueId";
         String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
-        if (ExpectedVerificationCode != null && ExpectedVerificationCode.equals(request.getVerificationCode())) {
-            Member member = registerRepository.findByPhone(request.getPhone());
-            if (member != null) {
+        if (Optional.ofNullable(ExpectedVerificationCode)
+                .filter(code -> code.equals(request.getVerificationCode()))
+                .isPresent()) {
+
+            Optional<Member> optionalMember = Optional.ofNullable(
+                    registerRepository.findByPhone(verificationCodeMap.get(requestId).getPhone()));
+
+            return optionalMember.map(member -> {
                 FindResponseDTO responseDTO = new FindResponseDTO();
-                responseDTO.setPassword(member.getPassword());
+                responseDTO.setMemberID(member.getMemberID());
+
+                // 결과를 맵에 저장하여 GetMapping에서 사용
+                findPasswordResultMap.put(requestId, responseDTO);
 
                 verificationCodeMap.remove(requestId);
                 return ApiResponse.onSuccess(responseDTO);
-            } else {
-                return ApiResponse.onFailure("PASSWORD_NOT_FOUND", "Password could not be found for the provided phone number.", null);
-            }
+            }).orElseGet(() ->
+                    ApiResponse.onFailure("ID_NOT_FOUND", "Member ID not found for the provided phone number.", null));
         } else {
             return ApiResponse.onFailure("VERIFICATION_FAILED", "Verification code is incorrect.", null);
         }
     }
+
+    @GetMapping("/result-id")
+    public ApiResponse<FindResponseDTO> getResultID() {
+        String requestId = "UniqueId";
+        FindResponseDTO result = findIDResultMap.get(requestId);
+
+        if (result != null) {
+            // 화면에 ID 결과를 보여준 후 맵에서 제거
+            findIDResultMap.remove(requestId);
+            return ApiResponse.onSuccess(result);
+        } else {
+            return ApiResponse.onFailure("RESULT_NOT_FOUND", "No ID result found. Please verify first.", null);
+        }
+    }
+
+    @GetMapping("/result-password")
+    public ApiResponse<FindResponseDTO> getResultPassword() {
+        String requestId = "UniqueId";
+        FindResponseDTO result = findPasswordResultMap.get(requestId);
+
+        if (result != null) {
+            // 화면에 비밀번호 결과를 보여준 후 맵에서 제거
+            findPasswordResultMap.remove(requestId);
+            return ApiResponse.onSuccess(result);
+        } else {
+            return ApiResponse.onFailure("RESULT_NOT_FOUND", "No password result found. Please verify first.", null);
+        }
+    }
+
 }

@@ -20,8 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @RequestMapping("/register")
 public class RegisterController {
-
-    private final RegisterService registerService;
     private final SmsUtil smsUtil;
     private final MemberService memberService;
     private final RegisterRepository registerRepository;
@@ -36,8 +34,8 @@ public class RegisterController {
 
         // 폰 번호가 registerRepository에 존재하는지 확인
         Member phoneExists = registerRepository.findByPhone(phone);
-        if (phoneExists == null) {
-            return ApiResponse.onFailure("PHONE_NOT_FOUND", "Phone number does not exist.", null);
+        if (phoneExists != null) {
+            return ApiResponse.onFailure("PHONE_FOUND", "Phone number already exist.", null);
         }
 
         // Generate a verification code (e.g., 6-digit random number)

@@ -2,6 +2,7 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.Repository.RegisterRepository;
 import com.mediforme.mediforme.apiPayload.ApiResponse;
+import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.service.MemberService;
 import com.mediforme.mediforme.service.RegisterService;
 import com.mediforme.mediforme.util.SmsUtil;
@@ -33,16 +34,23 @@ public class RegisterController {
         // 전화번호와 함께 임시 데이터 저장
         String requestId = "UniqueId";
 
+        // 폰 번호가 registerRepository에 존재하는지 확인
+        Member phoneExists = registerRepository.findByPhone(phone);
+        if (phoneExists == null) {
+            return ApiResponse.onFailure("PHONE_NOT_FOUND", "Phone number does not exist.", null);
+        }
+
         // Generate a verification code (e.g., 6-digit random number)
         String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
 
         // Send the verification code using SmsCool API
         smsUtil.sendOne(phone, verificationCode);
 
-        // Store memberID in the temporary data map
-        VerificationDTO verifyData = verificationCodeMap.get(requestId);
-        verifyData.setVerificationCode(verificationCode);
-        verificationCodeMap.put(requestId, verifyData);
+        // 인증 코드를 맵에 저장 (phone -> verificationCode)
+        VerificationDTO data = new VerificationDTO();
+        data.setPhone(phone);
+        data.setVerificationCode(verificationCode);
+        verificationCodeMap.put(requestId, data);
 
         // Return verification code or success message
         return ApiResponse.onSuccess("Verification code sent successfully.");
@@ -53,6 +61,8 @@ public class RegisterController {
     public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDTO request) {
         String requestId = "UniqueId";
         String inputCode = request.getVerificationCode();
+
+        String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
         // Retrieve and finalize the verificationCodeMap
         VerificationDTO verify = verificationCodeMap.get(requestId);

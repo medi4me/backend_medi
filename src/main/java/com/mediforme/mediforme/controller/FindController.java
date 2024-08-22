@@ -28,6 +28,13 @@ public class FindController {
 
     @PostMapping("/send-verification-code")
     public ApiResponse<String> sendVerificationCode(@RequestBody @Valid VerificationDTO request) {
+
+        // 폰 번호가 registerRepository에 존재하는지 확인
+        Member phoneExists = registerRepository.findByPhone(request.getPhone());
+        if (phoneExists == null) {
+            return ApiResponse.onFailure("PHONE_NOT_FOUND", "Phone number does not exist.", null);
+        }
+
         // 인증 코드 생성
         String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
         String requestId = "UniqueId";

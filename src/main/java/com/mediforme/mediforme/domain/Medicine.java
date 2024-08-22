@@ -19,7 +19,7 @@ public class Medicine extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 150)
     private String name;
 
     @Column(nullable = false, columnDefinition = "Text")

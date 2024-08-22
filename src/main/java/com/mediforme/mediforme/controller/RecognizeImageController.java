@@ -1,9 +1,8 @@
 package com.mediforme.mediforme.controller;
 
-
-import com.mediforme.mediforme.dto.OnboardingDto;
 import com.mediforme.mediforme.dto.response.MedicineResponseDto;
 import com.mediforme.mediforme.service.MedicineCameraSearchService;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,14 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 
 public class RecognizeImageController {
+    // 카메라 검색 - 이미지를 통해 약물 이름을 인식
     private final MedicineCameraSearchService medicineCameraService;
 
     @Autowired
@@ -47,7 +45,9 @@ public class RecognizeImageController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(Collections.emptyList());
+            return ResponseEntity.status(500).build();
+        } catch (java.text.ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 }

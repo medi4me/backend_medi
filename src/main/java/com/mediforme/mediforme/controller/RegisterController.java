@@ -2,7 +2,6 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.Repository.RegisterRepository;
 import com.mediforme.mediforme.apiPayload.ApiResponse;
-import com.mediforme.mediforme.domain.enums.MemberConsent;
 import com.mediforme.mediforme.service.MemberService;
 import com.mediforme.mediforme.service.RegisterService;
 import com.mediforme.mediforme.util.SmsUtil;
@@ -10,13 +9,11 @@ import com.mediforme.mediforme.web.dto.MemberLoginResponseDTO;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
 import com.mediforme.mediforme.web.dto.VerificationDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,32 +25,13 @@ public class RegisterController {
     private final MemberService memberService;
     private final RegisterRepository registerRepository;
 
-    private final ConcurrentHashMap<String, RegisterRequestDTO.JoinDto> tempDataMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, VerificationDTO> verificationCodeMap = new ConcurrentHashMap<>();
-
-    @Operation(summary = "개인정보 사용 동의 여부")
-    @PostMapping("/consent")
-    public ApiResponse<String> submitConsent(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
-        MemberConsent consent = request.getConsent();
-        String requestId = "UniqueId"; // 예: UUID.randomUUID().toString() 사용 가능
-
-        RegisterRequestDTO.JoinDto data = new RegisterRequestDTO.JoinDto();
-        data.setConsent(consent);
-        tempDataMap.put(requestId, data);
-
-        return ApiResponse.onSuccess("Consent received.");
-    }
 
     @Operation(summary = "휴대폰 번호 제출")
     @PostMapping("/phone")
-    public ApiResponse<String> submitPhone(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
+    public ApiResponse<String> submitPhone(@RequestParam("phone") String phone) {
         // 전화번호와 함께 임시 데이터 저장
-        String phone = request.getPhone();
         String requestId = "UniqueId";
-
-        RegisterRequestDTO.JoinDto data = new RegisterRequestDTO.JoinDto();
-        data.setPhone(phone);
-        tempDataMap.put(requestId, data);
 
         // Generate a verification code (e.g., 6-digit random number)
         String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
@@ -93,99 +71,12 @@ public class RegisterController {
         // Handle username submission logic
         String requestId = "UniqueId"; // This should match the ID used in submitPhone
 
-        // 유효성 검사
-        if (!isMemberIDValid(request.getMemberID())) {
-            return ApiResponse.onFailure("INVALID_MEMBER_ID", "MemberID must be 5-30 characters long and contain only letters and numbers.", null);
-        }
-
         // 이미 존재하는 아이디인지 확인
         if (registerRepository.findByMemberID(request.getMemberID()).isPresent()) {
             return ApiResponse.onFailure("DUPLICATE_MEMBER_ID", "MemberID already exists.", null);
         }
 
-        // Store memberID in the temporary data map
-        RegisterRequestDTO.JoinDto data = tempDataMap.get(requestId);
-        data.setMemberID(request.getMemberID());
-        tempDataMap.put(requestId, data);
-
         return ApiResponse.onSuccess("MemberID received.");
-    }
-
-    @Operation(summary = "아이디 유효성 검사")
-    @GetMapping("/validate/memberID")
-    public ApiResponse<String> validateMemberID(@RequestParam("memberID") String memberID) {
-        // 유효성 검사: 5~30자리 숫자와 영문자로 이루어져 있는지 체크
-        String memberIDPattern = "^[a-zA-Z0-9]{5,30}$";
-        if (!Pattern.matches(memberIDPattern, memberID)) {
-            return ApiResponse.onFailure("INVALID_MEMBER_ID", "Member ID must be 5-30 characters long and contain only letters and numbers.", null);
-        }
-
-        // 중복 검사: 이미 존재하는 아이디인지 확인
-        boolean isMemberIDExists = registerRepository.findByMemberID(memberID).isPresent();
-        if (isMemberIDExists) {
-            return ApiResponse.onFailure("DUPLICATE_MEMBER_ID", "Member ID already exists.", null);
-        }
-
-        return ApiResponse.onSuccess("Member ID is valid and available.");
-    }
-
-    @Operation(summary = "비밀번호 제출")
-    @PostMapping("/password")
-    public ApiResponse<String> submitPassword(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
-        // Handle password submission logic
-        String requestId = "UniqueId"; // This should match the ID used in submitPhone
-
-        // 유효성 검사
-        if (!isPasswordValid(request.getPassword())){
-            return ApiResponse.onFailure("INVALID_PASSWORD", "Password must be at least 8 characters long, contain a number, a letter, and a special character.", null);
-        }
-
-        // Store password in the temporary data map
-        RegisterRequestDTO.JoinDto data = tempDataMap.get(requestId);
-        data.setPassword(request.getPassword());
-        tempDataMap.put(requestId, data);
-
-        return ApiResponse.onSuccess("Password received.");
-    }
-
-    @Operation(summary = "비밀번호 유효성 검사")
-    @GetMapping("/validate/password-length")
-    public ApiResponse<String> validatePasswordLength(@RequestParam("password") String password) {
-        if (password.length() >= 8) {
-            return ApiResponse.onSuccess("Password length is valid.");
-        } else {
-            return ApiResponse.onFailure("INVALID_PASSWORD_LENGTH", "Password must be at least 8 characters long.", null);
-        }
-    }
-
-    @Operation(summary = "비밀번호 유효성 검사")
-    @GetMapping("/validate/password-number")
-    public ApiResponse<String> validatePasswordNumber(@RequestParam("password") String password) {
-        if (password.matches(".*\\d.*")) {  // \d는 숫자를 의미합니다.
-            return ApiResponse.onSuccess("Password contains at least one number.");
-        } else {
-            return ApiResponse.onFailure("INVALID_PASSWORD_NUMBER", "Password must contain at least one number.", null);
-        }
-    }
-
-    @Operation(summary = "비밀번호 유효성 검사")
-    @GetMapping("/validate/password-letter")
-    public ApiResponse<String> validatePasswordLetter(@RequestParam("password") String password) {
-        if (password.matches(".*[a-zA-Z].*")) {  // [a-zA-Z]는 영문자를 의미합니다.
-            return ApiResponse.onSuccess("Password contains at least one letter.");
-        } else {
-            return ApiResponse.onFailure("INVALID_PASSWORD_LETTER", "Password must contain at least one letter.", null);
-        }
-    }
-
-    @Operation(summary = "비밀번호 유효성 검사")
-    @GetMapping("/validate/password-special-char")
-    public ApiResponse<String> validatePasswordSpecialChar(@RequestParam("password") String password) {
-        if (password.matches(".*[!@#$%^&*()\\-_=+{};:,<.>].*")) {  // 특수문자를 의미합니다.
-            return ApiResponse.onSuccess("Password contains at least one special character.");
-        } else {
-            return ApiResponse.onFailure("INVALID_PASSWORD_SPECIAL_CHAR", "Password must contain at least one special character.", null);
-        }
     }
 
     @Operation(summary = "성명 제출")
@@ -193,30 +84,19 @@ public class RegisterController {
     public ApiResponse<MemberLoginResponseDTO> submitName(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
         String requestId = "UniqueId";
 
-        // Retrieve and finalize the data
-        RegisterRequestDTO.JoinDto data = tempDataMap.get(requestId);
-        if (data != null) {
-            data.setName(request.getName());
+        RegisterRequestDTO.JoinDto newMember = new RegisterRequestDTO.JoinDto();
+        newMember.setPhone(request.getPhone());
+        newMember.setMemberID(request.getMemberID());
+        newMember.setPassword(request.getPassword());
+        newMember.setName(request.getName());
+        newMember.setConsent(request.getConsent());
 
-            RegisterRequestDTO.JoinDto newMember = new RegisterRequestDTO.JoinDto();
-            newMember.setPhone(data.getPhone());
-            newMember.setMemberID(data.getMemberID());
-            newMember.setPassword(data.getPassword());
-            newMember.setName(data.getName());
-            newMember.setConsent(data.getConsent());
+        registerService.registerUser(newMember);
 
-            registerService.registerUser(newMember);
+        // Automatically log in the new member and generate JWT token
+        MemberLoginResponseDTO loginResponse = memberService.getNewMemberLoginResponse(newMember);
 
-            // Remove from temp data map
-            tempDataMap.remove(requestId);
-
-            // Automatically log in the new member and generate JWT token
-            MemberLoginResponseDTO loginResponse = memberService.getNewMemberLoginResponse(newMember);
-
-            return ApiResponse.onSuccess(loginResponse);
-        } else {
-            return ApiResponse.onFailure("DATA_NOT_FOUND", "Previous data not found.", null);
-        }
+        return ApiResponse.onSuccess(loginResponse);
     }
 
     private boolean isMemberIDValid(String memberID) {

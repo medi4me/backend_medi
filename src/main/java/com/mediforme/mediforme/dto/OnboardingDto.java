@@ -34,5 +34,7 @@ public class OnboardingDto {
         private UserMedicineMeal meal;
         private String time;
         private String dosage;
+        private boolean isCheck;
+        private boolean isAlarm;
     }
 }

@@ -3,6 +3,7 @@ package com.mediforme.mediforme.service;
 import com.mediforme.mediforme.config.ApiConfig;
 import com.mediforme.mediforme.converter.MedicineConverter;
 import com.mediforme.mediforme.domain.Medicine;
+import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import com.mediforme.mediforme.dto.OnboardingDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
@@ -177,5 +178,53 @@ public class MedicineService {
                 .medicines(Collections.singletonList(savedMedicineInfo))
                 .build();
     }
+
+    public OnboardingDto.OnboardingResponseDto getUserMedicines(Long memberId) {
+
+        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(memberId);
+
+        List<OnboardingDto.MedicineInfoDto> userMedicineDtos = new ArrayList<>();
+
+        for (UserMedicine userMedicine : userMedicines) {
+            Medicine medicine = userMedicine.getMedicine();
+
+            OnboardingDto.MedicineInfoDto dto = OnboardingDto.MedicineInfoDto.builder()
+                    .itemName(medicine.getName())
+                    .itemImage(medicine.getItemImage())
+                    .description(medicine.getDescription())
+                    .benefit(medicine.getBenefit())
+                    .drugInteraction(medicine.getDrugInteraction())
+                    .meal(userMedicine.getMeal())
+                    .time(userMedicine.getTime())
+                    .dosage(userMedicine.getDosage())
+                    .isCheck(userMedicine.isCheck())
+                    .isAlarm(userMedicine.isAlarm())
+                    .build();
+
+            userMedicineDtos.add(dto);
+        }
+
+        return OnboardingDto.OnboardingResponseDto.builder()
+                .medicines(userMedicineDtos)
+                .build();
+    }
+
+    public void deleteUserMedicine(Long memberId, Long userMedicineId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
+
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new RuntimeException("User medicine not found"));
+
+        if (!userMedicine.getMember().getId().equals(member.getId())) {
+            throw new RuntimeException("User does not have permission to delete this medicine.");
+        }
+
+        userMedicineRepository.delete(userMedicine);
+    }
+
+
+
 
 }

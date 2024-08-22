@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.json.simple.parser.ParseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -46,6 +43,27 @@ public class MedicineController {
 
         OnboardingDto.OnboardingResponseDto responseDto = medicineService.saveMedicineInfo(requestDto, memberId);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "사용자가 복용하는 약 조회하기")
+    @GetMapping("/list/medicines")
+    public ResponseEntity<OnboardingDto.OnboardingResponseDto> getUserMedicines(@RequestParam Long memberId) {
+        OnboardingDto.OnboardingResponseDto responseDto = medicineService.getUserMedicines(memberId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @Operation(summary = "복용하는 약 삭제하기")
+    @DeleteMapping("/delete/userMedicine")
+    public ResponseEntity<String> deleteUserMedicine(
+            @RequestParam Long memberId,
+            @RequestParam Long userMedicineId) {
+
+        try {
+            medicineService.deleteUserMedicine(memberId, userMedicineId);
+            return ResponseEntity.ok("User medicine deleted successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 
 }

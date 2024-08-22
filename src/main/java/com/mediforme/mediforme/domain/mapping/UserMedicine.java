@@ -30,6 +30,10 @@ public class UserMedicine extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(30)")
     private String dosage;          // 약 용량
 
+    private boolean isCheck = false;
+
+    private boolean isAlarm = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

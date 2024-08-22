@@ -60,15 +60,15 @@ public class RegisterController {
     @PostMapping("/verifyPhone")
     public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDTO request) {
         String requestId = "UniqueId";
-        String inputCode = request.getVerificationCode();
 
+        String inputCode = request.getVerificationCode();
         String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
-        // Retrieve and finalize the verificationCodeMap
-        VerificationDTO verify = verificationCodeMap.get(requestId);
-        String expectedCode = verify.getVerificationCode();
+        System.out.println(ExpectedVerificationCode);
+        System.out.println(ExpectedVerificationCode);
+        System.out.println(ExpectedVerificationCode);
 
-        if (expectedCode != null && expectedCode.equals(inputCode)) {
+        if (ExpectedVerificationCode != null && ExpectedVerificationCode.equals(inputCode)) {
             return ApiResponse.onSuccess("Phone number verified successfully.");
         } else {
             return ApiResponse.onFailure("VERIFICATION_FAILED", "Verification code is incorrect.", null);

@@ -1,6 +1,7 @@
 package com.mediforme.mediforme.Controller;
 
 import com.mediforme.mediforme.DTO.StatusDto;
+import com.mediforme.mediforme.DTO.StatusSummaryDto;
 import com.mediforme.mediforme.Service.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,6 +48,21 @@ public class StatusController {
     public StatusDto getStatusByDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         return statusService.getStatusByDate(localDate);
+    }
+
+    @GetMapping("/week-summary")
+    public List<StatusSummaryDto> getStatusSummaryForWeek(@RequestParam String startDate, @RequestParam String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return statusService.getStatusSummaryForWeek(start, end);
+    }
+
+
+    @Operation(summary = "날짜로 상태 수정", description = "특정 날짜로 상태를 수정")
+    @PutMapping("/date/{date}")
+    public StatusDto updateStatusByDate(@PathVariable String date, @Valid @RequestBody StatusDto statusDto) {
+        LocalDate localDate = LocalDate.parse(date);
+        return statusService.updateStatusByDate(localDate, statusDto);
     }
 }
 

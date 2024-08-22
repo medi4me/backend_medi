@@ -26,6 +26,7 @@ public class OnboardingDto {
     @Getter
     @Builder
     public static class MedicineInfoDto {
+        private Long userMedicineId;
         private String itemName;
         private String itemImage;
         private String description;

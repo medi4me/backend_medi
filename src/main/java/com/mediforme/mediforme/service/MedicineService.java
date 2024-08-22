@@ -164,6 +164,7 @@ public class MedicineService {
         userMedicineRepository.save(userMedicine);
 
         OnboardingDto.MedicineInfoDto savedMedicineInfo = OnboardingDto.MedicineInfoDto.builder()
+//                .userMedicineId(userMedicine.getId())
                 .itemName(medicine.getName())
                 .itemImage(medicine.getItemImage())
                 .description(medicine.getDescription())
@@ -189,6 +190,7 @@ public class MedicineService {
             Medicine medicine = userMedicine.getMedicine();
 
             OnboardingDto.MedicineInfoDto dto = OnboardingDto.MedicineInfoDto.builder()
+                    .userMedicineId(userMedicine.getId())
                     .itemName(medicine.getName())
                     .itemImage(medicine.getItemImage())
                     .description(medicine.getDescription())

@@ -27,7 +27,9 @@ public class RegisterController {
     private final SmsUtil smsUtil;
     private final MemberService memberService;
     private final RegisterRepository registerRepository;
+
     private final ConcurrentHashMap<String, RegisterRequestDTO.JoinDto> tempDataMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, VerificationDTO> verificationCodeMap = new ConcurrentHashMap<>();
 
     @Operation(summary = "개인정보 사용 동의 여부")
     @PostMapping("/consent")
@@ -39,10 +41,6 @@ public class RegisterController {
         data.setConsent(consent);
         tempDataMap.put(requestId, data);
 
-        System.out.println(data.getConsent());
-        System.out.println();
-        System.out.println();
-
         return ApiResponse.onSuccess("Consent received.");
     }
 
@@ -51,7 +49,7 @@ public class RegisterController {
     public ApiResponse<String> submitPhone(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
         // 전화번호와 함께 임시 데이터 저장
         String phone = request.getPhone();
-        String requestId = "UniqueId"; // 예: UUID.randomUUID().toString() 사용 가능
+        String requestId = "UniqueId";
 
         RegisterRequestDTO.JoinDto data = new RegisterRequestDTO.JoinDto();
         data.setPhone(phone);
@@ -60,15 +58,27 @@ public class RegisterController {
         // Generate a verification code (e.g., 6-digit random number)
         String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
 
+        // Send the verification code using SmsCool API
+        smsUtil.sendOne(phone, verificationCode);
+
+        // Store memberID in the temporary data map
+        VerificationDTO verifyData = verificationCodeMap.get(requestId);
+        verifyData.setVerificationCode(verificationCode);
+        verificationCodeMap.put(requestId, verifyData);
+
         // Return verification code or success message
         return ApiResponse.onSuccess("Verification code sent successfully.");
     }
 
     @Operation(summary = "휴대폰 번호 인증")
     @PostMapping("/verifyPhone")
-    public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDTO request, HttpSession session) {
+    public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDTO request) {
+        String requestId = "UniqueId";
         String inputCode = request.getVerificationCode();
-        String expectedCode = (String) session.getAttribute("verificationCode"); // For demonstration, this could be replaced with a validation service
+
+        // Retrieve and finalize the verificationCodeMap
+        VerificationDTO verify = verificationCodeMap.get(requestId);
+        String expectedCode = verify.getVerificationCode();
 
         if (expectedCode != null && expectedCode.equals(inputCode)) {
             return ApiResponse.onSuccess("Phone number verified successfully.");

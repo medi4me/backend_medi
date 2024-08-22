@@ -2,6 +2,7 @@ package com.mediforme.mediforme.controller;
 
 
 import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.response.MedicineResponseDto;
 import com.mediforme.mediforme.service.MedicineCameraSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,24 +29,25 @@ public class RecognizeImageController {
 
     // 카메라 약물 인식
     @PostMapping("/camera")
-    public ResponseEntity<Map<String, String>> recognizeImage(@RequestParam("file") MultipartFile file) throws IOException, ParseException {
+    public ResponseEntity<List<MedicineResponseDto>> recognizeImage(@RequestParam("file") MultipartFile file) throws IOException, ParseException {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "No file selected"));
+            return ResponseEntity.badRequest().build();
         }
 
         try {
             // 이미지 처리 및 약물 정보 조회
-            OnboardingDto.OnboardingResponseDto responseDto = medicineCameraService.processImageAndRecognizeMedicine(file);
-            // 약물 이름을 추출
-            if (responseDto.getMedicines().isEmpty()) {
+            List<MedicineResponseDto> responseDtoList = medicineCameraService.processImageAndRecognizeMedicine(file);
+
+            // 약물 정보를 추출하여 응답
+            if (responseDtoList.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            String recognizedMedicineName = responseDto.getMedicines().get(0).getItemName();
-            return ResponseEntity.ok(Collections.singletonMap("medicine", recognizedMedicineName));
+
+            return ResponseEntity.ok(responseDtoList);
 
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(Collections.singletonMap("error", "Failed to process image"));
+            return ResponseEntity.status(500).body(Collections.emptyList());
         }
     }
 }

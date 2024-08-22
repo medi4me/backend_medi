@@ -85,6 +85,14 @@ public class MedicineService {
         JSONObject jsonBody = (JSONObject) jsonObject.get("body");
         JSONArray jsonItems = (JSONArray) jsonBody.get("items");
 
+        if (jsonItems == null) {
+            // `jsonItems`가 null일 때 처리
+            System.out.println("Warning: 'items' key is missing or null in the JSON response.");
+            return OnboardingDto.OnboardingResponseDto.builder()
+                    .medicines(new ArrayList<>())
+                    .build();
+        }
+
         List<OnboardingDto.MedicineInfoDto> medicines = new ArrayList<>();
 
         // items 배열을 순회하며 각 아이템의 이름과 이미지를 가져옴

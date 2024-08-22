@@ -23,13 +23,8 @@ public class ResignController {
     @Operation(summary = "회원 탈퇴 API")
     @PostMapping
     public ApiResponse<String> resign(HttpServletRequest request) {
-        System.out.println("여긴가 여긴가");
         String token = jwtAuthenticationFilter.resolveToken(request); // 토큰 추출 (헤더에서)
-        Long Id = Long.valueOf(jwtTokenProvider.getMemberIDFromToken(token)); // 토큰에서 사용자 ID 추출
-
-        System.out.println("제발 한번에 되줘 제발 제발");
-        System.out.println(token);
-        System.out.println(Id);
+        Long Id = Long.valueOf(jwtTokenProvider.getMemberIDFromToken(token)); // 토큰에서 사용자 ID 추
 
         try {
             resignService.resignUser(Id, token);

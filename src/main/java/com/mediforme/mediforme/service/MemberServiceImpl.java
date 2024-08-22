@@ -7,6 +7,7 @@ import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.converter.RegisterConverter;
 import com.mediforme.mediforme.domain.Member;
+import com.mediforme.mediforme.domain.enums.Role;
 import com.mediforme.mediforme.web.dto.MemberLoginResponseDTO;
 import com.mediforme.mediforme.web.dto.MemberRequestDTO;
 import com.mediforme.mediforme.web.dto.RegisterRequestDTO;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private final RegisterService registerService;
     private final RegisterRepository registerRepository;
     private final RegisterConverter registerConverter;
     private final AuthService authService;
@@ -82,7 +84,9 @@ public class MemberServiceImpl implements MemberService {
     // 새로운 사용자에 대해 JWT 토큰을 생성하여 반환하는 메서드. 회원가입 후 첫 로그인 시 사용.
     public MemberLoginResponseDTO getNewMemberLoginResponse(final RegisterRequestDTO.JoinDto memberID) {
         Member member = registerRepository.save(registerConverter.toMember(memberID));
+
         JwtToken jwtToken = authService.getToken(member);
+
         return registerConverter.toMemberLoginResponse(member.getMemberID(), jwtToken);
     }
 

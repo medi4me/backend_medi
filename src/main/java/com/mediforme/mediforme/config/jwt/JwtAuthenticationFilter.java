@@ -34,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Pattern.compile("^/register/.*"),
             Pattern.compile("^/auth/.*"),
             Pattern.compile("^/test/.*"),
+            Pattern.compile("^/find/.*"),
             Pattern.compile("^/favicon.ico$")
     );
 

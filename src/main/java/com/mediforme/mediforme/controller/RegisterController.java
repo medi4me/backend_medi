@@ -68,9 +68,6 @@ public class RegisterController {
     @Operation(summary = "아이디 제출")
     @PostMapping("/memberID")
     public ApiResponse<String> submitMemberID(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
-        // Handle username submission logic
-        String requestId = "UniqueId"; // This should match the ID used in submitPhone
-
         // 이미 존재하는 아이디인지 확인
         if (registerRepository.findByMemberID(request.getMemberID()).isPresent()) {
             return ApiResponse.onFailure("DUPLICATE_MEMBER_ID", "MemberID already exists.", null);
@@ -82,8 +79,6 @@ public class RegisterController {
     @Operation(summary = "성명 제출")
     @PostMapping("/name")
     public ApiResponse<MemberLoginResponseDTO> submitName(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
-        String requestId = "UniqueId";
-
         RegisterRequestDTO.JoinDto newMember = new RegisterRequestDTO.JoinDto();
         newMember.setPhone(request.getPhone());
         newMember.setMemberID(request.getMemberID());
@@ -91,49 +86,9 @@ public class RegisterController {
         newMember.setName(request.getName());
         newMember.setConsent(request.getConsent());
 
-        registerService.registerUser(newMember);
-
         // Automatically log in the new member and generate JWT token
         MemberLoginResponseDTO loginResponse = memberService.getNewMemberLoginResponse(newMember);
 
         return ApiResponse.onSuccess(loginResponse);
-    }
-
-    private boolean isMemberIDValid(String memberID) {
-        // 아이디가 5~30자리인지 확인
-        if (memberID.length() < 5 || memberID.length() > 30) {
-            return false;
-        }
-
-        // 아이디가 숫자와 영문자로만 이루어져 있는지 확인
-        if (!memberID.matches("[a-zA-Z0-9]+")) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-        // 비밀번호가 8자리 이상인지 확인
-        if (password.length() < 8) {
-            return false;
-        }
-
-        // 비밀번호에 숫자가 포함되어 있는지 확인
-        if (!password.matches(".*\\d.*")) {
-            return false;
-        }
-
-        // 비밀번호에 영문자가 포함되어 있는지 확인
-        if (!password.matches(".*[a-zA-Z].*")) {
-            return false;
-        }
-
-        // 비밀번호에 특수문자가 포함되어 있는지 확인
-        if (!password.matches(".*[!@#$%^&*()\\-_=+{};:,<.>].*")) {
-            return false;
-        }
-
-        return true;
     }
 }

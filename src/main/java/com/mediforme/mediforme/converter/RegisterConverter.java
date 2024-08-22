@@ -31,6 +31,7 @@ public class RegisterConverter {
                 .consent(request.getConsent())
                 .status(MemberStatus.ACTIVE)
                 .InactiveDate(null)
+                .role(Role.USER)
                 .build();
     }
 

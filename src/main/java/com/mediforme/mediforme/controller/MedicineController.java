@@ -65,5 +65,18 @@ public class MedicineController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+    @Operation(summary = "약 복용 체크")
+    @PutMapping("/{userMedicineId}/check")
+    public ResponseEntity<Void> checkUserMedicneEat(@PathVariable Long userMedicineId) {
+        medicineService.checkMedi(userMedicineId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "약 알람 체크")
+    @PutMapping("/{userMedicineId}/check/alarm")
+    public ResponseEntity<Void> checkUserMedicneAlarm(@PathVariable Long userMedicineId) {
+        medicineService.checkMediAlarm(userMedicineId);
+        return ResponseEntity.ok().build();
+    }
 
 }

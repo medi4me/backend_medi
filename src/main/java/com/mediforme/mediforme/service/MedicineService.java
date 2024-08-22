@@ -226,6 +226,22 @@ public class MedicineService {
         userMedicineRepository.delete(userMedicine);
     }
 
+    public void checkMedi(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setCheck(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediAlarm(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setAlarm(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
 
 
 

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: {jdbc:mysql://localhost:3306/mediforme}
-    username: {rds root user name}
-    password: {rds user password}
+    url: {jdbc:mysql://localhost:3306/mediforme_db}
+    username: {mediforme_user}
+    password: {password123}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:

@@ -37,8 +37,8 @@ public class MedicineController {
                                                                                 @RequestParam(name = "name") String itemName,
                                                                                 @RequestParam(name = "meal") UserMedicineMeal meal,
                                                                                 @RequestParam(name = "time") String time,
-                                                                                @RequestParam(name = "dosage") String dosage,
-                                                                                @RequestParam(name = "memberId") Long memberId) throws IOException, ParseException{
+                                                                                @RequestParam(name = "dosage") String dosage
+                                                                                ) throws IOException, ParseException{
         OnboardingDto.OnboardingRequestDto requestDto = OnboardingDto.OnboardingRequestDto.builder()
                 .memberID(memberID)
                 .itemName(itemName)

@@ -92,7 +92,7 @@ public class FindController {
 
             return optionalMember.map(member -> {
                 FindResponseDTO responseDTO = new FindResponseDTO();
-                responseDTO.setMemberID(member.getMemberID());
+                responseDTO.setPassword(member.getPassword());
 
                 // 결과를 맵에 저장하여 GetMapping에서 사용
                 findPasswordResultMap.put(requestId, responseDTO);
@@ -103,34 +103,6 @@ public class FindController {
                     ApiResponse.onFailure("ID_NOT_FOUND", "Member ID not found for the provided phone number.", null));
         } else {
             return ApiResponse.onFailure("VERIFICATION_FAILED", "Verification code is incorrect.", null);
-        }
-    }
-
-    @GetMapping("/result-id")
-    public ApiResponse<FindResponseDTO> getResultID() {
-        String requestId = "UniqueId";
-        FindResponseDTO result = findIDResultMap.get(requestId);
-
-        if (result != null) {
-            // 화면에 ID 결과를 보여준 후 맵에서 제거
-            findIDResultMap.remove(requestId);
-            return ApiResponse.onSuccess(result);
-        } else {
-            return ApiResponse.onFailure("RESULT_NOT_FOUND", "No ID result found. Please verify first.", null);
-        }
-    }
-
-    @GetMapping("/result-password")
-    public ApiResponse<FindResponseDTO> getResultPassword() {
-        String requestId = "UniqueId";
-        FindResponseDTO result = findPasswordResultMap.get(requestId);
-
-        if (result != null) {
-            // 화면에 비밀번호 결과를 보여준 후 맵에서 제거
-            findPasswordResultMap.remove(requestId);
-            return ApiResponse.onSuccess(result);
-        } else {
-            return ApiResponse.onFailure("RESULT_NOT_FOUND", "No password result found. Please verify first.", null);
         }
     }
 

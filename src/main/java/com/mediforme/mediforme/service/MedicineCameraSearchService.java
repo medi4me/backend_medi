@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.service;
 
+
 import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;

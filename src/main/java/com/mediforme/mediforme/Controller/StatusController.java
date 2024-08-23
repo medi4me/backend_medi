@@ -65,6 +65,3 @@ public class StatusController {
         return statusService.updateStatusByDate(localDate, statusDto);
     }
 }
-
-
-

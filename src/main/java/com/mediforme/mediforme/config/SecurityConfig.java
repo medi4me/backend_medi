@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/**", "/swagger-ui/**", "/register/**","/auth/**", "/test/**", "/chat-gpt/**",
                                 "/find/**", "/camera", "/medicine-info", "/medicine-ingredient", "/interactions/check","/api/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception

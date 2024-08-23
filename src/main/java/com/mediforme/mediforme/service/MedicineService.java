@@ -6,7 +6,6 @@ import com.mediforme.mediforme.domain.Medicine;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import com.mediforme.mediforme.dto.OnboardingDto;
-import com.mediforme.mediforme.dto.response.MedicineInteractResponseDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.repository.UserMedicineRepository;
@@ -85,14 +84,6 @@ public class MedicineService {
 
         JSONObject jsonBody = (JSONObject) jsonObject.get("body");
         JSONArray jsonItems = (JSONArray) jsonBody.get("items");
-
-        if (jsonItems == null) {
-            // `jsonItems`가 null일 때 처리
-            System.out.println("Warning: 'items' key is missing or null in the JSON response.");
-            return OnboardingDto.OnboardingResponseDto.builder()
-                    .medicines(new ArrayList<>())
-                    .build();
-        }
 
         List<OnboardingDto.MedicineInfoDto> medicines = new ArrayList<>();
 
@@ -234,4 +225,40 @@ public class MedicineService {
 
         userMedicineRepository.delete(userMedicine);
     }
+
+    public void checkMedi(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setCheck(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediAlarm(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setAlarm(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediOff(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setCheck(false);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediAlarmOff(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setAlarm(false);
+        userMedicineRepository.save(userMedicine);
+    }
+
+
+
+
 }

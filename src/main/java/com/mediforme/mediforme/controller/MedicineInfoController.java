@@ -1,5 +1,7 @@
 package com.mediforme.mediforme.controller;
 
+
+import com.mediforme.mediforme.dto.object.MedicineIngredientDto;
 import com.mediforme.mediforme.dto.response.MedicineResponseDto;
 import com.mediforme.mediforme.service.MedicineCameraSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +36,30 @@ public class MedicineInfoController {
             }
 
             return ResponseEntity.ok(responseDtoList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Collections.emptyList());
+        }
+    }
+
+    // 약물 성분 정보 조회
+    @GetMapping("/medicine-ingredient")
+    public ResponseEntity<List<MedicineIngredientDto>> getMedicineIngredients(@RequestParam("name") List<String> itemNames) {
+        List<MedicineIngredientDto> combinedIngredients = new ArrayList<>();
+        try {
+            for (String itemName : itemNames) {
+                List<MedicineIngredientDto> ingredients = medicineCameraService.getMedicineIngredientsByName(itemName);
+                if (!ingredients.isEmpty()) {
+                    combinedIngredients.addAll(ingredients);
+                }
+            }
+
+            if (combinedIngredients.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(combinedIngredients);
 
         } catch (Exception e) {
             e.printStackTrace();

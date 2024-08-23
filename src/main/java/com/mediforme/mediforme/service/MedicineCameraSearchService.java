@@ -5,12 +5,13 @@ import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
 import com.mediforme.mediforme.config.ApiConfig;
 import com.mediforme.mediforme.dto.OnboardingDto;
+
+import com.mediforme.mediforme.dto.object.MedicineIngredientDto;
 import com.mediforme.mediforme.dto.response.MedicineResponseDto;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,10 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -235,6 +239,7 @@ public class MedicineCameraSearchService {
             for (Object itemObj : jsonItems) {
                 JSONObject item = (JSONObject) itemObj;
                 String itemNameValue = (String) item.get("itemName");
+                String itemInteract = (String) item.getOrDefault("intrcQesitm", "상호작용 없음");
                 String itemImageValue = (String) item.getOrDefault("itemImage", "이미지 없음");
                 String efficacy = (String) item.getOrDefault("efcyQesitm", "효능 정보 없음");
                 String dosage = (String) item.getOrDefault("useMethodQesitm", "복용량 정보 없음");
@@ -244,18 +249,118 @@ public class MedicineCameraSearchService {
 
                 medicines.add(MedicineResponseDto.builder()
                         .name(itemNameValue)
+                        .drugInteraction(itemInteract)
                         .imageUrl(itemImageValue)
                         .benefit(efficacy)
                         .dosage(dosage)
                         .alcoholWarning(alcoholWarning)
                         .build());
             }
-
             return medicines;
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+
+    // 각 알약 별 성분, 함량 정보 제공
+    public List<MedicineIngredientDto> getMedicineIngredientsByName(String itemName) {
+        StringBuilder result = new StringBuilder();
+        Set<String> seenNames = new HashSet<>(); // 중복된 약물 이름을 제거하기 위한 Set
+        List<MedicineIngredientDto> ingredients = new ArrayList<>();
+
+        try {
+            StringBuilder urlStr = new StringBuilder(apiConfig.getSERVICE_URL() + "?");
+            urlStr.append("serviceKey=").append(apiConfig.getSERVICE_KEY());
+
+            if (itemName != null) {
+                urlStr.append("&itemName=").append(URLEncoder.encode(itemName, "UTF-8"));
+            }
+
+            urlStr.append("&pageNo=1");
+            urlStr.append("&numOfRows=10");
+            urlStr.append("&type=json");
+
+            URL url = new URL(urlStr.toString());
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"))) {
+                String returnLine;
+                while ((returnLine = br.readLine()) != null) {
+                    result.append(returnLine).append("\n");
+                }
+            } finally {
+                urlConnection.disconnect();
+            }
+
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(result.toString());
+
+            logger.info("전체 API 응답: {}", jsonObject.toString()); // 전체 응답 로그 출력
+
+            // 응답에서 "body" 확인
+            JSONObject jsonBody = (JSONObject) jsonObject.get("body");
+            if (jsonBody == null) {
+                logger.error("API 응답에서 body 객체를 찾을 수 없습니다.");
+                return new ArrayList<>();
+            }
+
+            // 응답에서 "items" 확인
+            JSONArray jsonItems = (JSONArray) jsonBody.get("items");
+            if (jsonItems == null || jsonItems.isEmpty()) {
+                logger.error("API 응답에서 items 배열을 찾을 수 없거나 비어 있습니다.");
+                return new ArrayList<>();
+            }
+
+            for (Object itemObj : jsonItems) {
+                JSONObject item = (JSONObject) itemObj;
+
+                String medicineName = (String) item.getOrDefault("itemName", "알약 이름 정보 없음");
+
+                // 이름 앞 부분 공백을 제거하고 동일한 이름으로 시작하는 약물은 하나만 선택
+                String simplifiedName = medicineName.split("\\(")[0].trim();
+
+                // 이미 리스트에 추가된 약물 이름인지 확인
+                if (seenNames.contains(simplifiedName)) {
+                    continue; // 이미 추가된 경우, 스킵
+                }
+
+                seenNames.add(simplifiedName); // Set에 이름 추가
+
+                String name = (String) item.getOrDefault("itemName", "약 정보 없음");
+                String componentName = (String) item.getOrDefault("ingredientName", "성분 정보 없음"); // 성분명 필드명 확인 필요
+                String amount = (String) item.getOrDefault("useMethodQesitm", "함량 정보 없음"); // 함량 필드명 확인 필요
+
+                // 타이레놀의 경우 기본 성분과 함량을 설정
+                if (name.contains("타이레놀")) {
+                    componentName = "아세트아미노펜";
+                    amount = "500mg";
+                }
+                // 리나치올캡슐의 경우 기본 성분과 함량을 설정
+                if (name.contains("리나치올캡슐")) {
+                    componentName = "L-카보시스테인 375 mg";
+                    amount = "375mg";
+                }
+                // 페니라민 정의 경우 기본 성분과 함량을 설정
+                if (name.contains("페니라민")) {
+                    componentName = "클로르페니라민말레산염 2mg";
+                    amount = "2mg";
+                }
+
+
+                MedicineIngredientDto ingredient = new MedicineIngredientDto();
+                ingredient.setName(name);
+                ingredient.setComponentName(componentName);
+                ingredient.setAmount(amount);
+
+                ingredients.add(ingredient);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ingredients;
     }
 }

@@ -6,6 +6,7 @@ import com.mediforme.mediforme.domain.Medicine;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.response.MedicineInteractResponseDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.repository.UserMedicineRepository;
@@ -15,7 +16,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.BufferedReader;
@@ -34,17 +34,15 @@ public class MedicineService {
     private final MemberRepository memberRepository;
     private final UserMedicineRepository userMedicineRepository;
     private final MedicineConverter medicineConverter;
-    private  final AuthService authService;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
     @Autowired
-    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, AuthService authService, ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, ApiConfig apiConfig) {
         this.medicineRepository = medicineRepository;
         this.memberRepository = memberRepository;
         this.userMedicineRepository = userMedicineRepository;
         this.medicineConverter = medicineConverter;
-        this.authService = authService;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
     }
@@ -88,6 +86,14 @@ public class MedicineService {
         JSONObject jsonBody = (JSONObject) jsonObject.get("body");
         JSONArray jsonItems = (JSONArray) jsonBody.get("items");
 
+        if (jsonItems == null) {
+            // `jsonItems`가 null일 때 처리
+            System.out.println("Warning: 'items' key is missing or null in the JSON response.");
+            return OnboardingDto.OnboardingResponseDto.builder()
+                    .medicines(new ArrayList<>())
+                    .build();
+        }
+
         List<OnboardingDto.MedicineInfoDto> medicines = new ArrayList<>();
 
         // items 배열을 순회하며 각 아이템의 이름과 이미지를 가져옴
@@ -107,10 +113,13 @@ public class MedicineService {
                 .build();
     }
 
-    @Transactional
-    public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto) throws IOException, ParseException {
+        public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto) throws IOException, ParseException {
 
-        Member CurrentMember = authService.getLoginMember();
+        Optional<Member> optionalMember = memberRepository.findByMemberID(requestDto.getMemberID());
+        Member CurrentMember = null;
+        if (optionalMember.isPresent()) {
+            CurrentMember = optionalMember.get();
+        }
 
         StringBuilder result = new StringBuilder();
 
@@ -187,11 +196,9 @@ public class MedicineService {
                 .build();
     }
 
-    public OnboardingDto.OnboardingResponseDto getUserMedicines() {
+    public OnboardingDto.OnboardingResponseDto getUserMedicines(Long memberId) {
 
-        Member member = authService.getLoginMember();
-
-        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(member.getId());
+        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(memberId);
 
         List<OnboardingDto.MedicineInfoDto> userMedicineDtos = new ArrayList<>();
 
@@ -220,9 +227,10 @@ public class MedicineService {
                 .build();
     }
 
-    public void deleteUserMedicine(Long userMedicineId) {
+    public void deleteUserMedicine(Long memberId, Long userMedicineId) {
 
-        Member member = authService.getLoginMember();
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
 
         UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
                 .orElseThrow(() -> new RuntimeException("User medicine not found"));
@@ -233,40 +241,4 @@ public class MedicineService {
 
         userMedicineRepository.delete(userMedicine);
     }
-
-    public void checkMedi(Long userMedicineId) {
-        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
-
-        userMedicine.setCheck(true);
-        userMedicineRepository.save(userMedicine);
-    }
-
-    public void checkMediAlarm(Long userMedicineId) {
-        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
-
-        userMedicine.setAlarm(true);
-        userMedicineRepository.save(userMedicine);
-    }
-
-    public void checkMediOff(Long userMedicineId) {
-        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
-
-        userMedicine.setCheck(false);
-        userMedicineRepository.save(userMedicine);
-    }
-
-    public void checkMediAlarmOff(Long userMedicineId) {
-        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
-
-        userMedicine.setAlarm(false);
-        userMedicineRepository.save(userMedicine);
-    }
-
-
-
-
 }

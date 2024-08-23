@@ -29,12 +29,14 @@ public class MedicineController {
 
     @Operation(summary = "복용하는 약 추가하기")
     @PostMapping("/api/medi/save")
-    public ResponseEntity<OnboardingDto.OnboardingResponseDto> saveMedicineInfo(@RequestParam(name = "name") String itemName,
+    public ResponseEntity<OnboardingDto.OnboardingResponseDto> saveMedicineInfo(@RequestParam(name = "memberID") String memberID
+                                                                                @RequestParam(name = "name") String itemName,
                                                                                 @RequestParam(name = "meal") UserMedicineMeal meal,
                                                                                 @RequestParam(name = "time") String time,
                                                                                 @RequestParam(name = "dosage") String dosage
                                                                                 ) throws IOException, ParseException{
         OnboardingDto.OnboardingRequestDto requestDto = OnboardingDto.OnboardingRequestDto.builder()
+                .memberID(memberID)
                 .itemName(itemName)
                 .meal(meal)
                 .time(time)

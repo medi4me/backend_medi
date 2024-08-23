@@ -113,7 +113,14 @@ public class MedicineService {
                 .build();
     }
 
-    public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto, Long memberId) throws IOException, ParseException {
+        public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto) throws IOException, ParseException {
+
+        Optional<Member> optionalMember = memberRepository.findByMemberID(requestDto.getMemberID());
+        Member CurrentMember = null;
+        if (optionalMember.isPresent()) {
+            CurrentMember = optionalMember.get();
+        }
+
         StringBuilder result = new StringBuilder();
 
         StringBuilder urlStr = new StringBuilder(SERVICE_URL + "?");
@@ -166,7 +173,7 @@ public class MedicineService {
                 .meal(requestDto.getMeal())
                 .time(requestDto.getTime())
                 .dosage(requestDto.getDosage())
-                .member(memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"))) // 사용자 정보
+                .member(CurrentMember)
                 .medicine(medicine)
                 .build();
 

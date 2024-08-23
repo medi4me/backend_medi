@@ -11,6 +11,7 @@ public class OnboardingDto {
     @Getter
     @Builder
     public static class OnboardingRequestDto {
+        private String memberID;
         private String itemName;
         private UserMedicineMeal meal;
         private String time;

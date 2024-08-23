@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .httpBasic().disable()
                 .formLogin().disable()
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/**", "/swagger-ui/**", "/register/**","/auth/**", "/test/**",
+                        .requestMatchers("/v3/**", "/swagger-ui/**", "/register/**","/auth/**", "/test/**", "/chat-gpt/**",
                                 "/find/**", "/camera", "/medicine-info", "/medicine-ingredient", "/interactions/check","/api/**").permitAll()
                         .anyRequest().authenticated()
                 )

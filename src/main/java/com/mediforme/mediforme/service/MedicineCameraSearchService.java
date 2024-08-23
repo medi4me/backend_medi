@@ -339,9 +339,9 @@ public class MedicineCameraSearchService {
                     amount = "500mg";
                 }
                 // 리나치올캡슐의 경우 기본 성분과 함량을 설정
-                if (name.contains("리나치올캡슐")) {
-                    componentName = "L-카보시스테인 375 mg";
-                    amount = "375mg";
+                if (name.contains("초당 아스피린장용정 100mg")) {
+                    componentName = "아스피린 100.0mg";
+                    amount = "100mg";
                 }
                 // 페니라민 정의 경우 기본 성분과 함량을 설정
                 if (name.contains("페니라민")) {

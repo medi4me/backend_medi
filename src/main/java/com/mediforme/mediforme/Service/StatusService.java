@@ -1,9 +1,10 @@
-    package com.mediforme.mediforme.Service;
+    package com.mediforme.mediforme.service;
 
-    import com.mediforme.mediforme.DTO.StatusDto;
-    import com.mediforme.mediforme.DTO.StatusSummaryDto;
+
     import com.mediforme.mediforme.domain.Status;
     import com.mediforme.mediforme.Repository.StatusRepository;
+    import com.mediforme.mediforme.dto.StatusDto;
+    import com.mediforme.mediforme.dto.StatusSummaryDto;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
 

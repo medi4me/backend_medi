@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.DTO;
+package com.mediforme.mediforme.dto;
 
 import lombok.Getter;
 import lombok.Setter;

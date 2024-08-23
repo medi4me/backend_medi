@@ -338,7 +338,7 @@ public class MedicineCameraSearchService {
                     componentName = "아세트아미노펜";
                     amount = "500mg";
                 }
-                // 리나치올캡슐의 경우 기본 성분과 함량을 설정
+                // 아스피린장용정의 경우 기본 성분과 함량을 설정
                 if (name.contains("아스피린장용정")) {
                     componentName = "아스피린 100.0mg";
                     amount = "100mg";

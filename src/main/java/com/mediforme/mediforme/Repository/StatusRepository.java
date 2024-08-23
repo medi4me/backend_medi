@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.Repository;
+package com.mediforme.mediforme.repository;
 
 import com.mediforme.mediforme.domain.Status;
 import org.springframework.data.jpa.repository.JpaRepository;

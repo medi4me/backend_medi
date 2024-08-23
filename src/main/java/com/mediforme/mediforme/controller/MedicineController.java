@@ -1,7 +1,9 @@
 package com.mediforme.mediforme.controller;
 
+import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.enums.UserMedicineMeal;
 import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.MedicineService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.json.simple.parser.ParseException;
@@ -15,9 +17,11 @@ import java.io.IOException;
 @RestController
 public class MedicineController {
     private final MedicineService medicineService;
+    private  final AuthService authService;
 
-    public MedicineController(MedicineService medicineService) {
+    public MedicineController(MedicineService medicineService, AuthService authService) {
         this.medicineService = medicineService;
+        this.authService = authService;
     }
 
 
@@ -29,12 +33,12 @@ public class MedicineController {
 
     @Operation(summary = "복용하는 약 추가하기")
     @PostMapping("/api/medi/save")
-    public ResponseEntity<OnboardingDto.OnboardingResponseDto> saveMedicineInfo(@RequestParam(name = "memberID") String memberID
+    public ResponseEntity<OnboardingDto.OnboardingResponseDto> saveMedicineInfo(@RequestParam(name = "memberID") String memberID,
                                                                                 @RequestParam(name = "name") String itemName,
                                                                                 @RequestParam(name = "meal") UserMedicineMeal meal,
                                                                                 @RequestParam(name = "time") String time,
-                                                                                @RequestParam(name = "dosage") String dosage
-                                                                                ) throws IOException, ParseException{
+                                                                                @RequestParam(name = "dosage") String dosage,
+                                                                                @RequestParam(name = "memberId") Long memberId) throws IOException, ParseException{
         OnboardingDto.OnboardingRequestDto requestDto = OnboardingDto.OnboardingRequestDto.builder()
                 .memberID(memberID)
                 .itemName(itemName)

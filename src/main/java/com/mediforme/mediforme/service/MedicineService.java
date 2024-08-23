@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MedicineService {
@@ -34,15 +35,17 @@ public class MedicineService {
     private final MemberRepository memberRepository;
     private final UserMedicineRepository userMedicineRepository;
     private final MedicineConverter medicineConverter;
+    private  final  AuthService authService;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
     @Autowired
-    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, AuthService authService, ApiConfig apiConfig) {
         this.medicineRepository = medicineRepository;
         this.memberRepository = memberRepository;
         this.userMedicineRepository = userMedicineRepository;
         this.medicineConverter = medicineConverter;
+        this.authService = authService;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
     }
@@ -196,9 +199,11 @@ public class MedicineService {
                 .build();
     }
 
-    public OnboardingDto.OnboardingResponseDto getUserMedicines(Long memberId) {
+    public OnboardingDto.OnboardingResponseDto getUserMedicines() {
 
-        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(memberId);
+        Member member = authService.getLoginMember();
+
+        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(member.getId());
 
         List<OnboardingDto.MedicineInfoDto> userMedicineDtos = new ArrayList<>();
 
@@ -227,10 +232,9 @@ public class MedicineService {
                 .build();
     }
 
-    public void deleteUserMedicine(Long memberId, Long userMedicineId) {
+    public void deleteUserMedicine(Long userMedicineId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+        Member member = authService.getLoginMember();
 
         UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
                 .orElseThrow(() -> new RuntimeException("User medicine not found"));
@@ -240,5 +244,37 @@ public class MedicineService {
         }
 
         userMedicineRepository.delete(userMedicine);
+    }
+
+    public void checkMedi(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setCheck(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediAlarm(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setAlarm(true);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediOff(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setCheck(false);
+        userMedicineRepository.save(userMedicine);
+    }
+
+    public void checkMediAlarmOff(Long userMedicineId) {
+        UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userMedicine ID"));
+
+        userMedicine.setAlarm(false);
+        userMedicineRepository.save(userMedicine);
     }
 }

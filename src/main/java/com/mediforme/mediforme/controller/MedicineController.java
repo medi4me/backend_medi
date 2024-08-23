@@ -79,4 +79,18 @@ public class MedicineController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "약 복용 체크 해제")
+    @PutMapping("/{userMedicineId}/checkOff")
+    public ResponseEntity<Void> checkUserMedicneEatOff(@PathVariable Long userMedicineId) {
+        medicineService.checkMediOff(userMedicineId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "약 알람 체크 해제")
+    @PutMapping("/{userMedicineId}/check/alarmOff")
+    public ResponseEntity<Void> checkUserMedicneAlarmOff(@PathVariable Long userMedicineId) {
+        medicineService.checkMediAlarmOff(userMedicineId);
+        return ResponseEntity.ok().build();
+    }
+
 }

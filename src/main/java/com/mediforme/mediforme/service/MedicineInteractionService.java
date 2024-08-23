@@ -21,7 +21,7 @@ public class MedicineInteractionService {
         List<String> interactions = new ArrayList<>();
 
         // 현재 사용자가 복용 중인 약물 목록을 가져옴
-        OnboardingDto.OnboardingResponseDto userMedicines = medicineService.getUserMedicines(memberId);
+        OnboardingDto.OnboardingResponseDto userMedicines = medicineService.getUserMedicines();
 
         // 사용자가 복용 중인 각 약물을 순회
         for (OnboardingDto.MedicineInfoDto userMed : userMedicines.getMedicines()) {

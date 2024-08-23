@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Pattern.compile("^/medicine-ingredient"),
             Pattern.compile("^/interactions/check"),
             Pattern.compile("^/api/.*"),
+            Pattern.compile("^/chat-gpt/.*"),
             Pattern.compile("^/favicon.ico$")
     );
 

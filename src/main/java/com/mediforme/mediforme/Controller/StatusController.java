@@ -1,8 +1,8 @@
-package com.mediforme.mediforme.Controller;
+package com.mediforme.mediforme.controller;
 
-import com.mediforme.mediforme.DTO.StatusDto;
-import com.mediforme.mediforme.DTO.StatusSummaryDto;
-import com.mediforme.mediforme.Service.StatusService;
+import com.mediforme.mediforme.dto.StatusDto;
+import com.mediforme.mediforme.dto.StatusSummaryDto;
+import com.mediforme.mediforme.service.StatusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

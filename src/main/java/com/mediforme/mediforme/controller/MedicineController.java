@@ -32,8 +32,8 @@ public class MedicineController {
     public ResponseEntity<OnboardingDto.OnboardingResponseDto> saveMedicineInfo(@RequestParam(name = "name") String itemName,
                                                                                 @RequestParam(name = "meal") UserMedicineMeal meal,
                                                                                 @RequestParam(name = "time") String time,
-                                                                                @RequestParam(name = "dosage") String dosage,
-                                                                                @RequestParam(name = "memberId") Long memberId) throws IOException, ParseException{
+                                                                                @RequestParam(name = "dosage") String dosage
+                                                                                ) throws IOException, ParseException{
         OnboardingDto.OnboardingRequestDto requestDto = OnboardingDto.OnboardingRequestDto.builder()
                 .itemName(itemName)
                 .meal(meal)
@@ -41,25 +41,24 @@ public class MedicineController {
                 .dosage(dosage)
                 .build();
 
-        OnboardingDto.OnboardingResponseDto responseDto = medicineService.saveMedicineInfo(requestDto, memberId);
+        OnboardingDto.OnboardingResponseDto responseDto = medicineService.saveMedicineInfo(requestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "사용자가 복용하는 약 조회하기")
     @GetMapping("/list/medicines")
-    public ResponseEntity<OnboardingDto.OnboardingResponseDto> getUserMedicines(@RequestParam Long memberId) {
-        OnboardingDto.OnboardingResponseDto responseDto = medicineService.getUserMedicines(memberId);
+    public ResponseEntity<OnboardingDto.OnboardingResponseDto> getUserMedicines() {
+        OnboardingDto.OnboardingResponseDto responseDto = medicineService.getUserMedicines();
         return ResponseEntity.ok(responseDto);
     }
 
     @Operation(summary = "복용하는 약 삭제하기")
     @DeleteMapping("/delete/userMedicine")
     public ResponseEntity<String> deleteUserMedicine(
-            @RequestParam Long memberId,
             @RequestParam Long userMedicineId) {
 
         try {
-            medicineService.deleteUserMedicine(memberId, userMedicineId);
+            medicineService.deleteUserMedicine(userMedicineId);
             return ResponseEntity.ok("User medicine deleted successfully.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(404).body(e.getMessage());

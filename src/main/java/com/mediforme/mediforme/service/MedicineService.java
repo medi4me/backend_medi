@@ -15,6 +15,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.BufferedReader;
@@ -33,15 +34,17 @@ public class MedicineService {
     private final MemberRepository memberRepository;
     private final UserMedicineRepository userMedicineRepository;
     private final MedicineConverter medicineConverter;
+    private  final AuthService authService;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
     @Autowired
-    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineConverter medicineConverter, AuthService authService, ApiConfig apiConfig) {
         this.medicineRepository = medicineRepository;
         this.memberRepository = memberRepository;
         this.userMedicineRepository = userMedicineRepository;
         this.medicineConverter = medicineConverter;
+        this.authService = authService;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();
     }
@@ -104,7 +107,11 @@ public class MedicineService {
                 .build();
     }
 
-    public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto, Long memberId) throws IOException, ParseException {
+    @Transactional
+    public OnboardingDto.OnboardingResponseDto saveMedicineInfo(OnboardingDto.OnboardingRequestDto requestDto) throws IOException, ParseException {
+
+        Member CurrentMember = authService.getLoginMember();
+
         StringBuilder result = new StringBuilder();
 
         StringBuilder urlStr = new StringBuilder(SERVICE_URL + "?");
@@ -157,7 +164,7 @@ public class MedicineService {
                 .meal(requestDto.getMeal())
                 .time(requestDto.getTime())
                 .dosage(requestDto.getDosage())
-                .member(memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"))) // 사용자 정보
+                .member(CurrentMember)
                 .medicine(medicine)
                 .build();
 
@@ -180,9 +187,11 @@ public class MedicineService {
                 .build();
     }
 
-    public OnboardingDto.OnboardingResponseDto getUserMedicines(Long memberId) {
+    public OnboardingDto.OnboardingResponseDto getUserMedicines() {
 
-        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(memberId);
+        Member member = authService.getLoginMember();
+
+        List<UserMedicine> userMedicines = userMedicineRepository.findByMemberId(member.getId());
 
         List<OnboardingDto.MedicineInfoDto> userMedicineDtos = new ArrayList<>();
 
@@ -211,10 +220,9 @@ public class MedicineService {
                 .build();
     }
 
-    public void deleteUserMedicine(Long memberId, Long userMedicineId) {
+    public void deleteUserMedicine(Long userMedicineId) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+        Member member = authService.getLoginMember();
 
         UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
                 .orElseThrow(() -> new RuntimeException("User medicine not found"));

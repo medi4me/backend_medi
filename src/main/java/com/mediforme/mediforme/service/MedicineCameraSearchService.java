@@ -339,7 +339,7 @@ public class MedicineCameraSearchService {
                     amount = "500mg";
                 }
                 // 리나치올캡슐의 경우 기본 성분과 함량을 설정
-                if (name.contains("초당 아스피린장용정 100mg")) {
+                if (name.contains("아스피린장용정")) {
                     componentName = "아스피린 100.0mg";
                     amount = "100mg";
                 }

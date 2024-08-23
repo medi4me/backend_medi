@@ -6,6 +6,7 @@ import com.mediforme.mediforme.domain.Medicine;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.response.MedicineInteractResponseDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.repository.UserMedicineRepository;

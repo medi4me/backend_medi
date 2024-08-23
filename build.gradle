@@ -26,35 +26,11 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'javax.servlet:javax.servlet-api:4.0.1'
-	implementation 'com.google.cloud:google-cloud-vision:3.45.0' // GCP Vision API 클라이언트
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-	//swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
-	//json simple
-	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-
-	implementation 'net.nurigo:sdk:4.3.0' //SMS Verification
-
-	// JWT Library
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // for JSON parsing (e.g., Jackson or Gson)
-
-	// Spring Security 의존성
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.security:spring-security-web'
-	implementation 'org.springframework.security:spring-security-config'
-
-	// BCrypt Password Encoder
-	implementation 'org.springframework.security:spring-security-crypto'
 }
 
 tasks.named('test') {

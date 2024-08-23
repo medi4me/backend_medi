@@ -34,3 +34,9 @@ spring:
       vision:
         credentials:
           path: ${GOOGLE_APPLICATION_CREDENTIALS}  # 환경 변수로 설정된 경로 사용
+  coolsms:
+    api:
+      key: "NCSB6SRUZRUWBIBZ"
+      secret: "JIP96XAXUCSNFFSDMQO4SNJRLB7VXL29"
+  jwt:
+    secret_key: "AbCdEfGhIjKlMnOpQrStUvWxYz1234567890+AbCdEfGhIjKlMnOpQrStUvWxYz===AbCdEfGhIjKlMnOpQrStUvWxYz1234567890+AbCdEfGhIjKlMnOpQrStUvWxYz==="

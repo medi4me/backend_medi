@@ -3,6 +3,7 @@ package com.mediforme.mediforme.domain;
 import com.mediforme.mediforme.domain.common.BaseEntity;
 import com.mediforme.mediforme.domain.enums.MemberConsent;
 import com.mediforme.mediforme.domain.enums.MemberStatus;
+import com.mediforme.mediforme.domain.enums.Role;
 import com.mediforme.mediforme.domain.mapping.Calendar;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,9 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 15)
+    private String memberID;
 
     @Column(nullable = false, length = 15)
     private String name;
@@ -41,10 +46,18 @@ public class Member extends BaseEntity {
 
     private LocalDate InactiveDate;             // 비활성화 시간 저장
 
+    private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<UserMedicine> UserMedicineList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)           // 양방향 매핑
     private List<Calendar> StatusList = new ArrayList<>();
+
+    public void saveRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

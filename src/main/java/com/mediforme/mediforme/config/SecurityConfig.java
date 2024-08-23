@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .formLogin().disable()
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/**", "/swagger-ui/**", "/register/**","/auth/**", "/test/**",
-                                "/find/**", "/camera/**", "/medicine-info/**", "/medicine-ingredient/**", "/interactions/check/**","/api/**").permitAll()
+                                "/find/**", "/camera", "/medicine-info", "/medicine-ingredient", "/interactions/check","/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

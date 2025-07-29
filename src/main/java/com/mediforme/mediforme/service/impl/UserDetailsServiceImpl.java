@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.service;
+package com.mediforme.mediforme.service.impl;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;

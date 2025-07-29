@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.service;
+package com.mediforme.mediforme.service.impl;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
@@ -6,6 +6,7 @@ import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.repository.MemberRepository;
+import com.mediforme.mediforme.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;

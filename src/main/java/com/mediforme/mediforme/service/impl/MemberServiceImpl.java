@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.service;
+package com.mediforme.mediforme.service.impl;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
@@ -10,6 +10,8 @@ import com.mediforme.mediforme.dto.request.MemberRequestDTO;
 import com.mediforme.mediforme.dto.request.RegisterRequestDTO;
 import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
 import com.mediforme.mediforme.repository.MemberRepository;
+import com.mediforme.mediforme.service.AuthService;
+import com.mediforme.mediforme.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

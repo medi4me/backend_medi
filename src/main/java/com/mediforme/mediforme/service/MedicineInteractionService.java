@@ -1,7 +1,7 @@
 package com.mediforme.mediforme.service;
 
 import com.mediforme.mediforme.dto.response.MedicineInteractResponseDto;
-import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.object.OnboardingDto;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 

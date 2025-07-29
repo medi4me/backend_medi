@@ -2,8 +2,8 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.domain.Member;
-import com.mediforme.mediforme.dto.VerificationDTO;
-import com.mediforme.mediforme.dto.response.FindResponseDTO;
+import com.mediforme.mediforme.dto.object.VerificationDto;
+import com.mediforme.mediforme.dto.response.FindResponseDto;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.util.SmsUtil;
 import jakarta.validation.Valid;
@@ -25,10 +25,10 @@ public class FindController {
     private final SmsUtil smsUtil;
 
     // 인증 코드를 임시 저장할 맵
-    private final ConcurrentHashMap<String, VerificationDTO> verificationCodeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, VerificationDto> verificationCodeMap = new ConcurrentHashMap<>();
 
     @PostMapping("/send-verification-code")
-    public ApiResponse<String> sendVerificationCode(@RequestBody @Valid VerificationDTO request) {
+    public ApiResponse<String> sendVerificationCode(@RequestBody @Valid VerificationDto request) {
 
         // 폰 번호가 registerRepository에 존재하는지 확인
         Member phoneExists = memberRepository.findByPhone(request.getPhone());
@@ -43,7 +43,7 @@ public class FindController {
         smsUtil.sendOne(request.getPhone(), verificationCode);
 
         // 인증 코드를 맵에 저장 (phone -> verificationCode)
-        VerificationDTO data = new VerificationDTO();
+        VerificationDto data = new VerificationDto();
         data.setPhone(request.getPhone());
         data.setVerificationCode(verificationCode);
         verificationCodeMap.put(requestId, data);
@@ -52,7 +52,7 @@ public class FindController {
     }
 
     @PostMapping("/verify-and-find-id")
-    public ApiResponse<FindResponseDTO> verifyAndFindID(@RequestBody @Valid VerificationDTO request) {
+    public ApiResponse<FindResponseDto> verifyAndFindID(@RequestBody @Valid VerificationDto request) {
         String requestId = "UniqueId";
         String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
@@ -64,7 +64,7 @@ public class FindController {
                     memberRepository.findByPhone(verificationCodeMap.get(requestId).getPhone()));
 
             return optionalMember.map(member -> {
-                FindResponseDTO responseDTO = new FindResponseDTO();
+                FindResponseDto responseDTO = new FindResponseDto();
                 responseDTO.setMemberID(member.getMemberID());
 
                 verificationCodeMap.remove(requestId);
@@ -77,7 +77,7 @@ public class FindController {
     }
 
     @PostMapping("/verify-and-find-password")
-    public ApiResponse<FindResponseDTO> verifyAndFindPassword(@RequestBody @Valid VerificationDTO request) {
+    public ApiResponse<FindResponseDto> verifyAndFindPassword(@RequestBody @Valid VerificationDto request) {
         String requestId = "UniqueId";
         String ExpectedVerificationCode = verificationCodeMap.get(requestId).getVerificationCode();
 
@@ -89,7 +89,7 @@ public class FindController {
                     memberRepository.findByPhone(verificationCodeMap.get(requestId).getPhone()));
 
             return optionalMember.map(member -> {
-                FindResponseDTO responseDTO = new FindResponseDTO();
+                FindResponseDto responseDTO = new FindResponseDto();
                 responseDTO.setPassword(member.getPassword());
 
                 verificationCodeMap.remove(requestId);

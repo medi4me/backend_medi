@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.dto;
+package com.mediforme.mediforme.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

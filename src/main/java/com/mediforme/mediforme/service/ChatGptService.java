@@ -1,9 +1,9 @@
 package com.mediforme.mediforme.service;
 
-import com.mediforme.mediforme.dto.QuestionRequestDto;
+import com.mediforme.mediforme.dto.request.QuestionRequestDto;
 import com.mediforme.mediforme.config.ChatGptConfig;
-import com.mediforme.mediforme.dto.ChatGptRequestDto;
-import com.mediforme.mediforme.dto.ChatGptResponseDto;
+import com.mediforme.mediforme.dto.request.ChatGptRequestDto;
+import com.mediforme.mediforme.dto.response.ChatGptResponseDto;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

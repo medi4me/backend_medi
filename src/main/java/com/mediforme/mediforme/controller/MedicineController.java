@@ -1,8 +1,7 @@
 package com.mediforme.mediforme.controller;
 
-import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.enums.UserMedicineMeal;
-import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.object.OnboardingDto;
 import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.MedicineService;
 import io.swagger.v3.oas.annotations.Operation;

@@ -2,9 +2,9 @@
 
 
     import com.mediforme.mediforme.domain.Status;
-    import com.mediforme.mediforme.Repository.StatusRepository;
-    import com.mediforme.mediforme.dto.StatusDto;
-    import com.mediforme.mediforme.dto.StatusSummaryDto;
+    import com.mediforme.mediforme.repository.StatusRepository;
+    import com.mediforme.mediforme.dto.object.StatusDto;
+    import com.mediforme.mediforme.dto.object.StatusSummaryDto;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
 

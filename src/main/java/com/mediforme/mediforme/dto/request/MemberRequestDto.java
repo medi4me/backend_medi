@@ -3,7 +3,7 @@ package com.mediforme.mediforme.dto.request;
 import lombok.Builder;
 import lombok.Getter;
 
-public class MemberRequestDTO
+public class MemberRequestDto
 {
     @Builder
     @Getter

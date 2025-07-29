@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.dto;
+package com.mediforme.mediforme.dto.object;
 
 import com.mediforme.mediforme.domain.enums.UserMedicineMeal;
 import lombok.Builder;

@@ -1,8 +1,8 @@
 package com.mediforme.mediforme.controller;
 
-import com.mediforme.mediforme.dto.ChatGptResponseDto;
+import com.mediforme.mediforme.dto.response.ChatGptResponseDto;
 import com.mediforme.mediforme.service.ChatGptService;
-import com.mediforme.mediforme.dto.QuestionRequestDto;
+import com.mediforme.mediforme.dto.request.QuestionRequestDto;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

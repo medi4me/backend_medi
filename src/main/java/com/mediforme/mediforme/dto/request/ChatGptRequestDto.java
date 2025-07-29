@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.dto;
+package com.mediforme.mediforme.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

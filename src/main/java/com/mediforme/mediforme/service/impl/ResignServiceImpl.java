@@ -1,17 +1,18 @@
-package com.mediforme.mediforme.service;
+package com.mediforme.mediforme.service.impl;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.repository.MemberRepository;
+import com.mediforme.mediforme.service.ResignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ResignServiceImpl implements ResignService{
+public class ResignServiceImpl implements ResignService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider; // JwtTokenProvider
 

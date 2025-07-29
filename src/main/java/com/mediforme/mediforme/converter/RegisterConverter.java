@@ -4,9 +4,9 @@ import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.enums.MemberStatus;
 import com.mediforme.mediforme.domain.enums.Role;
-import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
-import com.mediforme.mediforme.dto.request.RegisterRequestDTO;
-import com.mediforme.mediforme.dto.response.RegisterResponseDTO;
+import com.mediforme.mediforme.dto.response.MemberLoginResponseDto;
+import com.mediforme.mediforme.dto.request.RegisterRequestDto;
+import com.mediforme.mediforme.dto.response.RegisterResponseDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @Component
 public class RegisterConverter {
 
-    public static RegisterResponseDTO.JoinResultDTO toJoinResultDTO(Member member){
-        return RegisterResponseDTO.JoinResultDTO.builder()
+    public static RegisterResponseDto.JoinResultDTO toJoinResultDTO(Member member){
+        return RegisterResponseDto.JoinResultDTO.builder()
                 .memberId(member.getId())
                 .role(Role.USER)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
-    public static Member toMember(RegisterRequestDTO.JoinDto request){
+    public static Member toMember(RegisterRequestDto.JoinDto request){
         return Member.builder()
                 .name(request.getName())
                 .memberID(request.getMemberID())
@@ -35,8 +35,8 @@ public class RegisterConverter {
                 .build();
     }
 
-    public MemberLoginResponseDTO toMemberLoginResponse(String memberId, JwtToken jwtToken) {
-        return MemberLoginResponseDTO.builder()
+    public MemberLoginResponseDto toMemberLoginResponse(String memberId, JwtToken jwtToken) {
+        return MemberLoginResponseDto.builder()
                 .memberID(memberId)
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())

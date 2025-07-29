@@ -2,8 +2,8 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
-import com.mediforme.mediforme.dto.request.MemberRequestDTO;
-import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
+import com.mediforme.mediforme.dto.request.MemberRequestDto;
+import com.mediforme.mediforme.dto.response.MemberLoginResponseDto;
 import com.mediforme.mediforme.service.MemberService;
 import com.mediforme.mediforme.service.TokenBlacklistService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +21,7 @@ public class AuthController {
 
     @Operation(summary = "로그인 API")
     @PostMapping("/login")
-    public ApiResponse<MemberLoginResponseDTO> login(@RequestBody MemberRequestDTO.LoginRequestDto request) {
+    public ApiResponse<MemberLoginResponseDto> login(@RequestBody MemberRequestDto.LoginRequestDto request) {
         return ApiResponse.onSuccess(memberService.login(request));
     }
 

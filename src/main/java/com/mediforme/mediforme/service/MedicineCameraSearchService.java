@@ -5,7 +5,7 @@ import com.google.cloud.vision.v1.*;
 import com.google.cloud.vision.v1.Image;
 import com.google.protobuf.ByteString;
 import com.mediforme.mediforme.config.ApiConfig;
-import com.mediforme.mediforme.dto.OnboardingDto;
+import com.mediforme.mediforme.dto.object.OnboardingDto;
 
 import com.mediforme.mediforme.dto.object.MedicineIngredientDto;
 import com.mediforme.mediforme.dto.response.MedicineResponseDto;

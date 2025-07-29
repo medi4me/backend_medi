@@ -4,7 +4,7 @@ import com.mediforme.mediforme.domain.enums.MemberConsent;
 import lombok.Getter;
 import lombok.Setter;
 
-public class RegisterRequestDTO {
+public class RegisterRequestDto {
     @Getter
     @Setter
     public static class JoinDto{

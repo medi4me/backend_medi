@@ -2,9 +2,9 @@ package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.domain.Member;
-import com.mediforme.mediforme.dto.VerificationDTO;
-import com.mediforme.mediforme.dto.request.RegisterRequestDTO;
-import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
+import com.mediforme.mediforme.dto.object.VerificationDto;
+import com.mediforme.mediforme.dto.request.RegisterRequestDto;
+import com.mediforme.mediforme.dto.response.MemberLoginResponseDto;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.service.MemberService;
 import com.mediforme.mediforme.util.SmsUtil;
@@ -23,7 +23,7 @@ public class RegisterController {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
 
-    private final ConcurrentHashMap<String, VerificationDTO> verificationCodeMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, VerificationDto> verificationCodeMap = new ConcurrentHashMap<>();
 
     @Operation(summary = "휴대폰 번호 제출")
     @PostMapping("/phone")
@@ -44,7 +44,7 @@ public class RegisterController {
         smsUtil.sendOne(phone, verificationCode);
 
         // 인증 코드를 맵에 저장 (phone -> verificationCode)
-        VerificationDTO data = new VerificationDTO();
+        VerificationDto data = new VerificationDto();
         data.setPhone(phone);
         data.setVerificationCode(verificationCode);
         verificationCodeMap.put(requestId, data);
@@ -55,7 +55,7 @@ public class RegisterController {
 
     @Operation(summary = "휴대폰 번호 인증")
     @PostMapping("/verifyPhone")
-    public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDTO request) {
+    public ApiResponse<String> verifyPhone(@RequestBody @Valid VerificationDto request) {
         String requestId = "UniqueId";
 
         String inputCode = request.getVerificationCode();
@@ -74,7 +74,7 @@ public class RegisterController {
 
     @Operation(summary = "아이디 제출")
     @PostMapping("/memberID")
-    public ApiResponse<String> submitMemberID(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
+    public ApiResponse<String> submitMemberID(@RequestBody @Valid RegisterRequestDto.JoinDto request) {
         // 이미 존재하는 아이디인지 확인
         if (memberRepository.findByMemberID(request.getMemberID()).isPresent()) {
             return ApiResponse.onFailure("DUPLICATE_MEMBER_ID", "MemberID already exists.", null);
@@ -85,8 +85,8 @@ public class RegisterController {
 
     @Operation(summary = "성명 제출")
     @PostMapping("/name")
-    public ApiResponse<MemberLoginResponseDTO> submitName(@RequestBody @Valid RegisterRequestDTO.JoinDto request) {
-        RegisterRequestDTO.JoinDto newMember = new RegisterRequestDTO.JoinDto();
+    public ApiResponse<MemberLoginResponseDto> submitName(@RequestBody @Valid RegisterRequestDto.JoinDto request) {
+        RegisterRequestDto.JoinDto newMember = new RegisterRequestDto.JoinDto();
         newMember.setPhone(request.getPhone());
         newMember.setMemberID(request.getMemberID());
         newMember.setPassword(request.getPassword());
@@ -94,7 +94,7 @@ public class RegisterController {
         newMember.setConsent(request.getConsent());
 
         // Automatically log in the new member and generate JWT token
-        MemberLoginResponseDTO loginResponse = memberService.getNewMemberLoginResponse(newMember);
+        MemberLoginResponseDto loginResponse = memberService.getNewMemberLoginResponse(newMember);
 
         return ApiResponse.onSuccess(loginResponse);
     }

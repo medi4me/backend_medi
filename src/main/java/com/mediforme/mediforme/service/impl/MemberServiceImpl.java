@@ -6,9 +6,9 @@ import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.converter.RegisterConverter;
 import com.mediforme.mediforme.domain.Member;
-import com.mediforme.mediforme.dto.request.MemberRequestDTO;
-import com.mediforme.mediforme.dto.request.RegisterRequestDTO;
-import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
+import com.mediforme.mediforme.dto.request.MemberRequestDto;
+import com.mediforme.mediforme.dto.request.RegisterRequestDto;
+import com.mediforme.mediforme.dto.response.MemberLoginResponseDto;
 import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.MemberService;
@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     //사용자의 로그인 인증을 처리하고, JWT 토큰을 발급하여 반환하는 메서드
-    public MemberLoginResponseDTO login(MemberRequestDTO.LoginRequestDto request){
+    public MemberLoginResponseDto login(MemberRequestDto.LoginRequestDto request){
         String memberID = request.getMemberID();
         String password = request.getPassword();
 
@@ -54,14 +54,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 기존 사용자에 대해 JWT 토큰을 생성하여 반환하는 메서드. 특히 리프레시 토큰을 사용해 새로운 액세스 토큰을 발급할 때 유용
-    public MemberLoginResponseDTO getMemberLoginResponse(final Member member) {
+    public MemberLoginResponseDto getMemberLoginResponse(final Member member) {
         // TODO RefreshToken으로 AccessToken만 재발급 받도록 구현
         JwtToken jwtToken = authService.getToken(member);
         return registerConverter.toMemberLoginResponse(member.getMemberID(), jwtToken);
     }
 
     // 새로운 사용자에 대해 JWT 토큰을 생성하여 반환하는 메서드. 회원가입 후 첫 로그인 시 사용.
-    public MemberLoginResponseDTO getNewMemberLoginResponse(final RegisterRequestDTO.JoinDto memberID) {
+    public MemberLoginResponseDto getNewMemberLoginResponse(final RegisterRequestDto.JoinDto memberID) {
         Member member = memberRepository.save(registerConverter.toMember(memberID));
 
         JwtToken jwtToken = authService.getToken(member);

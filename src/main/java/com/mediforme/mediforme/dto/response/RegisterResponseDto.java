@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-public class RegisterResponseDTO {
+public class RegisterResponseDto {
     @Builder
     @Getter
     @NoArgsConstructor

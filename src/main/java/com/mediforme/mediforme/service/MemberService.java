@@ -1,13 +1,13 @@
 package com.mediforme.mediforme.service;
 
 import com.mediforme.mediforme.domain.Member;
-import com.mediforme.mediforme.dto.request.MemberRequestDTO;
-import com.mediforme.mediforme.dto.request.RegisterRequestDTO;
-import com.mediforme.mediforme.dto.response.MemberLoginResponseDTO;
+import com.mediforme.mediforme.dto.request.MemberRequestDto;
+import com.mediforme.mediforme.dto.request.RegisterRequestDto;
+import com.mediforme.mediforme.dto.response.MemberLoginResponseDto;
 
 public interface MemberService {
-    MemberLoginResponseDTO login(MemberRequestDTO.LoginRequestDto request);
-    MemberLoginResponseDTO getMemberLoginResponse(final Member member);
-    MemberLoginResponseDTO getNewMemberLoginResponse(final RegisterRequestDTO.JoinDto memberID);
+    MemberLoginResponseDto login(MemberRequestDto.LoginRequestDto request);
+    MemberLoginResponseDto getMemberLoginResponse(final Member member);
+    MemberLoginResponseDto getNewMemberLoginResponse(final RegisterRequestDto.JoinDto memberID);
     String findMemberNameByID(String memberID);
 }

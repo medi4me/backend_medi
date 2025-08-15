@@ -32,10 +32,10 @@ public class StatusConverter {
     public void updateEntityFromDto(StatusDto dto, Status target){
         if (dto==null|| target == null) return;
         target.setStatus(dto.getStatus());
-        target.setDate(dto.getDate());
+        target.setDate(dto.getDate()); // 여기서 date 변경 x
         target.setDrink(dto.getDrink());
         target.setMemo(dto.getMemo());
-        target.setStatusCondition(dto.getStatusCondition());
+        if (dto.getStatusCondition() != null) target.setStatusCondition(dto.getStatusCondition());
 
     }
 }

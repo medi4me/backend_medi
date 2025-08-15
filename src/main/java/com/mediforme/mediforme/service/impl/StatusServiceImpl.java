@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.service.impl;
 
+import com.mediforme.mediforme.converter.StatusConverter;
 import com.mediforme.mediforme.domain.Status;
 import com.mediforme.mediforme.dto.object.StatusDto;
 import com.mediforme.mediforme.dto.object.StatusSummaryDto;
@@ -13,31 +14,32 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
 
     private final StatusRepository statusRepository;
+    private final StatusConverter statusConverter;
 
     @Override
     public StatusDto saveStatus(StatusDto statusDto) {
-        Status status = toEntity(statusDto);
+        Status status = statusConverter.toEntity(statusDto);
         Status savedStatus = statusRepository.save(status);
-        return toDto(savedStatus);
+        return statusConverter.toDto(savedStatus);
     }
 
     @Override
     public List<StatusDto> getAllStatuses() {
-        return statusRepository.findAll()
-                .stream()
-                .map(this::toDto)
+        return statusRepository.findAll().stream()
+                .map(statusConverter::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public StatusDto getStatusById(Long id) {
         return statusRepository.findById(id)
-                .map(this::toDto)
+                .map(statusConverter::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found"));
     }
 
@@ -49,7 +51,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusDto getStatusByDate(LocalDate date) {
         return statusRepository.findByDate(date)
-                .map(this::toDto)
+                .map(statusConverter::toDto)
                 .orElse(null);
     }
 
@@ -58,14 +60,18 @@ public class StatusServiceImpl implements StatusService {
         Status existing = statusRepository.findByDate(date)
                 .orElseThrow(() -> new EntityNotFoundException("Status not found for the date: " + date));
 
-        existing.setStatus(statusDto.getStatus());
-        existing.setDrink(statusDto.getDrink());
-        existing.setStatusCondition(statusDto.getStatusCondition());
-        existing.setMemo(statusDto.getMemo());
-        existing.setDate(statusDto.getDate());
+//        existing.setStatus(statusDto.getStatus());
+//        existing.setDrink(statusDto.getDrink());
+//        existing.setStatusCondition(statusDto.getStatusCondition());
+//        existing.setMemo(statusDto.getMemo());
+//        existing.setDate(statusDto.getDate()); // impl내에서 직접적인 방식
+
+        statusConverter.updateEntityFromDto(statusDto,existing);
+
+
 
         Status updated = statusRepository.save(existing);
-        return toDto(updated);
+        return statusConverter.toDto(updated);
     }
 
     @Override

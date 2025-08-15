@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 //import org.antlr.v4.runtime.misc.NotNull;
-import jakarta.validation.constraints.NotNull; //
+import jakarta.validation.constraints.NotNull; // Bean validation
 
 
 import java.time.LocalDate;

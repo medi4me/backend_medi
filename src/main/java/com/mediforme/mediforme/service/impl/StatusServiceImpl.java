@@ -79,7 +79,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public List<StatusSummaryDto> getStatusSummaryForWeek(LocalDate startDate, LocalDate endDate) {
         List<Status> statuses = statusRepository.findByDateBetweenOrderByDateAsc(startDate, endDate);
-
+        //정렬 메소드 사용
         return statuses.stream().map(status -> {
             StatusSummaryDto dto = new StatusSummaryDto();
             dto.setDate(status.getDate().toString());

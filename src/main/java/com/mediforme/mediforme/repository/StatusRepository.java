@@ -14,5 +14,8 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     Optional<Status> findByDate(LocalDate date);
 
     List<Status> findByDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<Status>findByDateBetweenOrderByDateAsc(LocalDate startDate, LocalDate endDate);
+    // OrderByDateAsc 키워드를 추가함으로써 반환 리스트를 날짜 오름차순으로 정렬
 }
 ;

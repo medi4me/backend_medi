@@ -68,6 +68,8 @@ public class StatusServiceImpl implements StatusService {
 
         statusConverter.updateEntityFromDto(statusDto,existing);
 
+        existing.setDate(date);
+
 
 
         Status updated = statusRepository.save(existing);
@@ -76,7 +78,8 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<StatusSummaryDto> getStatusSummaryForWeek(LocalDate startDate, LocalDate endDate) {
-        List<Status> statuses = statusRepository.findByDateBetween(startDate, endDate);
+        List<Status> statuses = statusRepository.findByDateBetweenOrderByDateAsc(startDate, endDate);
+
         return statuses.stream().map(status -> {
             StatusSummaryDto dto = new StatusSummaryDto();
             dto.setDate(status.getDate().toString());

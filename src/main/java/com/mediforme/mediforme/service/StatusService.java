@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface StatusService {
+
     StatusDto saveStatus(StatusDto statusDto);
     List<StatusDto> getAllStatuses();
     StatusDto getStatusById(Long id);

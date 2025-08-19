@@ -4,7 +4,6 @@ import com.mediforme.mediforme.config.ApiConfig;
 import com.mediforme.mediforme.domain.Medicine;
 import com.mediforme.mediforme.domain.Member;
 import com.mediforme.mediforme.domain.mapping.UserMedicine;
-import com.mediforme.mediforme.dto.object.MedicineDto;
 import com.mediforme.mediforme.dto.object.OnboardingDto;
 import com.mediforme.mediforme.repository.MedicineRepository;
 import com.mediforme.mediforme.repository.MemberRepository;
@@ -33,17 +32,15 @@ public class MedicineService {
     private final MedicineRepository medicineRepository;
     private final MemberRepository memberRepository;
     private final UserMedicineRepository userMedicineRepository;
-    private final MedicineDto medicineDto;
     private  final  AuthService authService;
     private final String SERVICE_URL;
     private final String SERVICE_KEY;
 
     @Autowired
-    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, MedicineDto medicineDto, AuthService authService, ApiConfig apiConfig) {
+    public MedicineService(MedicineRepository medicineRepository, MemberRepository memberRepository, UserMedicineRepository userMedicineRepository, AuthService authService, ApiConfig apiConfig) {
         this.medicineRepository = medicineRepository;
         this.memberRepository = memberRepository;
         this.userMedicineRepository = userMedicineRepository;
-        this.medicineDto = medicineDto;
         this.authService = authService;
         this.SERVICE_URL = apiConfig.getSERVICE_URL();
         this.SERVICE_KEY = apiConfig.getSERVICE_KEY();

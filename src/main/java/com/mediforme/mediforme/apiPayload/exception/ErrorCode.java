@@ -15,11 +15,12 @@ public enum ErrorCode {
     USER_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "COMMON404", "관리자만 사용 가능한 API입니다."),
     UNKNOWN_INQUIRY_TYPE(HttpStatus.BAD_REQUEST, "COMMON405", "알 수 없는 조회 타입입니다."),
 
-    // Member
+    // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER401", "사용자를 찾을 수 없습니다."),
     DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "USER402", "이미 존재하는 사용자입니다."),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "USER403", "권한이 존재하지 않습니다."),
     DUPLICATED_USER_LOGIN_ID(HttpStatus.CONFLICT, "USER404", "이미 존재하는 사용자 로그인 아이디입니다."),
+    DUPLICATED_PHONE(HttpStatus.CONFLICT, "USER405", "이미 존재하는 사용자 전화번호입니다."),
 
     //Email
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "email401", "중복된 이메일이 존재합니다."),

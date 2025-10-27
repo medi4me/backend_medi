@@ -1,12 +1,16 @@
 package com.mediforme.mediforme.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
-public class MemberLoginResponseDto {
-    private String memberID;
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserLoginResponseDto {
+    private String userLoginId;
     private String accessToken;
     private String refreshToken;
 }

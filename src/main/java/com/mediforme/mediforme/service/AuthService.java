@@ -1,12 +1,12 @@
 package com.mediforme.mediforme.service;
 
 import com.mediforme.mediforme.config.jwt.JwtToken;
-import com.mediforme.mediforme.domain.Member;
+import com.mediforme.mediforme.domain.User;
 
 public interface AuthService {
-    JwtToken getToken(Member member);
+    JwtToken getToken(User user);
 
-    Long getLoginMemberId();
+    String getLoginUserLoginId();
 
-    Member getLoginMember();
+    User getLoginUser();
 }

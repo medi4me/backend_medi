@@ -1,45 +1,60 @@
 package com.mediforme.mediforme.domain;
 
 import com.mediforme.mediforme.domain.common.BaseEntity;
-import com.mediforme.mediforme.domain.mapping.UserMedicine;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-@Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Entity
+@Table(name = "t_medicine")
 public class Medicine extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "medicine_id")
+    private Long medicineId;
 
-    @Column(nullable = false, length = 150)
+    @Column(name = "medicine_name", nullable = false, length = 150)
     private String name;
 
-    @Column(nullable = false, columnDefinition = "Text")
-    private String description;             // 약 설명 : info -> description 수정
+    @Column(name = "medicine_name", length = 30, nullable = false)
+    private String medicineName;
 
-    @Column(nullable = false, columnDefinition = "Text")
-    private String benefit;                 // 약 효능
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
-//    @Column(nullable = false, columnDefinition = "Text")
-    private String drugInteraction;         // 약물 상호작용
+    @Column(name = "medicine_benefit", columnDefinition = "TEXT")
+    private String medicineBenefit;
 
-    @Column(name = "image_url")
-    private String itemImage;
+    @Column(name = "medicine_component", length = 50)
+    private String medicineComponent;
 
-//    @Column(nullable = false, length = 50)
-//    private String component;               // 성분명
+    @Column(name = "drug_interaction", columnDefinition = "TEXT")
+    private String drugInteraction;
 
+    @Column(name = "medicine_amount")
+    private Integer medicineAmount;
 
-//    private Integer amount;                     // 함량
+    @Column(name = "image_url", length = 255)
+    private String imageUrl;
 
-    @OneToMany(mappedBy = "medicine", cascade = CascadeType.ALL)           // 양방향 매핑
-    private List<UserMedicine> UserMedicineList = new ArrayList<>();
+    public void updateDescription(String newDescription, Long modifierId) {
+        this.description = newDescription;
+        this.setModifierId(modifierId);
+    }
+    public void updateBenefit(String newBenefit, Long modifierId) {
+        this.medicineBenefit = newBenefit;
+        this.setModifierId(modifierId);
+    }
+    public void updateAmount(Integer newAmount, Long modifierId) {
+        this.medicineAmount = newAmount;
+        this.setModifierId(modifierId);
+    }
+    public void updateImage(String newImageUrl, Long modifierId) {
+        this.imageUrl = newImageUrl;
+        this.setModifierId(modifierId);
+    }
 }

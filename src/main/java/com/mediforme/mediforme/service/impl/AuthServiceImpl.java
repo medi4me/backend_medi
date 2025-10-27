@@ -5,7 +5,6 @@ import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.config.jwt.JwtToken;
 import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.domain.User;
-import com.mediforme.mediforme.repository.MemberRepository;
 import com.mediforme.mediforme.repository.UserRepository;
 import com.mediforme.mediforme.service.AuthService;
 import lombok.RequiredArgsConstructor;

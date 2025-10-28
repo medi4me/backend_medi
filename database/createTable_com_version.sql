@@ -109,6 +109,7 @@ CREATE TABLE t_status (
                           drink_cd BIGINT NOT NULL COMMENT '공통코드 참조 - 안마심/소주/맥주',
                           condition_cd BIGINT NOT NULL COMMENT '공통코드 참조 - 피곤/상쾌',
                           status_memo TEXT NULL,
+                          status_date DATE NOT NULL COMMENT '상태 기록 날짜',
                           created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                           creator_id BIGINT NOT NULL,
                           modified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

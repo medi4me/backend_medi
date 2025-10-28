@@ -1,75 +1,50 @@
 package com.mediforme.mediforme.domain;
 
 import com.mediforme.mediforme.domain.common.BaseEntity;
-import com.mediforme.mediforme.domain.enums.StatusCondition;
-import com.mediforme.mediforme.domain.enums.StatusDrink;
-import com.mediforme.mediforme.domain.enums.StatusStatus;
-import com.mediforme.mediforme.domain.mapping.Calendar;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
+
 @Getter
-@Table(name = "status_table")
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@Entity
+@Table(name = "t_status")
 public class Status extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "status_id")
+    private Long statusId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 15)
-    private StatusStatus status;                // Good, notBad, bad
+    // 공통코드 참조
+    @Column(name = "default_status_cd", nullable = false)       // 기본 상태 (좋음, 보통, 나쁨)
+    private Long defaultStatusCd;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 15)
-    private StatusDrink drink;                  // drink, noDrink
+    @Column(name = "drink_cd", nullable = false)
+    private Long drinkCd;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 15)
-    private StatusCondition statusCondition;          // Good, notBad, bad
+    @Column(name = "condition_cd", nullable = false)            // 피곤, 상쾌 등
+    private Long conditionCd;
 
+    @Column(name = "status_memo", columnDefinition = "TEXT")
+    private String statusMemo;
 
-    private String memo;        // 상태 메모
+    @Column(name = "status_date", nullable = false)
+    private LocalDate statusDate;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)           // 양방향 매핑
-    private List<Calendar> StatusList = new ArrayList<>();
+    // FK - User
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
-    @Column(nullable = false)
-    private LocalDate date; //캘린더
-
-    @Builder
-    public Status(StatusStatus status, StatusDrink drink, StatusCondition statusCondition, String memo, LocalDate date) {
-        this.status = status;
-        this.drink = drink;
-        this.statusCondition = statusCondition;
-        this.memo = memo;
-        this.date = date;
-    }
-
-    public void setStatus(StatusStatus status) {
-        this.status = status;
-    }
-
-    public void setDrink(StatusDrink drink) {
-        this.drink = drink;
-    }
-
-    public void setStatusCondition(StatusCondition statusCondition) {
-        this.statusCondition = statusCondition;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void updateStatus(Long defaultStatusCd, Long drinkCd, Long conditionCd, String memo, LocalDate statusDate, Long modifierId) {
+        this.defaultStatusCd = defaultStatusCd;
+        this.drinkCd = drinkCd;
+        this.conditionCd = conditionCd;
+        this.statusMemo = memo;
+        this.statusDate = statusDate;
+        this.setModifierId(modifierId);
     }
 }

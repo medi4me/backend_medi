@@ -11,8 +11,9 @@ import java.util.Optional;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
 
-    Optional<Status> findByDate(LocalDate date);
+    Optional<Status> findByUserIdAndStatusDate(Long userId, LocalDate statusDate);
 
-    List<Status> findByDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Status> findByUserIdAndStatusDateBetween(Long userId, LocalDate startDate, LocalDate endDate);
+
+    List<Status> findByUserId(Long userId);
 }
-;

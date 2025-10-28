@@ -34,9 +34,11 @@ CREATE TABLE t_common_code (
 -- 사용자
 CREATE TABLE t_user (
                         user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                        user_login_id VARCHAR(30) NOT NULL UNIQUE,          -- 로그인용 ID 추가
                         user_name VARCHAR(30) NOT NULL,
                         password VARCHAR(100) NOT NULL,
                         phone VARCHAR(15) NOT NULL,
+                        role_cd BIGINT NOT NULL COMMENT '공통코드 참조 - ROLE_USER / ROLE_ADMIN',
                         consent_cd BIGINT NOT NULL COMMENT '공통코드 참조',
                         status_cd BIGINT NOT NULL COMMENT '공통코드 참조',
                         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

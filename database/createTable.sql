@@ -19,10 +19,10 @@ create table if not exists medicine
     );
 
 
--- member : 사용자 계정 테이블
+-- user : 사용자 계정 테이블
 --  - 회원 정보 (아이디, 이름, 전화번호, 비밀번호, 권한 등)
 --  - 상태(활성/비활성), 동의 여부, refresh token 관리
-create table if not exists member
+create table if not exists user
 (
     inactive_date date                         null,
     created_at    datetime(6)                  null,
@@ -70,7 +70,7 @@ create table if not exists calendar
     updated_at datetime(6) null,
     date       varchar(40) not null,
     constraint FK4xr1o686dphnmfq2ehy0d166
-    foreign key (member_id) references member (id),
+    foreign key (member_id) references user (id),
     constraint FK6mcpgj7lrsnr4wfej2x9bnq5y
     foreign key (status_id) references status_table (id)
     );
@@ -79,7 +79,7 @@ create table if not exists calendar
 -- user_medicine : 사용자 복용 약 테이블
 --  - 사용자가 어떤 약을 복용하는지 기록
 --  - 알람 여부, 복용 시간, 식사 전/후 등 기록
---  - medicine, member 테이블과 연관
+--  - medicine, user 테이블과 연관
 create table if not exists user_medicine
 (
     is_alarm    bit         not null,
@@ -94,7 +94,7 @@ create table if not exists user_medicine
     time        varchar(30) null,
     meal        varchar(15) null,
     constraint FK604c1kl9ngvcd2toodhoe6twv
-    foreign key (member_id) references member (id),
+    foreign key (member_id) references user (id),
     constraint FKnfn672hqfum0atlesq0pos45s
     foreign key (medicine_id) references medicine (id)
     );

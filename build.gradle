@@ -55,6 +55,10 @@ dependencies {
 
 	// BCrypt Password Encoder
 	implementation 'org.springframework.security:spring-security-crypto'
+
+	// MapStruct
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 }
 
 tasks.named('test') {

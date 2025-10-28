@@ -9,13 +9,13 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class ChatGptRequestDto implements Serializable {
+public class ChatbotRequestDto implements Serializable {
 
     private String model;
     private List<Message> messages;
 
     @Builder
-    public ChatGptRequestDto(String model, List<Message> messages) {
+    public ChatbotRequestDto(String model, List<Message> messages) {
         this.model = model;
         this.messages = messages;
     }

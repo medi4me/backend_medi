@@ -30,6 +30,9 @@ public class User extends BaseEntity {
     private String phone;
 
     // 공통 코드 참조 (조인 없이 id만 저장)
+    @Column(name = "role_cd", nullable = false)
+    private Long roleCd;   // 역할 코드 (1001=USER, 1002=ADMIN)
+
     @Column(name = "consent_cd", nullable = false)
     private Long consentCd;
 

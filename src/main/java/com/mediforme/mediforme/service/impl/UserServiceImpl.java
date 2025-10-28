@@ -83,7 +83,8 @@ public class UserServiceImpl implements UserService {
                 .password(encodedPassword)
                 .phone(request.getPhone())
                 .consentCd(request.getConsentCd())
-                .statusCd(1001L) // ACTIVE 상태 공통코드
+                .statusCd(1001L)    // ACTIVE 상태 공통코드
+                .roleCd(1001L)      // ROLE_USER 기본값
                 .build();
         User savedUser = userRepository.save(user);
 

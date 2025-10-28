@@ -1,6 +1,6 @@
 package com.mediforme.mediforme.config;
 
-public class ChatGptConfig {
+public class OpenAIConfig {
     public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
     public static final String API_KEY = System.getenv("OPENAI_API_KEY");

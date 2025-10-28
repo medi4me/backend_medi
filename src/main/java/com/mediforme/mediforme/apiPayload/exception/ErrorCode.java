@@ -32,6 +32,13 @@ public enum ErrorCode {
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT403", "지원하지 않는 JWT 토큰입니다."),
     EMPTY_JWT_CLAIMS(HttpStatus.UNAUTHORIZED, "JWT404", "JWT claims string is empty입니다."),
     UNAUTHORIZED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT405", "권한 정보가 없는 토큰입니다."),
+
+    // Medicine
+    MEDICINE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEDICINE401", "약물을 찾을 수 없습니다."),
+    USER_MEDICINE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEDICINE402", "사용자 복용 약물을 찾을 수 없습니다."),
+
+    // Authorized Action
+    UNAUTHORIZED_ACTION(HttpStatus.UNAUTHORIZED, "ACTION401", "접근 권한이 없습니다."),
     ;
 
     private final HttpStatus httpStatus;

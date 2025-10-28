@@ -13,6 +13,7 @@ CREATE TABLE t_common_group_code (
                                      modifier_id BIGINT NOT NULL
 );
 
+
 -- 공통 코드
 CREATE TABLE t_common_code (
                                com_code_id BIGINT AUTO_INCREMENT PRIMARY KEY,

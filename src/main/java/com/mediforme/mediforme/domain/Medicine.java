@@ -17,9 +17,6 @@ public class Medicine extends BaseEntity {
     @Column(name = "medicine_id")
     private Long medicineId;
 
-    @Column(name = "medicine_name", nullable = false, length = 150)
-    private String name;
-
     @Column(name = "medicine_name", length = 30, nullable = false)
     private String medicineName;
 

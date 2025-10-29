@@ -135,7 +135,7 @@ public class MedicineServiceImpl implements MedicineService {
                 .map(um -> MedicineInteractionDto.builder()
                         .userMedicineId(um.getUserMedicineId())
                         .medicineName(medicineRepository.findById(um.getMedicineId())
-                                .map(Medicine::getName)
+                                .map(Medicine::getMedicineName)
                                 .orElse("알 수 없음"))
                         .component(null)
                         .build())

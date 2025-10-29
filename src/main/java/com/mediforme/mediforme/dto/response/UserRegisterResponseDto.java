@@ -1,6 +1,5 @@
 package com.mediforme.mediforme.dto.response;
 
-import com.mediforme.mediforme.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

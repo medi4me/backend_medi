@@ -37,7 +37,7 @@ public class OnboardingServiceImpl implements OnboardingService {
         User user = userRepository.findByUserLoginId(request.getUserLoginId())
                 .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
 
-        Medicine medicine = medicineRepository.findByName(request.getItemName())
+        Medicine medicine = medicineRepository.findByMedicineName(request.getItemName())
                 .orElseGet(() -> medicineRepository.save(Medicine.builder()
                         .medicineName(request.getItemName())
                         .description("등록된 설명 없음")

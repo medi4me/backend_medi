@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@Tag(name = "Medicine Info", description = "공공 약물 데이터 API 기반 약물 정보 조회")
+@Tag(name = "Medicine Info Data", description = "공공 약물 데이터 API 기반 약물 정보 조회")
 @RestController
-@RequestMapping("/v2/medicine")
+@RequestMapping("/v2/medicine-data")
 @RequiredArgsConstructor
 public class MedicineInfoController {
 

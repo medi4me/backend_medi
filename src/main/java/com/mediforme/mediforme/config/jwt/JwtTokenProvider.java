@@ -2,7 +2,6 @@ package com.mediforme.mediforme.config.jwt;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
-import com.mediforme.mediforme.domain.enums.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -36,14 +35,14 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(secretByteKey);
     }
 
-    public JwtToken generateToken(String memberId) {
+    public JwtToken generateToken(String userLoginId) {
 
         long now = new Date().getTime();
 
         // Access Token 생성
         String accessToken = Jwts.builder()
-                .setSubject(memberId) // payload "sub" : name"
-                .claim(AUTHORITIES_KEY, Role.USER) // payload "auth" : "USER"
+                .setSubject(userLoginId) // payload "sub" : name"
+                .claim(AUTHORITIES_KEY, "ROLE_USER") // payload "auth" : "USER"
                 .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_LENGTH))
                 .signWith(key, SignatureAlgorithm.HS512) // header "alg" : 해싱 알고리즘 HS512
                 .compact();
@@ -61,8 +60,8 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    // JWT에서 사용자 이름 추출
-    public String getMemberIDFromToken(String token) {
+    // JWT에서 사용자 로그인 Id (userLoginId) 추출
+    public String getUserLoginIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -71,24 +70,18 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    // Authentication 객체 생성
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
 
-        System.out.println("살려주세요 제발");
-        System.out.println(claims);
-        System.out.println(claims.getSubject());
-        System.out.println(claims.get("role", String.class));
-        System.out.println(claims.get("authorities", String.class));
-        System.out.println(claims.get("auth"));;
-        System.out.println("--------------------------");
-
-        if(claims.get("auth") == null) {
+        if(claims.get(AUTHORITIES_KEY) == null) {
             throw new CustomApiException(ErrorCode.UNAUTHORIZED_JWT_TOKEN);
         }
 
+        // 문자열 -> 권한 리스트로 변환
         Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("auth").toString().split(","))
+                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .toList();
 
@@ -97,6 +90,7 @@ public class JwtTokenProvider {
 
     }
 
+    // 토큰 유효성 검사
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -128,12 +122,6 @@ public class JwtTokenProvider {
                     .getBody();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
-        } catch (UnsupportedJwtException e) {
-            throw new CustomApiException(ErrorCode.UNSUPPORTED_JWT_TOKEN);
-        } catch (IllegalArgumentException e) {
-            throw new CustomApiException(ErrorCode.EMPTY_JWT_CLAIMS);
         }
     }
 

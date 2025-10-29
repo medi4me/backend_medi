@@ -3,7 +3,6 @@ package com.mediforme.mediforme.domain;
 import com.mediforme.mediforme.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
 

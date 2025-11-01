@@ -3,17 +3,14 @@ package com.mediforme.mediforme.controller;
 import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
-import com.mediforme.mediforme.config.jwt.JwtAuthenticationFilter;
-import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
+import com.mediforme.mediforme.config.security.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.ResignService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.TableGenerator;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

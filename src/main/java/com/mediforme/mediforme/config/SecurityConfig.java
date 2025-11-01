@@ -1,9 +1,9 @@
 package com.mediforme.mediforme.config;
 
-import com.mediforme.mediforme.config.jwt.JwtAccessDeniedHandler;
-import com.mediforme.mediforme.config.jwt.JwtAuthenticationEntryPoint;
-import com.mediforme.mediforme.config.jwt.JwtAuthenticationFilter;
-import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
+import com.mediforme.mediforme.config.security.jwt.JwtAccessDeniedHandler;
+import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationEntryPoint;
+import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationFilter;
+import com.mediforme.mediforme.config.security.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

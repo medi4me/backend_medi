@@ -1,7 +1,7 @@
 package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
-import com.mediforme.mediforme.config.jwt.JwtTokenProvider;
+import com.mediforme.mediforme.config.security.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.dto.request.UserLoginRequestDto;
 import com.mediforme.mediforme.dto.response.UserLoginResponseDto;
 import com.mediforme.mediforme.service.UserService;

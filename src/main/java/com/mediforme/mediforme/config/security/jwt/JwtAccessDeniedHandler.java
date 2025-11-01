@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.config.jwt;
+package com.mediforme.mediforme.config.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

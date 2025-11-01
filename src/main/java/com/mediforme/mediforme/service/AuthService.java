@@ -1,6 +1,6 @@
 package com.mediforme.mediforme.service;
 
-import com.mediforme.mediforme.config.jwt.JwtToken;
+import com.mediforme.mediforme.config.security.jwt.JwtToken;
 import com.mediforme.mediforme.domain.User;
 
 public interface AuthService {

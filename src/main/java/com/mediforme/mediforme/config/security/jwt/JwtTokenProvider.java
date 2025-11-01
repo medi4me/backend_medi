@@ -1,4 +1,4 @@
-package com.mediforme.mediforme.config.jwt;
+package com.mediforme.mediforme.config.security.jwt;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;

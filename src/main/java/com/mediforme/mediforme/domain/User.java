@@ -39,8 +39,6 @@ public class User extends BaseEntity {
     @Column(name = "status_cd", nullable = false)
     private Long statusCd;
 
-    @Column(name = "refresh_token", length = 255)
-    private String refreshToken;
 
 
     public void updateStatus(Long statusCd, Long modifier_id){
@@ -53,10 +51,6 @@ public class User extends BaseEntity {
     }
     public void changePassword(String newPassword, Long modifierId) {
         this.password = newPassword;
-        this.setModifierId(modifierId);
-    }
-    public void updateRefreshToken(String token, Long modifierId) {
-        this.refreshToken = token;
         this.setModifierId(modifierId);
     }
 }

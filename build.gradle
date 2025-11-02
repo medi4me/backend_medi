@@ -59,6 +59,9 @@ dependencies {
 	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	//redis 모듈
+	implementation project(':lib:redis')
 }
 
 tasks.named('test') {

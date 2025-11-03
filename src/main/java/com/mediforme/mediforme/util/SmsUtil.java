@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class SmsUtil {
 
-    @Value("${spring.coolsms.api.key}")
+    @Value("${coolsms.api.key}")
     private String apiKey;
 
-    @Value("${spring.coolsms.api.secret}")
+    @Value("${coolsms.api.secret}")
     private String apiSecretKey;
 
     private DefaultMessageService messageService;

@@ -17,34 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2/users")
-@Tag(name = "회훤 탈퇴", description = "회원을 탈퇴시킵니다.(탈퇴 상태 처리)")
+@Tag(name = "회원 탈퇴", description = "회원을 탈퇴시킵니다.(탈퇴 상태 처리)")
 public class ResignController {
     private final AuthService authService;
     private final ResignService resignService;
     private final JwtTokenProvider jwtTokenProvider;
-    
+
     @Operation(summary = "회원 탈퇴", description = "JWT 토큰을 기반으로 현재 로그인한 사용자를 탈퇴 처리합니다.")
-    @DeleteMapping("/resigh")
+    @DeleteMapping("/resign")
     public ApiResponse<String> resign(HttpServletRequest request) {
-        try {
-            // Authorization 헤더에서 Bearer 토큰 추출
-            String token = jwtTokenProvider.parseBearerToken(request);
 
-            if (token == null || ! jwtTokenProvider.validateToken(token)){
-                throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
-            }
+        String token = jwtTokenProvider.resolveToken(request);
 
-            // 현재 로그인한 사용자 정보 가져오기
-            String loginId = authService.getLoginUserLoginId();
-
-            // 회원 탈퇴 처리
-            resignService.resignUser(loginId);
-            return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
-
-        } catch (CustomApiException e) {
-            return ApiResponse.onFailure(e.getErrorCode().name(), e.getMessage(), null);
-        } catch (Exception e) {
-            return ApiResponse.onFailure("INTERNAL_ERROR", "회원 탈퇴 중 오류가 발생했습니다.", null);
+        if (token == null || !jwtTokenProvider.validateToken(token)) {
+            throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
+
+        // 회원 탈퇴 처리
+        resignService.resignUser();
+        return ApiResponse.onSuccess("회원 탈퇴가 완료되었습니다.");
     }
 }

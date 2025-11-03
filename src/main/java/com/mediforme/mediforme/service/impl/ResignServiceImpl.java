@@ -16,7 +16,7 @@ public class ResignServiceImpl implements ResignService {
 
     // 회원 탈퇴 (논리적 삭제)
     @Transactional
-    public void resignUser(String token) {
+    public void resignUser() {
         // 현재 로그인한 사용자 정보 조회
         User loginUser = authService.getLoginUser();
 

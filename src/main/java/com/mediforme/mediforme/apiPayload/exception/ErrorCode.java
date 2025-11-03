@@ -25,7 +25,6 @@ public enum ErrorCode {
     //Email
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "email401", "중복된 이메일이 존재합니다."),
 
-
     // JWT Token
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT401", "잘못된 JWT 토큰입니다."),
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT402", "만료된 JWT 토큰입니다."),
@@ -39,6 +38,12 @@ public enum ErrorCode {
 
     // Authorized Action
     UNAUTHORIZED_ACTION(HttpStatus.UNAUTHORIZED, "ACTION401", "접근 권한이 없습니다."),
+
+    // Verification (SMS 인증 관련)
+    TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "VERIFICATION401", "인증 코드를 너무 자주 요청했습니다. 잠시 후 다시 시도해주세요."),
+    SMS_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "VERIFICATION402", "인증 문자 발송에 실패했습니다."),
+    EXPIRED_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "VERIFICATION403", "인증 코드가 만료되었습니다."),
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "VERIFICATION404", "인증 코드가 올바르지 않습니다."),
     ;
 
     private final HttpStatus httpStatus;

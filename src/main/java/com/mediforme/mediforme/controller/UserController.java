@@ -5,6 +5,7 @@ import com.mediforme.mediforme.dto.object.VerificationDto;
 import com.mediforme.mediforme.dto.request.UserRegisterRequestDto;
 import com.mediforme.mediforme.dto.response.UserLoginResponseDto;
 import com.mediforme.mediforme.repository.UserRepository;
+import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.UserService;
 import com.mediforme.mediforme.util.SmsUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,9 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Tag(name = "User API", description = "회원가입 및 휴대폰 인증 관련 API")
 public class UserController {
     private final SmsUtil smsUtil;
-    private final UserService userService;
     private final UserRepository userRepository;
     private final ConcurrentHashMap<String, VerificationDto> verificationCodeMap = new ConcurrentHashMap<>();
+    private final AuthService authService;
 
     @Operation(summary = "휴대폰 인증코드 발송", description = "회원가입 시 입력한 휴대폰 번호로 인증 코드를 발송합니다.")
     @PostMapping("/phone")
@@ -71,7 +72,7 @@ public class UserController {
     @Operation(summary = "회원가입", description = "새로운 사용자를 등록하고, JWT 토큰을 발급받습니다.")
     @PostMapping("/register")
     public ApiResponse<UserLoginResponseDto> register(@RequestBody @Valid UserRegisterRequestDto.JoinRequest request) {
-        UserLoginResponseDto response = userService.register(request);
+        UserLoginResponseDto response = authService.register(request);
         return ApiResponse.onSuccess(response);
     }
 }

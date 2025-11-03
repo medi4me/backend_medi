@@ -1,99 +1,131 @@
 package com.mediforme.mediforme.controller;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
+import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
+import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.domain.User;
 import com.mediforme.mediforme.dto.object.VerificationDto;
+import com.mediforme.mediforme.dto.request.ResetPasswordRequestDto;
 import com.mediforme.mediforme.dto.response.FindLoginIdResponseDto;
 import com.mediforme.mediforme.repository.UserRepository;
-import com.mediforme.mediforme.util.SmsUtil;
+import com.mediforme.mediforme.service.VerificationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v2/find")
+@Tag(name = "Account Recovery API", description = "아이디 및 비밀번호 찾기 관련 API")
 public class AccountRecoveryController {
 
     private final UserRepository userRepository;
-    private final SmsUtil smsUtil;
-
-    // 인증 코드 임시 저장 (TODO: 추후 Redis로 교체 예정)
-    private final ConcurrentHashMap<String, String> verificationMap = new ConcurrentHashMap<>();
+    private final VerificationService verificationService;
+    private final PasswordEncoder passwordEncoder;
 
 
-    // 인증 코드 발송
+    /**
+     * 휴대폰 인증 코드 발송
+     */
+    @Operation(summary = "휴대폰 인증코드 발송", description = "등록된 사용자에게 인증 코드를 발송합니다.")
     @PostMapping("/send-verification-code")
     public ApiResponse<String> sendVerificationCode(@RequestBody @Valid VerificationDto request) {
 
         // 등록된 사용자 여부 확인
         boolean exists = userRepository.existsByPhone(request.getPhone());
         if (!exists) {
-            return ApiResponse.onFailure("PHONE_NOT_FOUND", "등록되지 않은 전화번호입니다.", null);
+            throw new CustomApiException(ErrorCode.USER_NOT_FOUND);
         }
 
-        // 6자리 인증 코드 생성
-        String verificationCode = String.valueOf((int) (Math.random() * 899999) + 100000);
-        // 코드 발송 (SMS)
-        smsUtil.sendOne(request.getPhone(), verificationCode);
-        // 메모리에 저장
-        // TODO: 레디스 저장 예정
-        verificationMap.put(request.getPhone(), verificationCode);
+        // Redis + SMS 발송
+        verificationService.sendCode(request.getPhone());
 
-        return ApiResponse.onSuccess("인증 코드가 전송되었습니다.");
+        return ApiResponse.onSuccess("인증 코드가 발송되었습니다.");
     }
 
 
-    // 인증 코드 검증 + 아이디 찾기
+    /**
+     * 인증 코드 검증 후 아이디 찾기
+     */
+    @Operation(summary = "아이디 찾기", description = "휴대폰 인증을 통해 아이디를 조회합니다.")
     @PostMapping("/verify-and-find-id")
     public ApiResponse<FindLoginIdResponseDto> verifyAndFindId(@RequestBody @Valid VerificationDto request) {
-        // 코드 검증
-        if (!verifyCode(request.getPhone(), request.getVerificationCode())) {
-            return ApiResponse.onFailure("VERIFICATION_FAILED", "인증 코드가 올바르지 않습니다.", null);
+
+        // 인증 코드 검증
+        boolean verified = verificationService.verifyCode(request.getPhone(), request.getVerificationCode());
+        if (!verified) {
+            throw new CustomApiException(ErrorCode.INVALID_VERIFICATION_CODE);
         }
+
         // 사용자 조회
         Optional<User> userOpt = userRepository.findByPhone(request.getPhone());
         if (userOpt.isEmpty()) {
-            return ApiResponse.onFailure("USER_NOT_FOUND", "해당 번호의 사용자를 찾을 수 없습니다.", null);
+            throw new CustomApiException(ErrorCode.USER_NOT_FOUND);
         }
 
+        // 응답 DTO 생성
+        User user = userOpt.get();
         FindLoginIdResponseDto response = new FindLoginIdResponseDto();
-        response.setUserLoginId(userOpt.get().getUserLoginId());
-        response.setUserName(userOpt.get().getUserName());
+        response.setUserLoginId(user.getUserLoginId());
+        response.setUserName(user.getUserName());
 
-        // 인증 코드 제거
-        verificationMap.remove(request.getPhone());
+        // 인증 코드 삭제
+        verificationService.removeCode(request.getPhone());
+
         return ApiResponse.onSuccess(response);
     }
 
-    // 인증 코드 검증 + 비밀번호 찾기 (비밀번호 직접 노출 X)
+    /**
+     * 인증 코드 검증 후 비밀번호 찾기 (재설정 절차 안내)
+     */
+    @Operation(summary = "비밀번호 찾기", description = "휴대폰 인증을 통해 비밀번호 재설정 절차를 진행합니다.")
     @PostMapping("/verify-and-find-password")
     public ApiResponse<String> verifyAndFindPassword(@RequestBody @Valid VerificationDto request) {
-        // 코드 검증
-        if (!verifyCode(request.getPhone(), request.getVerificationCode())) {
-            return ApiResponse.onFailure("VERIFICATION_FAILED", "인증 코드가 올바르지 않습니다.", null);
+
+        boolean verified = verificationService.verifyCode(request.getPhone(), request.getVerificationCode());
+        if (!verified) {
+            throw new CustomApiException(ErrorCode.INVALID_VERIFICATION_CODE);
         }
 
         Optional<User> userOpt = userRepository.findByPhone(request.getPhone());
         if (userOpt.isEmpty()) {
-            return ApiResponse.onFailure("USER_NOT_FOUND", "해당 번호의 사용자를 찾을 수 없습니다.", null);
+            throw new CustomApiException(ErrorCode.USER_NOT_FOUND);
         }
 
-        // TODO: 비밀번호 재설정용 토큰 발급 / 이메일 전송 로직 추가
-        verificationMap.remove(request.getPhone());
-        return ApiResponse.onSuccess("비밀번호 재설정 절차를 진행해주세요.");
+        // 비밀번호 재설정 토큰 발급 (Redis에 5분 TTL 저장)
+        String resetToken = verificationService.generatePasswordResetToken(request.getPhone());
+        return ApiResponse.onSuccess(resetToken);
     }
 
-    // 인증 코드 검증
-    private boolean verifyCode(String phone, String code) {
-        return Optional.ofNullable(verificationMap.get(phone))
-                .filter(savedCode -> savedCode.equals(code))
-                .isPresent();
+
+    /**
+     * 비밀번호 재설정
+     */
+    @Operation(summary = "비밀번호 재설정", description = "발급받은 토큰으로 비밀번호를 재설정합니다.")
+    @PostMapping("/reset-password")
+    public ApiResponse<String> resetPassword(@RequestBody @Valid ResetPasswordRequestDto request) {
+
+        // 토큰 검증 (내부에서 유효하지 않으면 CustomApiException 발생)
+        verificationService.validatePasswordResetToken(request.getPhone(), request.getToken());
+
+        // 사용자 조회
+        User user = userRepository.findByPhone(request.getPhone())
+                .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
+
+        // 비밀번호 암호화 후 갱신
+        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        // 응답 반환
+        return ApiResponse.onSuccess("비밀번호가 성공적으로 변경되었습니다.");
     }
+
 }

@@ -1,135 +1,161 @@
 package com.mediforme.mediforme.config.security.jwt;
 
+import com.mediforme.lib.redis.entity.BlacklistToken;
+import com.mediforme.lib.redis.entity.UserToken;
+import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
+import com.mediforme.lib.redis.repository.UserTokenRedisRepository;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
-    private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "bearer";
-    private static final Long ACCESS_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 1000; // 1 Day
-    private static final Long REFRESH_TOKEN_EXPIRE_LENGTH = 60L * 60 * 24 * 15 * 1000; // 15 Days
-    private final Key key;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UserTokenRedisRepository userTokenRedisRepository;
+    private final BlacklistRedisRepository blacklistRedisRepository;
 
-    public JwtTokenProvider(@Value("${spring.jwt.secret_key}") String secretKey) {
-        byte[] secretByteKey = Decoders.BASE64.decode(secretKey);
-        this.key = Keys.hmacShaKeyFor(secretByteKey);
+    @Value("${spring.jwt.secret}")
+    private String secretKey;
+
+    @Value("${spring.jwt.token.access-expiration-time}")
+    private Long accessExpirationTime;
+
+    @Value("${spring.jwt.token.refresh-expiration-time}")
+    private Long refreshExpirationTime;
+
+    private Key getSigningKey() {
+        // secretKey를 바이트 배열로 변환 (signWith 메서드 기존의 방식을 deprecated함)
+        byte[] secretKeyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+        // 바이트 배열로 SecretKeySpec 객체 생성
+        return new SecretKeySpec(secretKeyBytes, 0, secretKeyBytes.length, "HmacSHA256");
     }
 
-    public JwtToken generateToken(String userLoginId) {
+    /**
+     * Access Token 생성
+     */
+    public String createAccessToken(String userLoginId){
+        Date now = new Date();
+        Date expireDate = new Date(now.getTime() + accessExpirationTime);
 
-        long now = new Date().getTime();
-
-        // Access Token 생성
-        String accessToken = Jwts.builder()
-                .setSubject(userLoginId) // payload "sub" : name"
-                .claim(AUTHORITIES_KEY, "ROLE_USER") // payload "auth" : "USER"
-                .setExpiration(new Date(now + ACCESS_TOKEN_EXPIRE_LENGTH))
-                .signWith(key, SignatureAlgorithm.HS512) // header "alg" : 해싱 알고리즘 HS512
+        return Jwts.builder()
+                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setIssuedAt(now)
+                .setExpiration(expireDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
                 .compact();
 
-        // Refresh Token 생성
-        String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_LENGTH))
-                .signWith(key, SignatureAlgorithm.HS512)
+
+    }
+
+
+    /**
+     * Refresh Token 생성
+     */
+    public String createRefreshToken(Long userId, String userLoginId){
+        Date now = new Date();
+        Date expireDate = new Date(now.getTime() + refreshExpirationTime);
+
+        String refreshToken =  Jwts.builder()
+                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setIssuedAt(now)
+                .setExpiration(expireDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
                 .compact();
 
-        return JwtToken.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
+        // 리프레시 토큰 Redis에 저장
+        userTokenRedisRepository.save(UserToken.builder()
+                .userId(userId)
+                .userLoginId(userLoginId)
                 .refreshToken(refreshToken)
-                .build();
+                .build());
+
+        return refreshToken;
     }
 
-    // JWT에서 사용자 로그인 Id (userLoginId) 추출
+
+    /**
+     * JWT에서 사용자 식별자 추출
+     */
     public String getUserLoginIdFromToken(String token) {
+        return parseToken(token);
+    }
+
+
+    /**
+     * 토큰에서 Authentication 객체 복원
+     */
+    public Authentication getAuthentication(String token) {
+        String userLoginId = this.parseToken(token);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userLoginId);
+        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+    }
+
+
+    /**
+     * 토큰 유효성 검사
+     */
+    public boolean validateToken(String token) {
+        try{
+            // 블랙리스트 검증
+            if (blacklistRedisRepository.findById(token).isPresent()){
+                throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
+            }
+            Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e){
+            throw new CustomApiException(ErrorCode.EXPIRED_JWT_TOKEN);
+        } catch (JwtException e){
+            throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
+        }
+    }
+
+    /**
+     * Bearer 토큰 추출
+     */
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+
+    /** 토큰에서 userLoginId 추출 */
+    public String parseToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    // Authentication 객체 생성
-    public Authentication getAuthentication(String accessToken) {
-        // 토큰 복호화
-        Claims claims = parseClaims(accessToken);
-
-        if(claims.get(AUTHORITIES_KEY) == null) {
-            throw new CustomApiException(ErrorCode.UNAUTHORIZED_JWT_TOKEN);
-        }
-
-        // 문자열 -> 권한 리스트로 변환
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
-
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-
-    }
-
-    // 토큰 유효성 검사
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-            throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-            throw new CustomApiException(ErrorCode.EXPIRED_JWT_TOKEN);
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-            throw new CustomApiException(ErrorCode.UNSUPPORTED_JWT_TOKEN);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty", e);
-            throw new CustomApiException(ErrorCode.EMPTY_JWT_CLAIMS);
-        }
-    }
-
-    private Claims parseClaims(String accessToken) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(accessToken)
-                    .getBody();
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        }
-    }
-
-    public String parseBearerToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
+    /**
+     * 로그아웃 시 블랙리스트 등록
+     */
+    public void addToBlacklist(String token){
+        blacklistRedisRepository.save(BlacklistToken.builder()
+                .accessToken(token)
+                .reason("logout")
+                .build());
     }
 }

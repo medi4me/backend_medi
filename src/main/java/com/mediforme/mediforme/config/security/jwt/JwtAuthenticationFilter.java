@@ -1,6 +1,9 @@
 package com.mediforme.mediforme.config.security.jwt;
 
-import com.mediforme.mediforme.service.TokenBlacklistService;
+import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
+import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
+import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,90 +13,97 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
+/**
+ * JwtAuthenticationFilter
+ * - HTTP 요청 시 JWT 토큰을 검증하고 인증 정보를 SecurityContext에 저장
+ * - Redis 기반 블랙리스트 검증 포함
+ * - 인증이 불필요한 URL은 자동으로 필터 제외
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_PREFIX = "Bearer ";
     private final JwtTokenProvider jwtTokenProvider;
-    private final TokenBlacklistService tokenBlacklistService;
+    private final BlacklistRedisRepository blacklistRedisRepository;
+    private static final PathMatcher pathMatcher = new AntPathMatcher();
 
-    private static final List<Pattern> EXCLUDE_URL_PATTERNS = Arrays.asList(
-            Pattern.compile("^/v3/.*"),
-            Pattern.compile("^/swagger-ui/.*"),
-            Pattern.compile("^/register/.*"),
-            Pattern.compile("^/auth/.*"),
-            Pattern.compile("^/test/.*"),
-            Pattern.compile("^/find/.*"),
-            Pattern.compile("^/camera"),
-            Pattern.compile("^/medicine-info"),
-            Pattern.compile("^/medicine-ingredient"),
-            Pattern.compile("^/interactions/check"),
-            Pattern.compile("^/api/.*"),
-            Pattern.compile("^/chat-gpt/.*"),
-            Pattern.compile("^/chat-gpt/question"),
-            Pattern.compile("^/favicon.ico$")
+    // 필터 예외 url
+    private static final List<String> EXCLUDE_URLS = Arrays.asList(
+            // Swagger & API Docs
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+
+            // 인증/회원 관련 (JWT 불필요)
+            "/v2/users/auth/**",    // 로그인, 회원가입, 토큰 재발급
+            "/v2/find/**",          // 아이디/비밀번호 찾기
+
+            // 정적 리소스
+            "/favicon.ico",
+            "/error"
     );
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        return EXCLUDE_URL_PATTERNS.stream().anyMatch(pattern -> pattern.matcher(path).matches());
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain)
+        throws ServletException, IOException{
+        String requestURI = request.getRequestURI();
 
-        // 필터를 적용하지 않아야 하는 URL인 경우, 필터를 건너뜁니다.
-        if (shouldNotFilter(request)) {
+        // 인증 제외 경로면 필터 패스
+        if (isExcluded(requestURI)) {
             filterChain.doFilter(request, response);
             return;
         }
-        else {
-            String token = resolveToken(request);
-            if ((token != null && !tokenBlacklistService.isTokenBlacklisted(token))) {
-                String jwt = resolveToken(request);
-
-                // token 유효성 검사
-                if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                    System.out.println("여기가 문제일 수 도????");
-                    Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-
-                System.out.println("필터 문제인가?");
-                System.out.println(request);
-                System.out.println(response);
-                filterChain.doFilter(request, response);
-                return;
-            } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().write("Token is invalid or blacklisted.");
-                return;
+        try{
+            // 토큰 추출
+            String token = jwtTokenProvider.resolveToken(request);
+            if (token == null){
+                throw new CustomApiException(ErrorCode.EMPTY_JWT_CLAIMS);
             }
+            // 블랙리스트 검증
+            if (blacklistRedisRepository.findById(token).isPresent()){
+                throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
+            }
+            // 유효한 토큰이면 Authentication 객체 생성
+            if (jwtTokenProvider.validateToken(token)){
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            // 다음 필터 실행
+            filterChain.doFilter(request, response);
+        }  catch (ExpiredJwtException e) {
+            log.warn("JWT 만료: {}", e.getMessage());
+            setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+        } catch (CustomApiException e) {
+            log.warn("JWT 검증 실패: {}", e.getErrorCode().getMessage());
+            setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getErrorCode().getMessage());
+        } catch (Exception e) {
+            log.error("JWT 필터 처리 중 예외 발생", e);
+            setErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error");
         }
     }
 
-    // 요청 헤더에서 토큰을 꺼내는 함수
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
-        }
-        return null;
+
+    /** 특정 경로가 인증 제외 대상인지 여부 */
+    private boolean isExcluded(String requestURI) {
+        return JwtAuthenticationFilter.EXCLUDE_URLS.stream().anyMatch(pattern -> JwtAuthenticationFilter.pathMatcher.match(pattern, requestURI));
+    }
+
+    /** 공통 에러 응답 */
+    private void setErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
     }
 }
+

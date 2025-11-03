@@ -56,7 +56,7 @@ public class JwtTokenProvider {
                 .setClaims(Jwts.claims().setSubject(userLoginId))
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(getSigningKey(), SignatureAlgorithm.ES256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
 
 
@@ -85,6 +85,16 @@ public class JwtTokenProvider {
                 .build());
 
         return refreshToken;
+    }
+
+    /**
+     * Redis에 저장된 Refresh Token 검증
+     */
+    public boolean isRefreshTokenValid(String userLoginId, String refreshToken) {
+        return userTokenRedisRepository.findByUserLoginId(userLoginId)
+                .map(UserToken::getRefreshToken)
+                .filter(token -> token.equals(refreshToken))
+                .isPresent();
     }
 
 
@@ -139,7 +149,9 @@ public class JwtTokenProvider {
     }
 
 
-    /** 토큰에서 userLoginId 추출 */
+    /**
+     * 토큰에서 userLoginId 추출
+     */
     public String parseToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())

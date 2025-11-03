@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class ApiConfig {
 
-    @Value("${spring.api.drug.service-url}")
+    @Value("${api.drug.service-url}")
     private String SERVICE_URL;
 
-    @Value("${spring.api.drug.service-key}")
+    @Value("${api.drug.service-key}")
     private String SERVICE_KEY;
 }

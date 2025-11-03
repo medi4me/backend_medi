@@ -49,8 +49,7 @@ public class User extends BaseEntity {
         this.consentCd = consentCd;
         this.setModifierId(modifier_id);
     }
-    public void changePassword(String newPassword, Long modifierId) {
+    public void updatePassword(String newPassword) {
         this.password = newPassword;
-        this.setModifierId(modifierId);
     }
 }

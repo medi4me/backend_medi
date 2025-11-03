@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.config;
 
+import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
 import com.mediforme.mediforme.config.security.jwt.JwtAccessDeniedHandler;
 import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationFilter;
@@ -24,28 +25,42 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final TokenBlacklistService blacklistService;
+    private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .csrf()
-                .disable()
-                .httpBasic().disable()
-                .formLogin().disable()
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/**", "/swagger-ui/**", "/register/**","/auth/**", "/test/**", "/chat-gpt/**",
-                                "/find/**", "/camera", "/medicine-info", "/medicine-ingredient", "/interactions/check","/api/**").permitAll()
-                        .anyRequest().permitAll()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http
+                // CORS 설정
+                .cors(cors -> cors.configure(http))
+                // CSRF 비활성화 (JWT 기반이므로 세션 불필요)
+                .csrf(csrf -> csrf.disable())
+                // HTTP Basic / Form 로그인 비활성화
+                .httpBasic(basic -> basic.disable())
+                .formLogin(form -> form.disable())
+                // 세션을 STATELESS로 설정 (JWT 인증)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 인증/인가 실패시 핸들러
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                )
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, blacklistService), UsernamePasswordAuthenticationFilter.class);
-
+                        .accessDeniedHandler(jwtAccessDeniedHandler))
+                // URL 접근 권한 설정
+                .authorizeHttpRequests(auth -> auth
+                        // 인증 없이 접근 가능한 URL 목록
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-resources/**",
+                                "/favicon.ico",
+                                "/error"
+                        ).permitAll()
+                        // 나머지 모든 요청은 인증 필요
+                        .anyRequest().authenticated())
+                // JWT 인증 필터 등록
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(jwtTokenProvider, blacklistRedisRepository),
+                        UsernamePasswordAuthenticationFilter.class
+                );
         return http.build();
     }
 

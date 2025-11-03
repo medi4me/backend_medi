@@ -1,7 +1,5 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.2'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'java-library'                           // 공통 모듈 사용
 }
 
 group = 'com.mediforme.lib.redis'
@@ -19,8 +17,8 @@ repositories {
 
 dependencies {
     // Spring Boot Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+    api 'org.springframework.boot:spring-boot-starter-cache'
 
     // Jackson Serializer (Redis 직렬화용)
     implementation 'com.fasterxml.jackson.core:jackson-databind'

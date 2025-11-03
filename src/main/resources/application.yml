@@ -27,7 +27,7 @@ spring:
       - classpath:application-redis.yml
 
   profiles:
-    active: local                   # 실행 환경 (local, dev, prod 중 선택)
+    active: local, redis                   # 실행 환경 (local, dev, prod 중 선택), Redis 프로필 활성화
 
 # 공공 API, 외부 서비스 등 공통 설정
 api:

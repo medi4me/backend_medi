@@ -10,6 +10,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -74,6 +75,17 @@ public class RedisConfig {
 
         log.info("RedisTemplate 등록 완료");
         return redisTemplate;
+    }
+
+    /**
+     * 인증 코드 / 단순 문자열 저장용
+     */
+    @Bean
+    public StringRedisTemplate stringRedisTemplate(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
+        StringRedisTemplate template = new StringRedisTemplate();
+        template.setConnectionFactory(connectionFactory);
+        log.info("StringRedisTemplate 등록 완료 (단순 문자열 Key-Value 저장용)");
+        return template;
     }
 
 

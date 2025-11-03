@@ -9,6 +9,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserLoginId(String userLoginId);       // 사용자 로그인 id로 회원 조회
     Optional<User> findByUserName(String userName);             // 사용자 이름 조회
     Optional<User> findByPhone(String phone);                   // 전화번호 기반 조회 (중복 체크 용도)
-    Optional<User> findByRefreshToken(String refreshToken);     // 리프레시 토큰 기반 조회 (JWT 재발급 시 사용)
     boolean existsByPhone(String phone);                        // 전화번호 존재 여부 확인 (아이디 찾기 시 사용)
 }

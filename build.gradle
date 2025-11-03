@@ -67,3 +67,18 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// 공통 BOM 상속 추가
+subprojects {
+	apply plugin: 'io.spring.dependency-management'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.2"
+		}
+	}
+}

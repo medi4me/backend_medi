@@ -1,5 +1,6 @@
 package com.mediforme.mediforme.dto.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 public class StatusResponseDto {
     private Long statusId;
     private Long defaultStatusCd;

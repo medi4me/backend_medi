@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2/find")
+@RequestMapping("/find")
 @Tag(name = "Account Recovery API", description = "아이디 및 비밀번호 찾기 관련 API")
 public class AccountRecoveryController {
 

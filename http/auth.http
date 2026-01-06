@@ -1,0 +1,51 @@
+### ===== 공통 변수 =====
+@baseUrl = http://localhost:8080
+@userLoginId = test@test.com
+@password = password123
+
+### 회원가입
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "userLoginId": "{{userLoginId}}",
+  "password": "{{password}}",
+  "userName": "테스트",
+  "phone": "01012345678",
+  "agreeToTerms": true
+}
+
+
+### 로그인
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "userLoginId": "{{userLoginId}}",
+  "password": "{{password}}"
+}
+
+
+### 아이디 중복 확인 (이미 가입된 경우)
+GET {{baseUrl}}/auth/check-id?userLoginId={{userLoginId}}
+
+
+### 아이디 중복 확인 (신규 아이디)
+GET {{baseUrl}}/auth/check-id?userLoginId=newuser@test.com
+
+
+### 로그아웃
+# login 응답에서 받은 accessToken을 Bearer로 넣기
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
+
+
+### 토큰 재발급 (Refresh Token)
+# login 또는 register 응답에서 받은 refreshToken 사용
+POST {{baseUrl}}/auth/reissue
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY3Njc0NzIxLCJleHAiOjE3NjgyNzk1MjF9.AWCno_slvr9glMjI1BxIQzwQCJN144JXrU9b_MPhTow
+
+### (검증용) 이전 Refresh Token으로 재발급 시도
+# refresh token rotation 검증용
+POST {{baseUrl}}/auth/reissue
+Authorization: Bearer {{oldRefreshToken}}

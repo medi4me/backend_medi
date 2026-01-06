@@ -1,6 +1,5 @@
 package com.mediforme.mediforme.config;
 
-import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
 import com.mediforme.mediforme.config.security.jwt.JwtAccessDeniedHandler;
 import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationFilter;
@@ -27,7 +26,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final BlacklistRedisRepository blacklistRedisRepository;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,13 +53,14 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-resources/**",
                                 "/favicon.ico",
-                                "/error"
+                                "/error",
+                                "/auth/**"
                         ).permitAll()
                         // 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated())
                 // JWT 인증 필터 등록
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider, blacklistRedisRepository),
+                        new JwtAuthenticationFilter(jwtTokenProvider, tokenBlacklistService),
                         UsernamePasswordAuthenticationFilter.class
                 );
         return http.build();

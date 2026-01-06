@@ -16,26 +16,39 @@ public class UserTokenRedisServiceImpl implements UserTokenRedisService {
 
     private final UserTokenRedisRepository userTokenRedisRepository;
 
+    /**
+     * Refresh Token 저장
+     */
     @Override
     public void saveUserToken(UserToken userToken) {
         userTokenRedisRepository.save(userToken);
-        log.info("Redis 저장 완료 - userLoginId={}, accessToken={}",
-                userToken.getUserLoginId(), userToken.getAccessToken());
+        log.info("Redis 저장 완료 - userLoginId={}, refreshToken={}",
+                userToken.getUserLoginId(), userToken.getRefreshToken());
     }
 
+    /**
+     * Refresh Token으로 조회
+     */
     @Override
-    public Optional<UserToken> findByAccessToken(String accessToken) {
-        return userTokenRedisRepository.findById(accessToken);
+    public Optional<UserToken> findByRefreshToken(String refreshToken) {
+        return userTokenRedisRepository.findById(refreshToken);
     }
 
+    /**
+     * userLoginId 기반 조회 (중복 로그인 제어)
+     */
     @Override
     public Optional<UserToken> findByUserLoginId(String userLoginId) {
         return userTokenRedisRepository.findByUserLoginId(userLoginId);
     }
 
+
+    /**
+     * Refresh Token 삭제 (rotation)
+     */
     @Override
-    public void deleteByAccessToken(String accessToken) {
-        userTokenRedisRepository.deleteById(accessToken);
-        log.info("Redis 삭제 완료 - accessToken={}", accessToken);
+    public void deleteByRefreshToken(String refreshToken) {
+        userTokenRedisRepository.deleteById(refreshToken);
+        log.info("Redis 삭제 완료 - refreshToken={}", refreshToken);
     }
 }

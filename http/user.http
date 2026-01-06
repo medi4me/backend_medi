@@ -1,0 +1,12 @@
+@host = http://localhost:8080
+@accessToken = {{accessToken}}
+
+### (1) 토큰 없이 호출 - SecurityConfig가 permitAll이면 200, 아니면 401/403 나올 것
+GET {{host}}/user/test@test.com/name
+Accept: application/json
+
+
+### (2) 액세스 토큰 포함 호출 - 보호 자원이면 이 케이스가 정상(200)
+GET {{host}}/user/test@test.com/name
+Accept: application/json
+Authorization: Bearer {{accessToken}}

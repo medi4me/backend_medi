@@ -41,7 +41,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("status", HttpServletResponse.SC_FORBIDDEN);
         responseBody.put("error", "FORBIDDEN");
-        responseBody.put("message", ErrorCode.FORBIDDEN.getMessage());
+        responseBody.put("message", ErrorCode.COMMON_FORBIDDEN.getMessage());
         responseBody.put("path", request.getRequestURI());
 
         // JSON 변환 및 출력

@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface UserTokenRedisService {
     void saveUserToken(UserToken userToken);
-    Optional<UserToken> findByAccessToken(String accessToken);
+    Optional<UserToken> findByRefreshToken(String refreshToken);
     Optional<UserToken> findByUserLoginId(String userLoginId);
-    void deleteByAccessToken(String accessToken);
+    void deleteByRefreshToken(String refreshToken);
 }

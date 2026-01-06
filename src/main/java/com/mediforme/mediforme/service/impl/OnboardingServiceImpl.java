@@ -93,7 +93,7 @@ public class OnboardingServiceImpl implements OnboardingService {
         UserMedicine userMedicine = userMedicineRepository.findById(userMedicineId)
                 .orElseThrow(() -> new CustomApiException(ErrorCode.USER_MEDICINE_NOT_FOUND));
         if (!Objects.equals(userMedicine.getUserId(), userId)) {
-            throw new CustomApiException(ErrorCode.UNAUTHORIZED_ACTION);
+            throw new CustomApiException(ErrorCode.FORBIDDEN_ACTION);
         }
         userMedicineRepository.delete(userMedicine);
     }

@@ -1,121 +1,97 @@
 package com.mediforme.mediforme.apiPayload.exception;
 
 import com.mediforme.mediforme.apiPayload.ApiResponse;
-import com.mediforme.mediforme.apiPayload.code.ErrorReasonDTO;
 import com.mediforme.mediforme.apiPayload.code.status.ErrorStatus;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Slf4j
-@RestControllerAdvice(annotations = {RestController.class})
+@RestControllerAdvice
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Object> validation(ConstraintViolationException e, WebRequest request) {
-        String errorMessage = e.getConstraintViolations().stream()
-                .map(constraintViolation -> constraintViolation.getMessage())
-                .findFirst()
-                .orElse("ConstraintViolationException 발생");
-
-        return handleExceptionInternalConstraint(e, ErrorStatus._BAD_REQUEST, HttpHeaders.EMPTY, request);
+    // 비즈니스 예외 (의도된 예외)
+    @ExceptionHandler(CustomApiException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCustomApiException(CustomApiException e) {
+        return ResponseEntity
+            .status(e.getErrorCode().getHttpStatus())
+            .body(ApiResponse.onFailure(
+                e.getErrorCode().getCode(),
+                e.getErrorCode().getMessage()
+            ));
     }
 
-    //@Override
+    // @Valid RequestBody 검증 실패
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        MethodArgumentNotValidException e,
+        HttpHeaders headers,
+        HttpStatusCode status,
+        WebRequest request) {
 
-        Map<String, String> errors = new LinkedHashMap<>();
+        String message = Optional.ofNullable(e.getBindingResult().getFieldError())
+            .map(fieldError -> fieldError.getDefaultMessage())
+            .orElse("잘못된 요청입니다.");
 
-        ex.getBindingResult().getFieldErrors().forEach(fieldError -> {
-            String fieldName = fieldError.getField();
-            String errorMessage = Optional.ofNullable(fieldError.getDefaultMessage()).orElse("");
-            errors.merge(fieldName, errorMessage, (existingErrorMessage, newErrorMessage) -> existingErrorMessage + ", " + newErrorMessage);
-        });
-
-        return handleExceptionInternalArgs(ex, HttpHeaders.EMPTY, ErrorStatus._BAD_REQUEST, request, errors);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.onFailure(
+                ErrorStatus._BAD_REQUEST.getCode(),
+                message
+            ));
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler
-    public ResponseEntity<Object> exception(Exception e, WebRequest request) {
-        e.printStackTrace();
-
-        return handleExceptionInternalFalse(e, ErrorStatus._INTERNAL_SERVER_ERROR, HttpHeaders.EMPTY, ErrorStatus._INTERNAL_SERVER_ERROR.getHttpStatus(),request, e.getMessage());
+    // PathVariable 날짜 파싱 실패 (LocalDate.parse)
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDateTimeParseException(DateTimeParseException e) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.onFailure(
+                ErrorStatus._BAD_REQUEST.getCode(),
+                "날짜 형식이 올바르지 않습니다. (yyyy-MM-dd)"
+            ));
     }
 
+    // @Validated (PathVariable / RequestParam) 검증 실패
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleConstraintViolationException(
+        ConstraintViolationException e) {
 
+        String message = e.getConstraintViolations().stream()
+            .map(ConstraintViolation::getMessage)
+            .findFirst()
+            .orElse("잘못된 요청입니다.");
 
-    @ExceptionHandler(value = GeneralException.class)
-    public ResponseEntity<Object> onThrowException(GeneralException generalException, WebRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
-        return handleExceptionInternal(generalException, errorReasonHttpStatus, null, request);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.onFailure(
+                ErrorStatus._BAD_REQUEST.getCode(),
+                message
+            ));
     }
 
+    // 예상치 못한 시스템 예외
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Object>> handleException(Exception e) {
+        log.error("Unhandled exception occurred", e);
 
-
-    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
-                                                           HttpHeaders headers, WebRequest request) {
-
-        ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(), reason.getMessage(), null);
-
-        return super.handleExceptionInternal(
-                e,
-                body,
-                headers,
-                reason.getHttpStatus(),
-                request
-        );
-    }
-
-
-
-    private ResponseEntity<Object> handleExceptionInternalFalse(Exception e, ErrorStatus errorCommonStatus,
-                                                                HttpHeaders headers, HttpStatus status, WebRequest request, String errorPoint) {
-        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus.getCode(),errorCommonStatus.getMessage(),errorPoint);
-        return super.handleExceptionInternal(
-                e,
-                body,
-                headers,
-                status,
-                request
-        );
-    }
-
-    private ResponseEntity<Object> handleExceptionInternalArgs(Exception e, HttpHeaders headers, ErrorStatus errorCommonStatus,
-                                                               WebRequest request, Map<String, String> errorArgs) {
-        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus.getCode(), errorCommonStatus.getMessage(), errorArgs);
-        return super.handleExceptionInternal(
-                e,
-                body,
-                headers,
-                errorCommonStatus.getHttpStatus(),
-                request
-        );
-    }
-
-
-    private ResponseEntity<Object> handleExceptionInternalConstraint(Exception e, ErrorStatus errorCommonStatus,
-                                                                     HttpHeaders headers, WebRequest request) {
-        ApiResponse<Object> body = ApiResponse.onFailure(errorCommonStatus.getCode(), errorCommonStatus.getMessage(), null);
-        return super.handleExceptionInternal(
-                e,
-                body,
-                headers,
-                errorCommonStatus.getHttpStatus(),
-                request
-        );
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ApiResponse.onFailure(
+                ErrorStatus._INTERNAL_SERVER_ERROR.getCode(),
+                ErrorStatus._INTERNAL_SERVER_ERROR.getMessage()
+            ));
     }
 }

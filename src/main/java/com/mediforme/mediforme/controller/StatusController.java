@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "상태 API", description = "상태 추가, 조회, 삭제 등 상태 관련 처리를 담당합니다.")
 @RestController
-@RequestMapping("/v2/status")
+@RequestMapping("/status")
 public class StatusController {
 
     @Autowired
@@ -35,9 +36,8 @@ public class StatusController {
 
     @Operation(summary = "사용자 + 날짜별 상태 조회", description = "특정 사용자와 날짜로 상태 조회합니다.")
     @GetMapping("/user/{userId}/date/{date}")
-    public StatusResponseDto getStatusByUserAndDate(@PathVariable Long userId, @PathVariable String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        return statusService.getStatusByUserAndDate(userId, localDate);
+    public StatusResponseDto getStatusByUserAndDate(@PathVariable Long userId, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return statusService.getStatusByUserAndDate(userId, date);
     }
 
     @Operation(summary = "사용자별 상태 전체 조회", description = "특정 사용자의 모든 상태를 조회합니다.")

@@ -21,6 +21,7 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "USER403", "권한이 존재하지 않습니다."),
     DUPLICATED_USER_LOGIN_ID(HttpStatus.CONFLICT, "USER404", "이미 존재하는 사용자 로그인 아이디입니다."),
     DUPLICATED_PHONE(HttpStatus.CONFLICT, "USER405", "이미 존재하는 사용자 전화번호입니다."),
+    CONSENT_REQUIRED(HttpStatus.BAD_REQUEST, "USER406", "약관 동의가 필요합니다."),
 
     //Email
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "email401", "중복된 이메일이 존재합니다."),
@@ -29,7 +30,7 @@ public enum ErrorCode {
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT401", "잘못된 JWT 토큰입니다."),
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT402", "만료된 JWT 토큰입니다."),
     UNSUPPORTED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT403", "지원하지 않는 JWT 토큰입니다."),
-    EMPTY_JWT_CLAIMS(HttpStatus.UNAUTHORIZED, "JWT404", "JWT claims string is empty입니다."),
+    EMPTY_JWT_CLAIMS(HttpStatus.UNAUTHORIZED, "JWT404", "JWT claims string이 비어있습니다."),
     UNAUTHORIZED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "JWT405", "권한 정보가 없는 토큰입니다."),
 
     // Medicine

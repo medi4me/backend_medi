@@ -1,7 +1,10 @@
 package com.mediforme.mediforme.apiPayload.code;
 
-public interface BaseCode {
-    public ReasonDTO getReason();
+import org.springframework.http.HttpStatus;
 
-    public ReasonDTO getReasonHttpStatus();
+public interface BaseCode {
+    HttpStatus getHttpStatus();
+    String getCode();
+    String getMessage();
 }
+

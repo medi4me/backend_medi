@@ -1,5 +1,5 @@
 @host = http://localhost:8080
-@accessToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY3Njc1MjQ2LCJleHAiOjE3Njc2Nzg4NDZ9.bbbgqV30yYAt4QhTDylI0PQUP7lrL5H0TwtXoGySkbA
+@accessToken = {{accessToken}}
 
 ### (1) 토큰 없이 호출 - SecurityConfig가 permitAll이면 200, 아니면 401/403 나올 것
 GET {{host}}/user/test@test.com/name

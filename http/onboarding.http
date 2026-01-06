@@ -1,5 +1,5 @@
 @host = http://localhost:8080
-@accessToken = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzY3Njg2NjY0LCJleHAiOjE3Njc2OTAyNjR9.gZu-vWuvOEgV2VcQNtzn5NkzCl6H3GI1rdCxGoyyIiQ
+@accessToken = {{accessToken}}
 @userId = 2
 @userMedicineId = 7
 

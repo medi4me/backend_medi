@@ -12,5 +12,7 @@ import java.util.Optional;
  */
 @Repository
 public interface UserTokenRedisRepository extends CrudRepository<UserToken, String> {
+    Optional<UserToken> findByRefreshToken(String refreshToken);
+    void deleteByRefreshToken(String refreshToken);
     Optional<UserToken> findByUserLoginId(String userLoginId);
 }

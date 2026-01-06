@@ -1,6 +1,5 @@
 package com.mediforme.lib.redis.config;
 
-import com.mediforme.lib.redis.enums.RedisDBIndex;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,20 +34,16 @@ public class RedisConfig {
 
     /**
      * RedisConnectionFactory 설정
-     * - Redis 연결을 설정하기 위한 빈
      */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
-        redisConfig.setHostName(host);
-        redisConfig.setPort(port);
-        redisConfig.setDatabase(RedisDBIndex.AUTH.getIndex());       // 기본 AUTH DB 사용
+        RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration(host, port);
 
-        if (password != null && !password.isEmpty()) {
+        if (password != null && !password.isBlank()) {
             redisConfig.setPassword(password);
         }
 
-        log.info("Redis 연결 설정 완료 → Host: {}, Port: {}, DB: {}", host, port, RedisDBIndex.AUTH.getIndex());
+        log.info("Redis 연결 설정 완료 → Host: {}, Port: {}", host, port);
         return new LettuceConnectionFactory(redisConfig);
     }
 
@@ -56,14 +51,15 @@ public class RedisConfig {
 
     /**
      * RedisTemplate 설정
-     * - Redis 데이터베이스에 대한 연산을 수행하는 데 사용되는 빈
+     * - @RedisHash repository가 내부적으로도 사용 가능
+     * - 직접 RedisTemplate 쓸 경우를 대비해 둠
      */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(@Qualifier("redisConnectionFactory") RedisConnectionFactory cf) {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 
         // Redis 서버 연결
-        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setConnectionFactory(cf);
 
         // 문자열 기반 직렬화 (Key/Hash Key)
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -78,36 +74,13 @@ public class RedisConfig {
     }
 
     /**
-     * 인증 코드 / 단순 문자열 저장용
+     * 단순 문자열 저장용 (블랙리스트/인증코드 등)
      */
     @Bean
     public StringRedisTemplate stringRedisTemplate(@Qualifier("redisConnectionFactory") RedisConnectionFactory connectionFactory) {
         StringRedisTemplate template = new StringRedisTemplate();
         template.setConnectionFactory(connectionFactory);
         log.info("StringRedisTemplate 등록 완료 (단순 문자열 Key-Value 저장용)");
-        return template;
-    }
-
-
-    /**
-     * 블랙리스트용 별도 RedisTemplate (DB1)
-     */
-    @Bean
-    public RedisConnectionFactory blacklistConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(host);
-        config.setPort(port);
-        config.setDatabase(RedisDBIndex.BLACKLIST.getIndex());
-        if (password != null && !password.isEmpty()) config.setPassword(password);
-        return new LettuceConnectionFactory(config);
-    }
-
-    @Bean
-    public RedisTemplate<String, Object> blacklistRedisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(blacklistConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
     }
 }

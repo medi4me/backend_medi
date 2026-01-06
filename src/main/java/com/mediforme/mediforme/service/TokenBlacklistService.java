@@ -1,6 +1,6 @@
 package com.mediforme.mediforme.service;
 
 public interface TokenBlacklistService {
-    void addToBlacklist(String token);
-    boolean isTokenBlacklisted(String token);
+    void addToBlacklist(String accessToken);
+    boolean isTokenBlacklisted(String accessToken);
 }

@@ -1,8 +1,10 @@
 package com.mediforme.mediforme.config.security.jwt;
 
-import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
+import com.mediforme.mediforme.service.TokenBlacklistService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,6 +21,7 @@ import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,8 +37,10 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final BlacklistRedisRepository blacklistRedisRepository;
+    private final TokenBlacklistService tokenBlacklistService;
+
     private static final PathMatcher pathMatcher = new AntPathMatcher();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     // 필터 예외 url
     private static final List<String> EXCLUDE_URLS = Arrays.asList(
@@ -44,13 +50,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/swagger-resources/**",
 
             // 인증/회원 관련 (JWT 불필요)
-            "/v2/users/auth/**",    // 로그인, 회원가입, 토큰 재발급
-            "/v2/find/**",          // 아이디/비밀번호 찾기
+            "/auth/**",             // 로그인, 회원가입, 토큰 재발급
+            "/find/**",             // 아이디/비밀번호 찾기
 
             // 정적 리소스
             "/favicon.ico",
             "/error"
     );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return EXCLUDE_URLS.stream().anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -59,51 +71,50 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         throws ServletException, IOException{
         String requestURI = request.getRequestURI();
 
-        // 인증 제외 경로면 필터 패스
-        if (isExcluded(requestURI)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
         try{
             // 토큰 추출
             String token = jwtTokenProvider.resolveToken(request);
-            if (token == null){
-                throw new CustomApiException(ErrorCode.EMPTY_JWT_CLAIMS);
+
+            // 토큰이 없으면 인증 시도 없이 통과 (인증이 필요한지는 Security가 판단)
+            if (token == null || token.isBlank()) {
+                filterChain.doFilter(request, response);
+                return;
             }
-            // 블랙리스트 검증
-            if (blacklistRedisRepository.findById(token).isPresent()){
+
+            // 블랙리스트 검증 (redis)
+            if (tokenBlacklistService.isTokenBlacklisted(token)) {
                 throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
             }
-            // 유효한 토큰이면 Authentication 객체 생성
-            if (jwtTokenProvider.validateToken(token)){
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
-            // 다음 필터 실행
+
+            // JWT 유효성 검증 (실패 시 예외 발생)
+            jwtTokenProvider.validateToken(token);
+
+            // 인증 객체 생성 및 SecurityContext 저장
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             filterChain.doFilter(request, response);
-        }  catch (ExpiredJwtException e) {
-            log.warn("JWT 만료: {}", e.getMessage());
-            setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+
         } catch (CustomApiException e) {
-            log.warn("JWT 검증 실패: {}", e.getErrorCode().getMessage());
-            setErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, e.getErrorCode().getMessage());
+            log.warn("JWT 필터 인증 실패: {}", e.getErrorCode());
+            writeError(response, e.getErrorCode());
+
         } catch (Exception e) {
-            log.error("JWT 필터 처리 중 예외 발생", e);
-            setErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error");
+            log.error("JWT 필터 처리 중 알 수 없는 예외", e);
+            writeError(response, ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
 
-    /** 특정 경로가 인증 제외 대상인지 여부 */
-    private boolean isExcluded(String requestURI) {
-        return JwtAuthenticationFilter.EXCLUDE_URLS.stream().anyMatch(pattern -> JwtAuthenticationFilter.pathMatcher.match(pattern, requestURI));
-    }
+    private void writeError(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setStatus(errorCode.getHttpStatus().value());
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-    /** 공통 에러 응답 */
-    private void setErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
-        response.setStatus(status);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write("{\"error\": \"" + message + "\"}");
+        // ApiResponse 표준 형식으로 통일
+        ApiResponse<Object> body = ApiResponse.onFailure(errorCode.getCode(), errorCode.getMessage());
+
+        response.getWriter().write(objectMapper.writeValueAsString(body));
     }
 }
 

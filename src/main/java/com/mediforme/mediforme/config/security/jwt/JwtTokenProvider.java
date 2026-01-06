@@ -1,9 +1,5 @@
 package com.mediforme.mediforme.config.security.jwt;
 
-import com.mediforme.lib.redis.entity.BlacklistToken;
-import com.mediforme.lib.redis.entity.UserToken;
-import com.mediforme.lib.redis.repository.BlacklistRedisRepository;
-import com.mediforme.lib.redis.repository.UserTokenRedisRepository;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import io.jsonwebtoken.*;
@@ -26,8 +22,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
-    private final UserTokenRedisRepository userTokenRedisRepository;
-    private final BlacklistRedisRepository blacklistRedisRepository;
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
@@ -68,36 +62,13 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshExpirationTime);
 
-        String accessToken = createAccessToken(userLoginId);
-
-        String refreshToken =  Jwts.builder()
+        return Jwts.builder()
                 .setClaims(Jwts.claims().setSubject(userLoginId))
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
-
-        // 리프레시 토큰 Redis에 저장
-        userTokenRedisRepository.save(UserToken.builder()
-                .accessToken(accessToken)
-                .userId(userId)
-                .userLoginId(userLoginId)
-                .refreshToken(refreshToken)
-                .build());
-
-        return refreshToken;
     }
-
-    /**
-     * Redis에 저장된 Refresh Token 검증
-     */
-    public boolean isRefreshTokenValid(String userLoginId, String refreshToken) {
-        return userTokenRedisRepository.findByUserLoginId(userLoginId)
-                .map(UserToken::getRefreshToken)
-                .filter(token -> token.equals(refreshToken))
-                .isPresent();
-    }
-
 
     /**
      * JWT에서 사용자 식별자 추출
@@ -122,10 +93,6 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token) {
         try{
-            // 블랙리스트 검증
-            if (blacklistRedisRepository.findById(token).isPresent()){
-                throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
-            }
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
@@ -154,21 +121,43 @@ public class JwtTokenProvider {
      * 토큰에서 userLoginId 추출
      */
     public String parseToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return getClaims(token).getSubject();
+    }
+
+
+    /**
+     * 토큰 만료 시각(exp) 추출
+     * - TTL 계산을 위한 exp
+     * - 만료된 토큰이어도 exp는 필요할 수 있으므로 ExpiredJwtException에서 claims를 복구
+     */
+    public Date getExpiration(String token) {
+        return getClaims(token).getExpiration();
     }
 
     /**
-     * 로그아웃 시 블랙리스트 등록
+     * 토큰의 남은 TTL(ms) 계산
+     * - exp - now
+     * - 이미 만료된 경우 0 이하가 반환될 수 있음.
      */
-    public void addToBlacklist(String token){
-        blacklistRedisRepository.save(BlacklistToken.builder()
-                .accessToken(token)
-                .reason("logout")
-                .build());
+    public long getRemainingTtlMs(String token) {
+        Date exp = getExpiration(token);
+        return exp.getTime() - System.currentTimeMillis();
+    }
+
+    /**
+     * JWT Claims 파싱 공통 메서드
+     * - 만료된 토큰이라도 claims(subject/exp)를 얻어야 하는 요구가 있을 수 있음.
+     * - 만료된 경우 ExpiredJwtException에서 claims를 꺼내 반환함.
+     */
+    private Claims getClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 }

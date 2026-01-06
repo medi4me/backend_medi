@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2/onboarding")
+@RequestMapping("/onboarding")
 public class OnboardingController {
 
     private final OnboardingService onboardingService;

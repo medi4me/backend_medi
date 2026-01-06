@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Slf4j
@@ -49,6 +50,17 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             .body(ApiResponse.onFailure(
                 ErrorStatus._BAD_REQUEST.getCode(),
                 message
+            ));
+    }
+
+    // PathVariable 날짜 파싱 실패 (LocalDate.parse)
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDateTimeParseException(DateTimeParseException e) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.onFailure(
+                ErrorStatus._BAD_REQUEST.getCode(),
+                "날짜 형식이 올바르지 않습니다. (yyyy-MM-dd)"
             ));
     }
 

@@ -50,6 +50,10 @@ public enum ErrorCode {
     // Authorization (403)
     FORBIDDEN_ACTION(HttpStatus.FORBIDDEN, "ACTION403", "접근 권한이 없습니다."),
 
+
+    // Status
+    STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "STATUS404", "상태를 찾을 수 없습니다."),
+
     // Verification (SMS 인증 관련)
     TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "VERIFICATION401", "인증 코드를 너무 자주 요청했습니다. 잠시 후 다시 시도해주세요."),
     SMS_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "VERIFICATION402", "인증 문자 발송에 실패했습니다."),

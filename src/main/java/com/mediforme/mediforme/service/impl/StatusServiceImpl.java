@@ -1,5 +1,7 @@
 package com.mediforme.mediforme.service.impl;
 
+import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
+import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.domain.Status;
 import com.mediforme.mediforme.dto.request.StatusRequestDto;
 import com.mediforme.mediforme.dto.response.StatusResponseDto;
@@ -35,18 +37,18 @@ public class StatusServiceImpl implements StatusService {
     @Override
     @Transactional(readOnly = true)
     public StatusResponseDto getStatusById(Long statusId) {
-        return statusRepository.findById(statusId)
-                .map(statusMapper::toResponse)
-                .orElse(null);
+        Status status = statusRepository.findById(statusId)
+            .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
+        return statusMapper.toResponse(status);
     }
 
     // 사용자 + 날짜별 조회
     @Override
     @Transactional(readOnly = true)
     public StatusResponseDto getStatusByUserAndDate(Long userId, LocalDate date) {
-        return statusRepository.findByUserIdAndStatusDate(userId, date)
-                .map(statusMapper::toResponse)
-                .orElse(null);
+        Status status = statusRepository.findByUserIdAndStatusDate(userId, date)
+            .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
+        return statusMapper.toResponse(status);
     }
 
     // 사용자별 전체 상태 조회
@@ -78,7 +80,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusResponseDto updateStatusByDate(Long userId, LocalDate date, StatusRequestDto dto) {
         Status existing = statusRepository.findByUserIdAndStatusDate(userId, date)
-                .orElseThrow(() -> new RuntimeException("Status not found"));
+            .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
 
         existing.updateStatus(
                 dto.getDefaultStatusCd(),
@@ -96,15 +98,18 @@ public class StatusServiceImpl implements StatusService {
     // 상태 삭제
     @Override
     public void deleteStatus(Long statusId) {
-        statusRepository.deleteById(statusId);
+        Status status = statusRepository.findById(statusId)
+            .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
+        statusRepository.delete(status);
     }
 
-
     private String getDefaultStatusName(Long code) {
+        if (code == null) return "미정";
+
         return switch (code.intValue()) {
-            case 1001 -> "좋음";
-            case 1002 -> "보통";
-            case 1003 -> "나쁨";
+            case 1 -> "좋음";
+            case 2 -> "보통";
+            case 3 -> "나쁨";
             default -> "미정";
         };
     }

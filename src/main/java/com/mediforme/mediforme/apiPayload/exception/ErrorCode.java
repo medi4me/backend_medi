@@ -7,12 +7,13 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    // Common (시스템/요청 형식/기본 에러)
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON400", "잘못된 요청입니다."),
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
-    FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON402", "금지된 요청입니다."),
+    COMMON_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON401", "인증이 필요합니다."),
+    COMMON_FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON402", "금지된 요청입니다."),
     UNAUTHORIZED_MODIFY(HttpStatus.BAD_REQUEST, "COMMON403", "수정, 삭제 권한이 없습니다."),
-    USER_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "COMMON404", "관리자만 사용 가능한 API입니다."),
+    USER_NOT_ADMIN(HttpStatus.UNAUTHORIZED, "COMMON403", "관리자만 사용 가능한 API입니다."),
     UNKNOWN_INQUIRY_TYPE(HttpStatus.BAD_REQUEST, "COMMON405", "알 수 없는 조회 타입입니다."),
 
     // User
@@ -37,8 +38,17 @@ public enum ErrorCode {
     MEDICINE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEDICINE401", "약물을 찾을 수 없습니다."),
     USER_MEDICINE_NOT_FOUND(HttpStatus.NOT_FOUND, "MEDICINE402", "사용자 복용 약물을 찾을 수 없습니다."),
 
-    // Authorized Action
+    // Authentication(인증 실패 전용) (401)
+    AUTH_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH401", "인증이 필요합니다."),
+    AUTH_INVALID_JWT(HttpStatus.UNAUTHORIZED, "AUTH402", "잘못된 JWT 토큰입니다."),
+    AUTH_EXPIRED_JWT(HttpStatus.UNAUTHORIZED, "AUTH403", "만료된 JWT 토큰입니다."),
+    AUTH_UNSUPPORTED_JWT(HttpStatus.UNAUTHORIZED, "AUTH404", "지원하지 않는 JWT 토큰입니다."),
+    AUTH_EMPTY_JWT_CLAIMS(HttpStatus.UNAUTHORIZED, "AUTH405", "JWT claims string이 비어있습니다."),
+
+    // Authorized / Action (인가 실패(권한 없음) 전용)(403)
     UNAUTHORIZED_ACTION(HttpStatus.UNAUTHORIZED, "ACTION401", "접근 권한이 없습니다."),
+    // Authorization (403)
+    FORBIDDEN_ACTION(HttpStatus.FORBIDDEN, "ACTION403", "접근 권한이 없습니다."),
 
     // Verification (SMS 인증 관련)
     TOO_MANY_REQUESTS(HttpStatus.TOO_MANY_REQUESTS, "VERIFICATION401", "인증 코드를 너무 자주 요청했습니다. 잠시 후 다시 시도해주세요."),

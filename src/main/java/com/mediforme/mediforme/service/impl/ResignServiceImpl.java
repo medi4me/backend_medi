@@ -31,11 +31,11 @@ public class ResignServiceImpl implements ResignService {
     private String currentLoginIdOrThrow() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
-            throw new CustomApiException(ErrorCode.UNAUTHORIZED);
+            throw new CustomApiException(ErrorCode.COMMON_UNAUTHORIZED);
         }
         String name = auth.getName();
         if (name == null || "anonymousUser".equals(name)) {
-            throw new CustomApiException(ErrorCode.UNAUTHORIZED);
+            throw new CustomApiException(ErrorCode.COMMON_UNAUTHORIZED);
         }
         return name;
     }

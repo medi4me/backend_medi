@@ -68,7 +68,7 @@ public class AuthController {
 
     private String extractBearerToken(String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new CustomApiException(ErrorCode.EMPTY_JWT_CLAIMS);
+            throw new CustomApiException(ErrorCode.AUTH_EMPTY_JWT_CLAIMS);
         }
         return authorizationHeader.substring(7);
     }

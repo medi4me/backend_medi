@@ -2,6 +2,7 @@ package com.mediforme.mediforme.config.security.jwt;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
+import com.mediforme.mediforme.config.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -83,15 +84,30 @@ public class JwtTokenProvider {
      */
     public Authentication getAuthentication(String token) {
         String userLoginId = this.parseToken(token);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(userLoginId);
+
+        // 탈퇴/비활성/잠금 계정이면 인증 객체 생성 자체를 막음
+        if (userDetails instanceof CustomUserDetails cud) {
+            // 탈퇴/비활성(status) 기반 차단
+            if (!cud.isEnabled()){
+                throw new CustomApiException(ErrorCode.USER_RESIGNED);
+            }
+
+            // 잠금/정지 상태인 경우 차단
+            if (!cud.isAccountNonLocked()){
+                throw new CustomApiException(ErrorCode.COMMON_UNAUTHORIZED);
+            }
+        }
+
         return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
     }
 
 
     /**
-     * 토큰 유효성 검사
+     * 토큰 유효성 검증 (서명/만료/형식)
      */
-    public boolean validateToken(String token) {
+    public boolean validateTokenOrThrow(String token) {
         try{
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())

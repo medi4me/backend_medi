@@ -51,4 +51,14 @@ public class UserTokenRedisServiceImpl implements UserTokenRedisService {
         userTokenRedisRepository.deleteById(refreshToken);
         log.info("Redis 삭제 완료 - refreshToken={}", refreshToken);
     }
+
+    @Override
+    public void deleteByUserLoginId(String userLoginId) {   // userLoginId로 삭제
+        userTokenRedisRepository.findByUserLoginId(userLoginId)
+            .ifPresent(token -> {
+                userTokenRedisRepository.deleteById(token.getRefreshToken());
+                log.info("Redis 삭제 완료 - userLoginId={}, refreshToken={}", userLoginId, token.getRefreshToken());
+            });
+    }
+
 }

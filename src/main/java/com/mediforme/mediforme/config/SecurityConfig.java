@@ -29,7 +29,7 @@ public class SecurityConfig {
     private final TokenBlacklistService tokenBlacklistService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 // CORS 설정
                 .cors(cors -> cors.configure(http))
@@ -59,10 +59,7 @@ public class SecurityConfig {
                         // 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated())
                 // JWT 인증 필터 등록
-                .addFilterBefore(
-                        new JwtAuthenticationFilter(jwtTokenProvider, tokenBlacklistService),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

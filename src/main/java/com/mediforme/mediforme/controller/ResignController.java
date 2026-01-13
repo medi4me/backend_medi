@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v2/users")
+@RequestMapping("/user")
 @Tag(name = "회원 탈퇴", description = "회원을 탈퇴시킵니다.(탈퇴 상태 처리)")
 public class ResignController {
     private final AuthService authService;

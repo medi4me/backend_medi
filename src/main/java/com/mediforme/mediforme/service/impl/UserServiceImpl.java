@@ -39,14 +39,18 @@ public class UserServiceImpl implements UserService {
         if (!Boolean.TRUE.equals(request.getAgreeToTerms())) {
             throw new CustomApiException(ErrorCode.CONSENT_REQUIRED);
         }
+
+        final long STATUS_ACTIVE = 2001L;
+        final long ROLE_USER = 1001L;
+        final long CONSENT_AGREED = 1L;
         User user = User.builder()
                 .userLoginId(request.getUserLoginId())
                 .userName(request.getUserName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phone(request.getPhone())
-                .statusCd(1001L)        // ACTIVE
-                .roleCd(1001L)          // ROLE_USER
-                .consentCd(1001L)       // CONSENT_Y
+                .statusCd(STATUS_ACTIVE)
+                .roleCd(ROLE_USER)
+                .consentCd(CONSENT_AGREED)
                 .build();
         return userRepository.save(user);
     }

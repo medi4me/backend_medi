@@ -1,25 +1,24 @@
 package com.mediforme.mediforme.service;
 
-import com.mediforme.mediforme.dto.request.StatusRequestDto;
-import com.mediforme.mediforme.dto.response.StatusResponseDto;
+import com.mediforme.mediforme.dto.request.StatusAdminRequestDto;
+import com.mediforme.mediforme.dto.request.StatusMeRequestDto;
+import com.mediforme.mediforme.dto.response.StatusAdminResponseDto;
 import com.mediforme.mediforme.dto.object.StatusSummaryDto;
+import com.mediforme.mediforme.dto.response.StatusMeResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface StatusService {
 
-    StatusResponseDto saveStatus(StatusRequestDto requestDto);
+    StatusMeResponseDto saveStatus(Long currentUserId, StatusMeRequestDto requestDto);
+    StatusMeResponseDto getStatusByUserAndDate(Long currentUserId, LocalDate date);
+    List<StatusMeResponseDto> getStatusesByUser(Long currentUserId);
+    List<StatusSummaryDto> getStatusSummaryForWeek(Long currentUserId, LocalDate startDate, LocalDate endDate);
+    StatusMeResponseDto updateStatusByDate(Long currentUserId, LocalDate date, StatusMeRequestDto requestDto);
+    void deleteStatusById(Long currentUserId, Long statusId);   // 본인 삭제(소유 검증 필수)
 
-    StatusResponseDto getStatusById(Long statusId);
-
-    StatusResponseDto getStatusByUserAndDate(Long userId, LocalDate date);
-
-    List<StatusResponseDto> getStatusesByUser(Long userId);
-
-    List<StatusSummaryDto> getStatusSummaryForWeek(Long userId, LocalDate startDate, LocalDate endDate);
-
-    StatusResponseDto updateStatusByDate(Long userId, LocalDate date, StatusRequestDto requestDto);
-
-    void deleteStatus(Long id);
+    // admin용
+    StatusAdminResponseDto getStatusById(Long statusId);
+    void deleteStatusAdmin(Long statusId);
 }

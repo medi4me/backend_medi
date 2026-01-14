@@ -3,9 +3,11 @@ package com.mediforme.mediforme.service.impl;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.domain.Status;
-import com.mediforme.mediforme.dto.request.StatusRequestDto;
-import com.mediforme.mediforme.dto.response.StatusResponseDto;
+import com.mediforme.mediforme.dto.request.StatusAdminRequestDto;
+import com.mediforme.mediforme.dto.request.StatusMeRequestDto;
+import com.mediforme.mediforme.dto.response.StatusAdminResponseDto;
 import com.mediforme.mediforme.dto.object.StatusSummaryDto;
+import com.mediforme.mediforme.dto.response.StatusMeResponseDto;
 import com.mediforme.mediforme.mapper.StatusMapper;
 import com.mediforme.mediforme.repository.StatusRepository;
 import com.mediforme.mediforme.service.StatusService;
@@ -25,43 +27,62 @@ public class StatusServiceImpl implements StatusService {
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
 
-    // 상태 저장
+    /**
+     * 상태 저장 (사용자용)
+     */
     @Override
-    public StatusResponseDto saveStatus(StatusRequestDto dto) {
-        Status entity = statusMapper.toEntity(dto);
+    public StatusMeResponseDto saveStatus(Long currentUserId, StatusMeRequestDto dto) {
+        Status entity = Status.builder()
+            .defaultStatusCd(dto.getDefaultStatusCd())
+            .drinkCd(dto.getDrinkCd())
+            .conditionCd(dto.getConditionCd())
+            .statusMemo(dto.getStatusMemo())
+            .statusDate(dto.getStatusDate())
+            .userId(currentUserId)
+            .build();
+
         Status saved = statusRepository.save(entity);
-        return statusMapper.toResponse(saved);
+        return statusMapper.toMeResponse(saved);
     }
 
-    // statusId로 조회
+
+    /**
+     * statusId로 조회 (관리자/디버그용)
+     */
     @Override
     @Transactional(readOnly = true)
-    public StatusResponseDto getStatusById(Long statusId) {
+    public StatusAdminResponseDto getStatusById(Long statusId) {
         Status status = statusRepository.findById(statusId)
             .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
-        return statusMapper.toResponse(status);
+        return statusMapper.toAdminResponse(status);
     }
 
-    // 사용자 + 날짜별 조회
+    /**
+     * 사용자 + 날짜별 조회 (사용자용)
+     */
     @Override
     @Transactional(readOnly = true)
-    public StatusResponseDto getStatusByUserAndDate(Long userId, LocalDate date) {
+    public StatusMeResponseDto getStatusByUserAndDate(Long userId, LocalDate date) {
         Status status = statusRepository.findByUserIdAndStatusDate(userId, date)
             .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
-        return statusMapper.toResponse(status);
+        return statusMapper.toMeResponse(status);
     }
 
-    // 사용자별 전체 상태 조회
+    /**
+     * 사용자별 전체 상태 조회 (사용자용)
+     */
     @Override
     @Transactional(readOnly = true)
-    public List<StatusResponseDto> getStatusesByUser(Long userId) {
+    public List<StatusMeResponseDto> getStatusesByUser(Long userId) {
         return statusRepository.findByUserId(userId)
                 .stream()
-                .map(statusMapper::toResponse)
+                .map(statusMapper::toMeResponse)
                 .collect(Collectors.toList());
     }
 
-    // 주간 상태 요약
+    /**
+     * 주간 상태 요약 (사용자용)
+     */
     @Override
     @Transactional(readOnly = true)
     public List<StatusSummaryDto> getStatusSummaryForWeek(Long userId, LocalDate start, LocalDate end) {
@@ -76,9 +97,12 @@ public class StatusServiceImpl implements StatusService {
                 .collect(Collectors.toList());
     }
 
-    // 상태 수정 (날짜 기준)
+    /**
+     * 상태 수정 (날짜 기준 / 사용자용)
+     * - userId 기준으로 먼저 찾아서 소유 검증 겸용
+     */
     @Override
-    public StatusResponseDto updateStatusByDate(Long userId, LocalDate date, StatusRequestDto dto) {
+    public StatusMeResponseDto updateStatusByDate(Long userId, LocalDate date, StatusMeRequestDto dto) {
         Status existing = statusRepository.findByUserIdAndStatusDate(userId, date)
             .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
 
@@ -92,16 +116,33 @@ public class StatusServiceImpl implements StatusService {
         );
 
         Status updated = statusRepository.save(existing);
-        return statusMapper.toResponse(updated);
+        return statusMapper.toMeResponse(updated);
     }
 
-    // 상태 삭제
+    /**
+     * 상태 삭제 (사용자용)
+     * @param currentUserId, statusId
+     */
     @Override
-    public void deleteStatus(Long statusId) {
-        Status status = statusRepository.findById(statusId)
+    public void deleteStatusById(Long currentUserId, Long statusId) {
+        Status status = statusRepository.findByStatusIdAndUserId(statusId, currentUserId)
             .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
         statusRepository.delete(status);
     }
+
+
+    /**
+     * 상태 삭제 (관리자/매니저용)
+     * - 운영 목적으로 소유 검증 없이 삭제
+     */
+    @Override
+    public void deleteStatusAdmin(Long statusId) {
+        Status status = statusRepository.findById(statusId)
+            .orElseThrow(() -> new CustomApiException(ErrorCode.STATUS_NOT_FOUND));
+
+        statusRepository.delete(status);
+    }
+
 
     private String getDefaultStatusName(Long code) {
         if (code == null) return "미정";

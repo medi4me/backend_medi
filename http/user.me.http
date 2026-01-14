@@ -1,0 +1,18 @@
+@host = http://localhost:8080
+@accessToken = {{ACCESS_TOKEN}}
+
+### (ME-1) 토큰 없이 호출 - 401 기대
+GET {{host}}/users/me
+Accept: application/json
+
+
+### (ME-2) 액세스 토큰 포함 호출 - 보호 자원이면 정상(200) 기대
+GET {{host}}/users/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (ME-3) 잘못된 토큰 -> 401 기대
+GET {{host}}/users/me
+Accept: application/json
+Authorization: Bearer invalid.token.value

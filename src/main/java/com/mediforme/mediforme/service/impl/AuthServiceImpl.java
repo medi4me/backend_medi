@@ -132,24 +132,20 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomApiException(ErrorCode.USER_RESIGNED);
         }
 
-        String userLoginId = token.getUserLoginId();
-        Long userId = token.getUserId();
-        String role = token.getRole();
-
         // Refresh Token Rotation (기존 토큰 즉시 폐기)
         userTokenRedisService.deleteByRefreshToken(refreshToken);
 
         // 새 토큰 발급
-        String newAccess = jwtTokenProvider.createAccessToken(userLoginId);
-        String newRefresh = jwtTokenProvider.createRefreshToken(userId, userLoginId);
+        String newAccess = jwtTokenProvider.createAccessToken(user.getUserId(), user.getUserLoginId(), user.getRoleCd());
+        String newRefresh = jwtTokenProvider.createRefreshToken(user.getUserId(), user.getUserLoginId(), user.getRoleCd());
 
         // Redis 저장
         userTokenRedisService.saveUserToken(
                 UserToken.builder()
                     .refreshToken(newRefresh)
-                    .userLoginId(userLoginId)
-                    .userId(userId)
-                    .role(role)
+                    .userLoginId(user.getUserLoginId())
+                    .userId(user.getUserId())
+                    .role(String.valueOf(user.getRoleCd()))
                     .ttlSeconds(REFRESH_TTL_SECONDS)
                     .build()
         );
@@ -162,14 +158,19 @@ public class AuthServiceImpl implements AuthService {
 
 
     /**
-     * 토큰 발급 공통 로직
+     * 토큰 발급 공통 로직 (DB User 기준으로 uid/role 포함해 발급)
      */
     private JwtToken issueToken(User user) {
         return JwtToken.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(user.getUserLoginId()))
+                .accessToken(jwtTokenProvider.createAccessToken(
+                        user.getUserId(),
+                        user.getUserLoginId(),
+                        user.getRoleCd()
+                ))
                 .refreshToken(jwtTokenProvider.createRefreshToken(
                         user.getUserId(),
-                        user.getUserLoginId()
+                        user.getUserLoginId(),
+                        user.getRoleCd()
                 ))
                 .build();
     }

@@ -1,0 +1,44 @@
+@host = http://localhost:8080
+
+# ADMIN / MANAGER 토큰
+@adminAccessToken = {{ADMIN_ACCESS_TOKEN}}
+
+# USER 토큰 (권한 테스트용)
+@userAccessToken = {{USER_ACCESS_TOKEN}}
+
+@statusId = 6
+
+
+### (AD-0) 인증 없이 접근 -> 401 기대
+GET {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+
+
+### (AD-1) USER 토큰으로 단건 조회 -> 403 기대
+GET {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{userAccessToken}}
+
+
+### (AD-2) ADMIN/MANAGER 토큰으로 단건 조회 -> 200 기대
+GET {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{adminAccessToken}}
+
+
+### (AD-3) USER 토큰으로 삭제 -> 403 기대
+DELETE {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{userAccessToken}}
+
+
+### (AD-4) ADMIN/MANAGER 토큰으로 삭제 -> 200 기대
+DELETE {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{adminAccessToken}}
+
+
+### (AD-5) 삭제 후 재조회 -> 404 기대
+GET {{host}}/admin/statuses/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{adminAccessToken}}

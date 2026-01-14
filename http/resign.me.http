@@ -1,0 +1,56 @@
+@host = http://localhost:8080
+
+# 정상 로그인으로 발급받은 access token / refresh token
+@accessToken = {{ACCESS_TOKEN}}
+@refreshToken = {{REFRESH_TOKEN}}
+
+# 만료된 토큰 테스트
+@expiredAccessToken = {{EXPIRED_ACCESS_TOKEN}}
+
+
+### (R-0) 토큰 유효성 스모크 체크 - 내 정보 조회 등 보호 API 호출
+GET {{host}}/users/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (R-1) 정상 탈퇴 (Authorization 필요) -> 200 기대
+DELETE {{host}}/users/me/resign
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (R-2) 인증 없이 탈퇴 시도 -> 401 기대
+DELETE {{host}}/users/me/resign
+Accept: application/json
+
+
+### (R-3) 잘못된 토큰으로 탈퇴 시도 -> 401 기대
+DELETE {{host}}/users/me/resign
+Accept: application/json
+Authorization: Bearer invalid.token.value
+
+
+### (R-4) 만료 토큰으로 탈퇴 시도 -> 401 기대
+DELETE {{host}}/users/me/resign
+Accept: application/json
+Authorization: Bearer {{expiredAccessToken}}
+
+
+### (R-5) 탈퇴 후 동일 accessToken으로 보호 API 호출 -> 401/403 기대
+# (보통 블랙리스트 처리/유저 상태 체크로 막힘)
+GET {{host}}/users/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (R-6) 탈퇴 후 refresh/reissue 동작 확인
+# 정책: 탈퇴 시 refresh도 무효화라면 -> 실패(401) 기대
+POST {{host}}/auth/reissue
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "refreshToken": "{{refreshToken}}"
+}

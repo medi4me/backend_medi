@@ -7,17 +7,17 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class StatusResponseDto {
+public class StatusMeResponseDto {
+
     private Long statusId;
+    private LocalDate statusDate;
     private Long defaultStatusCd;
     private Long drinkCd;
     private Long conditionCd;
     private String statusMemo;
-    private LocalDate statusDate;
-    private Long userId;
 
-    // 공통코드명
     private String defaultStatusName;
     private String drinkName;
     private String conditionName;
 }
+

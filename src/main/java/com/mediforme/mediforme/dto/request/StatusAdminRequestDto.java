@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class StatusRequestDto {
+public class StatusAdminRequestDto {
 
     @NotNull(message = "defaultStatusCd는 필수입니다.")
     private Long defaultStatusCd;

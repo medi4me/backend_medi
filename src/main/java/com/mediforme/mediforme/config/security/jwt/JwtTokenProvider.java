@@ -22,6 +22,10 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    private static final String CLAIM_UID = "uid";
+    private static final String CLAIM_ROLE = "role";
+
     private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${spring.jwt.secret}")
@@ -42,13 +46,19 @@ public class JwtTokenProvider {
 
     /**
      * Access Token 생성
+     * - subject: userLoginId
+     * - claim: uid
      */
-    public String createAccessToken(String userLoginId){
+    public String createAccessToken(Long userId, String userLoginId, Long roleCd){
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + accessExpirationTime);
 
+        Claims claims = Jwts.claims().setSubject(userLoginId);
+        claims.put(CLAIM_UID, userId);
+        claims.put(CLAIM_ROLE,roleCd);
+
         return Jwts.builder()
-                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -59,12 +69,16 @@ public class JwtTokenProvider {
     /**
      * Refresh Token 생성
      */
-    public String createRefreshToken(Long userId, String userLoginId){
+    public String createRefreshToken(Long userId, String userLoginId, Long roleCd){
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshExpirationTime);
 
+        Claims claims = Jwts.claims().setSubject(userLoginId);
+        claims.put(CLAIM_UID, userId);
+        claims.put(CLAIM_ROLE,roleCd);
+
         return Jwts.builder()
-                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -100,7 +114,7 @@ public class JwtTokenProvider {
             }
         }
 
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
 
@@ -140,6 +154,17 @@ public class JwtTokenProvider {
         return getClaims(token).getSubject();
     }
 
+    /**
+     * 토큰에서 uid claim 추출 (/users/me 내 활용)
+     */
+    public Long getUserIdClaim(String token) {
+        Object v = getClaims(token).get(CLAIM_UID);
+        if (v == null) return null;
+        // jjwt가 숫자를 Integer/Long로 섞어줄 수 있어 방어
+        if (v instanceof Integer i) return i.longValue();
+        if (v instanceof Long l) return l;
+        return Long.valueOf(v.toString());
+    }
 
     /**
      * 토큰 만료 시각(exp) 추출

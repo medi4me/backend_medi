@@ -2,6 +2,7 @@ package com.mediforme.mediforme.config.security.jwt;
 
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
+import com.mediforme.mediforme.config.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
+
+    private static final String CLAIM_UID = "uid";
+    private static final String CLAIM_ROLE = "role";
+
     private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${spring.jwt.secret}")
@@ -41,13 +46,19 @@ public class JwtTokenProvider {
 
     /**
      * Access Token 생성
+     * - subject: userLoginId
+     * - claim: uid
      */
-    public String createAccessToken(String userLoginId){
+    public String createAccessToken(Long userId, String userLoginId, Long roleCd){
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + accessExpirationTime);
 
+        Claims claims = Jwts.claims().setSubject(userLoginId);
+        claims.put(CLAIM_UID, userId);
+        claims.put(CLAIM_ROLE,roleCd);
+
         return Jwts.builder()
-                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -58,12 +69,16 @@ public class JwtTokenProvider {
     /**
      * Refresh Token 생성
      */
-    public String createRefreshToken(Long userId, String userLoginId){
+    public String createRefreshToken(Long userId, String userLoginId, Long roleCd){
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshExpirationTime);
 
+        Claims claims = Jwts.claims().setSubject(userLoginId);
+        claims.put(CLAIM_UID, userId);
+        claims.put(CLAIM_ROLE,roleCd);
+
         return Jwts.builder()
-                .setClaims(Jwts.claims().setSubject(userLoginId))
+                .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -83,15 +98,30 @@ public class JwtTokenProvider {
      */
     public Authentication getAuthentication(String token) {
         String userLoginId = this.parseToken(token);
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(userLoginId);
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+
+        // 탈퇴/비활성/잠금 계정이면 인증 객체 생성 자체를 막음
+        if (userDetails instanceof CustomUserDetails cud) {
+            // 탈퇴/비활성(status) 기반 차단
+            if (!cud.isEnabled()){
+                throw new CustomApiException(ErrorCode.USER_RESIGNED);
+            }
+
+            // 잠금/정지 상태인 경우 차단
+            if (!cud.isAccountNonLocked()){
+                throw new CustomApiException(ErrorCode.COMMON_UNAUTHORIZED);
+            }
+        }
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
 
     /**
-     * 토큰 유효성 검사
+     * 토큰 유효성 검증 (서명/만료/형식)
      */
-    public boolean validateToken(String token) {
+    public boolean validateTokenOrThrow(String token) {
         try{
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
@@ -124,6 +154,17 @@ public class JwtTokenProvider {
         return getClaims(token).getSubject();
     }
 
+    /**
+     * 토큰에서 uid claim 추출 (/users/me 내 활용)
+     */
+    public Long getUserIdClaim(String token) {
+        Object v = getClaims(token).get(CLAIM_UID);
+        if (v == null) return null;
+        // jjwt가 숫자를 Integer/Long로 섞어줄 수 있어 방어
+        if (v instanceof Integer i) return i.longValue();
+        if (v instanceof Long l) return l;
+        return Long.valueOf(v.toString());
+    }
 
     /**
      * 토큰 만료 시각(exp) 추출

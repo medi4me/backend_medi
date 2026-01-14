@@ -9,4 +9,5 @@ public interface UserTokenRedisService {
     Optional<UserToken> findByRefreshToken(String refreshToken);
     Optional<UserToken> findByUserLoginId(String userLoginId);
     void deleteByRefreshToken(String refreshToken);
+    void deleteByUserLoginId(String userLoginId);
 }

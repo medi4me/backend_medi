@@ -23,6 +23,7 @@ public enum ErrorCode {
     DUPLICATED_USER_LOGIN_ID(HttpStatus.CONFLICT, "USER404", "이미 존재하는 사용자 로그인 아이디입니다."),
     DUPLICATED_PHONE(HttpStatus.CONFLICT, "USER405", "이미 존재하는 사용자 전화번호입니다."),
     CONSENT_REQUIRED(HttpStatus.BAD_REQUEST, "USER406", "약관 동의가 필요합니다."),
+    USER_RESIGNED(HttpStatus.CONFLICT, "USER_403_001", "탈퇴한 계정입니다."),
 
     //Email
     DUPLICATE_EMAIL(HttpStatus.CONFLICT, "email401", "중복된 이메일이 존재합니다."),
@@ -44,6 +45,9 @@ public enum ErrorCode {
     AUTH_EXPIRED_JWT(HttpStatus.UNAUTHORIZED, "AUTH403", "만료된 JWT 토큰입니다."),
     AUTH_UNSUPPORTED_JWT(HttpStatus.UNAUTHORIZED, "AUTH404", "지원하지 않는 JWT 토큰입니다."),
     AUTH_EMPTY_JWT_CLAIMS(HttpStatus.UNAUTHORIZED, "AUTH405", "JWT claims string이 비어있습니다."),
+
+    // Login
+    INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "AUTH406", "아이디 또는 비밀번호가 올바르지 않습니다."),
 
     // Authorized / Action (인가 실패(권한 없음) 전용)(403)
     UNAUTHORIZED_ACTION(HttpStatus.UNAUTHORIZED, "ACTION401", "접근 권한이 없습니다."),

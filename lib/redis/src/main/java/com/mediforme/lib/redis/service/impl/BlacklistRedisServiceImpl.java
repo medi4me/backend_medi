@@ -40,7 +40,9 @@ public class BlacklistRedisServiceImpl implements BlacklistRedisService {
             return false;
         }
         String key = keyOf(accessToken);
-        return Boolean.TRUE.equals(stringRedisTemplate.hasKey(key));
+        Boolean exists = stringRedisTemplate.hasKey(key);
+        log.info("[BLACKLIST] check keySuffix={}, exists={}", keySuffix(key), exists);
+        return Boolean.TRUE.equals(exists);
     }
 
     private void validate(String accessToken, long ttlMs, String reason) {

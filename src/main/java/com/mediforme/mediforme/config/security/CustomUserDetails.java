@@ -17,6 +17,10 @@ import java.util.List;
 @ToString
 @Schema(description = "회원 Principal 사용 용도")
 public class CustomUserDetails implements UserDetails {
+    private static final Long STATUS_ACTIVE = 2001L;
+    private static final Long STATUS_INACTIVE = 2002L;
+    private static final Long STATUS_RESIGNED = 9999L;
+
     private Long userId;
     private String userLoginId;
     private String userName;
@@ -25,6 +29,7 @@ public class CustomUserDetails implements UserDetails {
     private Long roleCd;
     private Long consentCd;
     private Long statusCd;
+
     private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
@@ -69,9 +74,16 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
+
+    /**
+     * 계정 잠금/정지 개념이 있으면 여기서 제어
+     * - STATUS_INACTIVE(비활성): 잠금 처리
+     *  - 탈퇴(9999)도 잠금으로 처리
+     */
     @Override
     public boolean isAccountNonLocked() {
-        return true;        // statusCd 값으로 제어
+        if (statusCd == null) return false;
+        return !STATUS_INACTIVE.equals(statusCd) && !STATUS_RESIGNED.equals(statusCd);        // statusCd 값으로 제어
     }
 
     @Override
@@ -81,8 +93,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        // statusCd 로직으로 제어 (2001=활성, 2002=비활성)
-        return true;
+        // 탈퇴(9999)면 로그인/ 인증 불가
+        if (statusCd == null) return false;
+        // 활성만 true
+        return STATUS_ACTIVE.equals(statusCd);
     }
 }
 

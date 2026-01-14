@@ -1,6 +1,7 @@
 ### ===== 공통 변수 =====
 @baseUrl = http://localhost:8080
-@userLoginId = test@test.com
+@userLoginId = testforresign@test.com
+@adminUserLoginId = test@admin.com
 @password = password123
 
 ### 회원가입
@@ -11,7 +12,7 @@ Content-Type: application/json
   "userLoginId": "{{userLoginId}}",
   "password": "{{password}}",
   "userName": "테스트",
-  "phone": "01012345678",
+  "phone": "01012345670",
   "agreeToTerms": true
 }
 

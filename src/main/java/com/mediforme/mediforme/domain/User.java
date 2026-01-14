@@ -52,4 +52,9 @@ public class User extends BaseEntity {
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public boolean isResigned() {
+        return this.statusCd != null && this.statusCd.equals(9999L);
+    }
+
 }

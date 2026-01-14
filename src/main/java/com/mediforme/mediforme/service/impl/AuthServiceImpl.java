@@ -14,9 +14,9 @@ import com.mediforme.mediforme.repository.UserRepository;
 import com.mediforme.mediforme.service.AuthService;
 import com.mediforme.mediforme.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,19 +39,34 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserLoginResponseDto login(UserLoginRequestDto.LoginRequestDto request){
         // Authentication 생성 및 검증
-        Authentication authentication = authenticationManager.authenticate(
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUserLoginId(),
-                        request.getPassword()
+                    request.getUserLoginId(),
+                    request.getPassword()
                 )
-        );
-        // 사용자 조회
+            );
+        } catch (DisabledException e) {
+            // isEnabled() == false
+            // 탈퇴/비활성 정책인 경우
+            throw new CustomApiException(ErrorCode.USER_RESIGNED);
+        } catch (LockedException e) {
+            // isAccountNonLocked() == false
+            throw new CustomApiException(ErrorCode.USER_RESIGNED);
+        } catch (BadCredentialsException e) {
+            // 비밀번호 틀림
+            throw new CustomApiException(ErrorCode.INVALID_LOGIN);
+        } catch (AuthenticationException e) {
+            // 그 외 인증 실패
+            throw new CustomApiException(ErrorCode.COMMON_UNAUTHORIZED);
+        }
+
+        // 인증 성공한 사용자만 도달
         User user = userService.getByLoginId(authentication.getName());
 
-        // JWT 발급 (Access, Refresh Token)
         JwtToken token = issueToken(user);
 
-        // refreshToken Redis 저장
         userTokenRedisService.saveUserToken(
             UserToken.builder()
                 .refreshToken(token.getRefreshToken())
@@ -59,14 +74,14 @@ public class AuthServiceImpl implements AuthService {
                 .userId(user.getUserId())
                 .role(String.valueOf(user.getRoleCd()))
                 .ttlSeconds(REFRESH_TTL_SECONDS)
-            .build()
+                .build()
         );
 
         return UserLoginResponseDto.builder()
-                .userLoginId(user.getUserLoginId())
-                .accessToken(token.getAccessToken())
-                .refreshToken(token.getRefreshToken())
-                .build();
+            .userLoginId(user.getUserLoginId())
+            .accessToken(token.getAccessToken())
+            .refreshToken(token.getRefreshToken())
+            .build();
     }
 
 
@@ -111,24 +126,26 @@ public class AuthServiceImpl implements AuthService {
         UserToken token = userTokenRedisService.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new CustomApiException(ErrorCode.INVALID_JWT_TOKEN));
 
-        String userLoginId = token.getUserLoginId();
-        Long userId = token.getUserId();
-        String role = token.getRole();
+        // 탈퇴 사용자인 경우 재발급 금지
+        User user = userService.getByLoginId(token.getUserLoginId());
+        if (user.isResigned()){
+            throw new CustomApiException(ErrorCode.USER_RESIGNED);
+        }
 
         // Refresh Token Rotation (기존 토큰 즉시 폐기)
         userTokenRedisService.deleteByRefreshToken(refreshToken);
 
         // 새 토큰 발급
-        String newAccess = jwtTokenProvider.createAccessToken(userLoginId);
-        String newRefresh = jwtTokenProvider.createRefreshToken(userId, userLoginId);
+        String newAccess = jwtTokenProvider.createAccessToken(user.getUserId(), user.getUserLoginId(), user.getRoleCd());
+        String newRefresh = jwtTokenProvider.createRefreshToken(user.getUserId(), user.getUserLoginId(), user.getRoleCd());
 
         // Redis 저장
         userTokenRedisService.saveUserToken(
                 UserToken.builder()
                     .refreshToken(newRefresh)
-                    .userLoginId(userLoginId)
-                    .userId(userId)
-                    .role(role)
+                    .userLoginId(user.getUserLoginId())
+                    .userId(user.getUserId())
+                    .role(String.valueOf(user.getRoleCd()))
                     .ttlSeconds(REFRESH_TTL_SECONDS)
                     .build()
         );
@@ -141,14 +158,19 @@ public class AuthServiceImpl implements AuthService {
 
 
     /**
-     * 토큰 발급 공통 로직
+     * 토큰 발급 공통 로직 (DB User 기준으로 uid/role 포함해 발급)
      */
     private JwtToken issueToken(User user) {
         return JwtToken.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(user.getUserLoginId()))
+                .accessToken(jwtTokenProvider.createAccessToken(
+                        user.getUserId(),
+                        user.getUserLoginId(),
+                        user.getRoleCd()
+                ))
                 .refreshToken(jwtTokenProvider.createRefreshToken(
                         user.getUserId(),
-                        user.getUserLoginId()
+                        user.getUserLoginId(),
+                        user.getRoleCd()
                 ))
                 .build();
     }

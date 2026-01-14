@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +27,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // 사용자 조회
         User user = userRepository.findByUserLoginId(userLoginId)
                 .orElseThrow(() -> {
-                    log.error("User not found: {}", userLoginId);
-                    return new CustomApiException(ErrorCode.USER_NOT_FOUND);
+                    log.info("[AUTH] user not found. userLoginId={}", userLoginId);
+                    return new UsernameNotFoundException("User not found");
                 });
 
         return new CustomUserDetails(user);

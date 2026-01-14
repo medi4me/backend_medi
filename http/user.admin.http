@@ -1,0 +1,20 @@
+@host = http://localhost:8080
+@adminAccessToken = {{ADMIN_ACCESS_TOKEN}}
+@userAccessToken = {{USER_ACCESS_TOKEN}}
+@userId = 11
+
+### (AD-1) 토큰 없이 호출 -> 401/403
+GET {{host}}/admin/users/{{userId}}
+Accept: application/json
+
+
+### (AD-2) USER 토큰으로 호출 -> 403 기대
+GET {{host}}/admin/users/{{userId}}
+Accept: application/json
+Authorization: Bearer {{userAccessToken}}
+
+
+### (AD-3) ADMIN/MANAGER 토큰으로 호출 -> 200 기대
+GET {{host}}/admin/users/{{userId}}
+Accept: application/json
+Authorization: Bearer {{adminAccessToken}}

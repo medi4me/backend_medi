@@ -1,0 +1,83 @@
+@host = http://localhost:8080
+@accessToken = {{ACCESS_TOKEN}}
+@userId = 10
+
+@date = 2026-01-06
+@startDate = 2026-01-01
+@endDate = 2026-01-07
+
+### (ME-0) 토큰 유효성 빠른 체크 - 내 정보 조회
+GET {{host}}/users/me
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (ME-1) 인증 없이 상태 조회 -> 401 조회
+GET {{host}}/users/me/statuses/{{date}}
+Accept: application/json
+
+
+### (ME-2) 상태 생성 (저장)
+POST {{host}}/users/me/statuses
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "statusDate": "{{date}}",
+  "defaultStatusCd": 1,
+  "drinkCd": 2,
+  "conditionCd": 3,
+  "statusMemo": "컨디션이 조금 안 좋아요"
+}
+
+
+### (ME-3) 날짜별 상태 조회 (ME)
+GET {{host}}/users/me/statuses/{{date}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (ME-4) 기간 상태 요약 (week-summary)
+GET {{host}}/users/me/statuses/week-summary?startDate={{startDate}}&endDate={{endDate}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (ME-5) 날짜 기준 상태 수정
+PUT {{host}}/users/me/statuses/{{date}}
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "statusDate": "{{date}}",
+  "defaultStatusCd": 2,
+  "drinkCd": 1,
+  "conditionCd": 2,
+  "statusMemo": "수정된 상태 메모"
+}
+
+
+### (ME-6) 필수값 누락 -> 400 기대 (Validation)
+POST {{host}}/users/me/statuses
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "statusDate": "{{date}}"
+}
+
+
+### (ME-7) 날짜 포맷 오류 -> 400 기대
+GET {{host}}/users/me/statuses/2026-99-99
+Accept: application/json
+Authorization: Bearer {{accessToken}}
+
+
+### (ME-8) 내 상태 삭제 (statusId 필요) -> 200 기대
+@statusId = 5
+DELETE {{host}}/users/me/statuses/id/{{statusId}}
+Accept: application/json
+Authorization: Bearer {{accessToken}}

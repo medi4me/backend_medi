@@ -33,9 +33,10 @@ public class OnboardingServiceImpl implements OnboardingService {
 
     // 약, 사용자 복용 정보 저장
     @Override
-    public OnboardingResponseDto saveMedicineInfo(OnboardingRequestDto request) throws IOException, ParseException {
-        User user = userRepository.findByUserLoginId(request.getUserLoginId())
-                .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
+    public OnboardingResponseDto saveMedicineInfo(Long userId, OnboardingRequestDto request) throws IOException, ParseException {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new CustomApiException(ErrorCode.USER_NOT_FOUND));
 
         Medicine medicine = medicineRepository.findByMedicineName(request.getItemName())
                 .orElseGet(() -> medicineRepository.save(Medicine.builder()

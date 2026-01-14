@@ -5,7 +5,6 @@ import com.mediforme.mediforme.apiPayload.ApiResponse;
 import com.mediforme.mediforme.apiPayload.exception.CustomApiException;
 import com.mediforme.mediforme.apiPayload.exception.ErrorCode;
 import com.mediforme.mediforme.service.TokenBlacklistService;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,6 +73,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try{
             // 토큰 추출
             String token = jwtTokenProvider.resolveToken(request);
+            log.info("[FILTER] tokenHead={}, uri={}",
+                token == null ? "null" : token.substring(0, Math.min(15, token.length())),
+                request.getRequestURI());
 
             // 토큰이 없으면 인증 시도 없이 통과 (인증이 필요한지는 Security가 판단)
             if (token == null || token.isBlank()) {
@@ -81,13 +83,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            request.setAttribute(SecurityTokenAttributes.ACCESS_TOKEN, token);
+
             // 블랙리스트 검증 (redis)
             if (tokenBlacklistService.isTokenBlacklisted(token)) {
+                log.warn("[FILTER] blacklisted hit: tokenHead={}", token.substring(0, Math.min(15, token.length())));
                 throw new CustomApiException(ErrorCode.INVALID_JWT_TOKEN);
             }
 
             // JWT 유효성 검증 (실패 시 예외 발생)
-            jwtTokenProvider.validateToken(token);
+            jwtTokenProvider.validateTokenOrThrow(token);
 
             // 인증 객체 생성 및 SecurityContext 저장
             Authentication authentication = jwtTokenProvider.getAuthentication(token);

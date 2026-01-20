@@ -1,6 +1,6 @@
 ### ===== 공통 변수 =====
 @baseUrl = http://localhost:8080
-@userLoginId = testforresign@test.com
+@userLoginId = test@test.com
 @adminUserLoginId = test@admin.com
 @password = password123
 

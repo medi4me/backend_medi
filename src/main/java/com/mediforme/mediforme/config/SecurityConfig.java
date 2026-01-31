@@ -5,6 +5,8 @@ import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationEntryPoint;
 import com.mediforme.mediforme.config.security.jwt.JwtAuthenticationFilter;
 import com.mediforme.mediforme.config.security.jwt.JwtTokenProvider;
 import com.mediforme.mediforme.service.TokenBlacklistService;
+import org.springframework.http.HttpMethod;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,6 +60,13 @@ public class SecurityConfig {
                                 "/error",
                                 "/auth/**"
                         ).permitAll()
+                    
+                        // 온보딩/조회성 API는 GET만 공개
+                        .requestMatchers(HttpMethod.GET,
+                            "/medicines",
+                            "/medicines/info"
+                        ).permitAll()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         // 나머지 모든 요청은 인증 필요
                         .anyRequest().authenticated())

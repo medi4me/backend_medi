@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v2/medicine-interactions")
 @RequiredArgsConstructor
-public class MedicineInteractionController {
+public class MedicineInteractionsController {
     private final MedicineInteractionService medicineInteractionService;
 
     // 사용자 복용 중인 약물과 새로 복용하려는 약물 간의 상호작용 검사

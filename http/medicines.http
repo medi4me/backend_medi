@@ -1,0 +1,9 @@
+@baseUrl = http://localhost:8080
+
+### 1) 온보딩 검색
+GET {{baseUrl}}/medicines?name=타이레놀
+Accept: application/json
+
+### 2) 상세 조회
+GET {{baseUrl}}/medicines/info?name=타이레놀
+Accept: application/json

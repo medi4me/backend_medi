@@ -1,15 +1,17 @@
 package com.mediforme.mediforme.check.controller;
 
+import com.mediforme.mediforme.check.application.InteractionCheckService;
 import com.mediforme.mediforme.medicine.dto.MedicineInteractResponseDto;
-import com.mediforme.mediforme.check.service.MedicineInteractionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.parser.ParseException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "약물 성분 충돌 검사", description = "약물 간 상호작용 검사 및 정보 조회")
@@ -17,7 +19,8 @@ import java.util.List;
 @RequestMapping("/v2/medicine-interactions")
 @RequiredArgsConstructor
 public class MedicineInteractionsController {
-    private final MedicineInteractionService medicineInteractionService;
+
+    private final InteractionCheckService interactionCheckService;
 
     // 사용자 복용 중인 약물과 새로 복용하려는 약물 간의 상호작용 검사
     @Operation(summary = "약물 상호작용 검사", description = "사용자 ID와 새 약 이름을 기반으로 복용 중인 약들과의 상호작용 여부를 확인합니다.")
@@ -26,18 +29,12 @@ public class MedicineInteractionsController {
             @RequestParam("userId") Long userId,
             @RequestParam("newMedication") String newMedication) {
 
-        try {
-            List<String> result = medicineInteractionService.checkDrugInteractions(userId, newMedication);
+        List<String> result = interactionCheckService.check(userId, newMedication);
 
-            if (result.isEmpty()) {
-                return ResponseEntity.ok(List.of("상호작용 없음"));
-            }
-            return ResponseEntity.ok(result);
-
-        } catch (IOException | ParseException e) {
-            return ResponseEntity.internalServerError()
-                    .body(List.of("상호작용 검사 중 오류가 발생했습니다: " + e.getMessage()));
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(List.of("상호작용 없음"));
         }
+        return ResponseEntity.ok(result);
     }
 
     // 특정 약 이름으로 상호작용 정보 조회 (관리자 사이트용)
@@ -46,7 +43,7 @@ public class MedicineInteractionsController {
     public ResponseEntity<List<MedicineInteractResponseDto>> getMedicineInteractionInfo(
             @RequestParam("medicineName") String medicineName) {
 
-        List<MedicineInteractResponseDto> result = medicineInteractionService.getMedicineInteractionInfoByName(medicineName);
+        List<MedicineInteractResponseDto> result = interactionCheckService.lookupRules(medicineName);
 
         if (result.isEmpty()) {
             return ResponseEntity.notFound().build();

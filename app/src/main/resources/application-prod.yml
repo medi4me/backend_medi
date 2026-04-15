@@ -1,0 +1,41 @@
+# 운영 서버 환경 (고객 대상 서비스 서버)
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_PROD_URL}
+    username: ${DB_PROD_USERNAME}
+    password: ${DB_PROD_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      pool-name: MediformeHikariCP
+
+  jpa:
+    hibernate:
+      ddl-auto: validate   # 운영 환경에서는 DB 스키마 자동 변경 금지
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+        show_sql: false
+        use_sql_comments: false
+        jdbc:
+          batch_size: 100
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: warn
+    org.springframework: info
+

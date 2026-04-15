@@ -1,0 +1,26 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java'
+}
+
+dependencies {
+    // 부트스트랩 모듈 — api 모듈을 실행 가능한 Spring Boot 앱으로 패키징
+    implementation project(':api')
+}
+
+// 이 모듈만 실행 가능한 boot jar 를 생성
+bootJar {
+    enabled = true
+    mainClass = 'com.mediforme.mediforme.MediformeApplication'
+    archiveFileName = 'mediforme.jar'
+}
+
+// 루트의 subprojects { apply plugin: 'java' } 때문에 기본 jar 가 같이 만들어짐 — 비활성
+jar {
+    enabled = false
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

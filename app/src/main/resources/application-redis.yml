@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: redis
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      timeout: 6000
+
+      # DB 분리 구성 (AUTH: 0, BLACKLIST: 1, CACHE: 2)
+      databases:
+        auth: 0
+        blacklist: 1
+        cache: 2
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000 # 캐시 TTL (10분)
+      cache-null-values: false
+
+logging:
+  level:
+    org.springframework.data.redis: info

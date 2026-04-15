@@ -1,13 +1,11 @@
 package com.mediforme.mediforme.medicine.service.impl;
 
 
-import com.mediforme.mediforme.medicine.external.MfdsApiConfig;
 import com.mediforme.mediforme.medicine.domain.Medicine;
 import com.mediforme.mediforme.medicine.domain.UserMedicine;
-import com.mediforme.mediforme.medicine.dto.MedicineInteractionDto;
-import com.mediforme.mediforme.medicine.dto.MedicineSearchItemDto;
 import com.mediforme.mediforme.medicine.dto.MedicineCameraResponseDto;
-import com.mediforme.mediforme.medicine.dto.MedicineSearchResponseDto;
+import com.mediforme.mediforme.medicine.dto.MedicineInteractionDto;
+import com.mediforme.mediforme.medicine.external.client.MfdsMedicineClient;
 import com.mediforme.mediforme.medicine.repository.MedicineRepository;
 import com.mediforme.mediforme.medicine.repository.UserMedicineRepository;
 import com.mediforme.mediforme.medicine.service.MedicineService;
@@ -15,71 +13,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static com.mediforme.mediforme.medicine.external.client.MfdsMedicineClient.firstNonBlank;
+import static com.mediforme.mediforme.medicine.external.client.MfdsMedicineClient.getString;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class MedicineServiceImpl implements MedicineService {
 
-    private static final int CONNECT_TIMEOUT_MS = 2000;
-    private static final int READ_TIMEOUT_MS = 3000;
-    private static final int DEFAULT_PAGE_NO = 1;
-    private static final int DEFAULT_NUM_OF_ROWS = 10;
-
     private final MedicineRepository medicineRepository;
-    private final MfdsApiConfig mfdsApiConfig;
     private final UserMedicineRepository userMedicineRepository;
-
-    /**
-     * (온보딩용) 약 이름, 이미지 위주만 내려주는 검색
-     */
-    @Override
-    public MedicineSearchResponseDto getMedicineInfoByName(String itemName) throws IOException, ParseException {
-        JSONArray items = fetchPublicApiItems(itemName);
-
-        if (items == null || items.isEmpty()) {
-            return MedicineSearchResponseDto.builder()
-                .medicines(Collections.emptyList())
-                .build();
-        }
-
-        List<MedicineSearchItemDto> list = new ArrayList<>();
-        for (Object o : items) {
-            JSONObject item = (JSONObject) o;
-
-            // 공공 API에서 키가 혼용될 수 있어 다중 키 접근
-            String name = firstNonBlank(
-                getString(item, "itemName"),
-                getString(item, "ITEM_NAME"),
-                "이름 없음"
-            );
-
-            String imageurl = firstNonBlank(
-                getString(item, "itemImage"),
-                getString(item, "ITEM_IMAGE"),
-                "이미지 없음"
-            );
-
-            list.add(MedicineSearchItemDto.builder()
-                .name(name)
-                .imageUrl(imageurl)
-                .build());
-        }
-
-        return MedicineSearchResponseDto.builder()
-            .medicines(list)
-            .build();
-    }
+    private final MfdsMedicineClient mfdsMedicineClient;
 
     /**
      * 카메라 인식 이후 상세 정보까지 포함한 조회
@@ -88,7 +40,7 @@ public class MedicineServiceImpl implements MedicineService {
     public List<MedicineCameraResponseDto.MedicineInfoDto> getMedicineInfoSimple(String itemName)
         throws IOException, ParseException {
 
-        JSONArray items = fetchPublicApiItems(itemName);
+        JSONArray items = mfdsMedicineClient.fetchItemsByName(itemName);
         if (items == null || items.isEmpty()) return Collections.emptyList();
 
         List<MedicineCameraResponseDto.MedicineInfoDto> list = new ArrayList<>();
@@ -122,78 +74,5 @@ public class MedicineServiceImpl implements MedicineService {
                         .component(null)
                         .build())
                 .toList();
-    }
-
-    /**
-     * 공공데이터 API 호출, JSON 파싱 후 items 추출
-     */
-    private JSONArray fetchPublicApiItems(String itemName) throws IOException, ParseException {
-        if (itemName == null || itemName.isBlank()) {
-            return null;
-        }
-
-        String urlStr = buildUrl(itemName);
-
-        HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
-        conn.setRequestMethod("GET");
-        conn.setConnectTimeout(CONNECT_TIMEOUT_MS);
-        conn.setReadTimeout(READ_TIMEOUT_MS);
-
-        int status = conn.getResponseCode();
-
-        InputStream stream = (status >= 200 && status < 300)
-            ? conn.getInputStream()
-            : conn.getErrorStream();
-
-        String responseBody;
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) sb.append(line);
-            responseBody = sb.toString();
-        } finally {
-            conn.disconnect();
-        }
-
-        if (status < 200 || status >= 300) {
-            // 외부 API 장애/키 문제 로깅
-            log.warn("Public API call failed. status={}, body={}", status, responseBody);
-            throw new IOException("Public API error. status=" + status);
-        }
-
-        if (responseBody == null || responseBody.isBlank()) return null;
-
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseBody);
-
-        JSONObject body = (JSONObject) json.get("body");
-        if (body == null) return null;
-
-        return (JSONArray) body.get("items");
-    }
-
-
-    private String buildUrl(String itemName) {
-        String encoded = URLEncoder.encode(itemName, StandardCharsets.UTF_8);
-
-        return mfdsApiConfig.getServiceUrl()
-            + "?serviceKey=" + mfdsApiConfig.getServiceKey()
-            + "&itemName=" + encoded
-            + "&pageNo=" + DEFAULT_PAGE_NO
-            + "&numOfRows=" + DEFAULT_NUM_OF_ROWS
-            + "&type=json";
-    }
-
-    private static String getString(JSONObject obj, String key) {
-        if (obj == null || key == null) return null;
-        Object v = obj.get(key);
-        return v == null ? null : String.valueOf(v).trim();
-    }
-
-    private static String firstNonBlank(String... values) {
-        for (String v : values) {
-            if (v != null && !v.isBlank()) return v;
-        }
-        return null;
     }
 }

@@ -1,6 +1,0 @@
-spring:
-  jwt:
-    secret: ${JWT_SECRET_KEY}
-    token:
-      access-expiration-time: ${JWT_ACCESS_EXPIRATION:3600000}      # 1시간 (1h)
-      refresh-expiration-time: ${JWT_REFRESH_EXPIRATION:604800000}  # 7일 (7d)

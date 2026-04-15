@@ -1,0 +1,68 @@
+plugins {
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'java-library'
+}
+
+dependencies {
+    // ── api (다른 모듈에 전이 노출) ──────────────────────────────
+    // app 에서 @SpringBootApplication / @EnableJpaAuditing / @EnableRedisRepositories 를 쓰려면 필요
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-web'
+
+    // 컨트롤러/서비스 시그니처가 common 타입(ApiResponse, ErrorCode 등)을 쓰므로 전이 노출
+    api project(':common')
+    api project(':lib:redis')
+
+    // ── implementation (api 내부 구현용) ──────────────────────
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'com.google.cloud:google-cloud-vision:3.45.0'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    // json simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+    // SMS Verification
+    implementation 'net.nurigo:sdk:4.3.0'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-web'
+    implementation 'org.springframework.security:spring-security-config'
+    implementation 'org.springframework.security:spring-security-crypto'
+
+    // MapStruct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// api 는 library 모듈 — 부트스트랩은 app 모듈에서 담당
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+    archiveClassifier = ''
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

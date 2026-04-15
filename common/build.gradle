@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    // JPA (BaseEntity - @MappedSuperclass, @Column)
+    implementation 'jakarta.persistence:jakarta.persistence-api'
+
+    // Spring Data (auditing: @CreatedDate, @LastModifiedDate, AuditingEntityListener)
+    implementation 'org.springframework.data:spring-data-jpa'
+
+    // Spring Web (HttpStatus — BaseCode / ErrorCode)
+    implementation 'org.springframework:spring-web'
+
+    // Jackson (ApiResponse 직렬화 애노테이션)
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

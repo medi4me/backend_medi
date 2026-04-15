@@ -1,4 +1,10 @@
 rootProject.name = 'mediforme'
 
-include("lib:redis")
+
+include(
+        "api",
+        "app",
+        "common",
+        "lib:redis"
+)
 project(":lib:redis").projectDir = file("lib/redis")

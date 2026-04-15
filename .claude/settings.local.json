@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs -0 sed -i '' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.code\\\\.status\\\\.ErrorStatus|com.mediforme.common.response.status.ErrorStatus|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.code\\\\.status\\\\.SuccessStatus|com.mediforme.common.response.status.SuccessStatus|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.code\\\\.BaseCode|com.mediforme.common.response.BaseCode|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.ApiResponse|com.mediforme.common.response.ApiResponse|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.exception\\\\.GeneralException|com.mediforme.common.exception.GeneralException|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.exception\\\\.CustomApiException|com.mediforme.common.exception.CustomApiException|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.apiPayload\\\\.exception\\\\.ErrorCode|com.mediforme.common.exception.ErrorCode|g' -e 's|com\\\\.mediforme\\\\.mediforme\\\\.domain\\\\.common\\\\.BaseEntity|com.mediforme.common.domain.BaseEntity|g')",
+      "Bash(set -e mkdir -p app/src/main/java/com/mediforme/mediforme mkdir -p app/src/main/resources mv api/src/main/java/com/mediforme/mediforme/MediformeApplication.java app/src/main/java/com/mediforme/mediforme/ mv api/src/main/resources/application.yml app/src/main/resources/ mv api/src/main/resources/application-dev.yml app/src/main/resources/ mv api/src/main/resources/application-local.yml app/src/main/resources/ mv api/src/main/resources/application-prod.yml app/src/main/resources/ mv api/src/main/resources/application-jwt.yml app/src/main/resources/ mv api/src/main/resources/application-redis.yml app/src/main/resources/ rmdir api/src/main/resources)",
+      "Bash(sort echo:*)",
+      "Bash(./gradlew :common:compileJava :api:compileJava :app:compileJava --console=plain)",
+      "Bash(chmod +x gradlew)",
+      "Bash(git restore:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(./gradlew :api:compileJava --console=plain)",
+      "Bash(git stash:*)",
+      "Bash(git revert:*)",
+      "Bash(set -e)",
+      "Bash(git reset:*)",
+      "Bash(git cherry-pick:*)"
+    ]
+  }
+}

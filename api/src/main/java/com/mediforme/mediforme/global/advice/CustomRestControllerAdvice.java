@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Slf4j
@@ -48,6 +49,20 @@ public class CustomRestControllerAdvice extends ResponseEntityExceptionHandler {
         return ResponseEntity
             .status(errorCode.getHttpStatus())
             .body(ApiResponse.onFailure(errorCode.getCode(), errorMessage));
+    }
+
+    /**
+     * 컨트롤러에서 LocalDate/LocalDateTime 문자열을 직접 파싱하다 실패한 경우
+     */
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<Object> handleDateTimeParseException(DateTimeParseException e) {
+        ErrorCode errorCode = ErrorCode.BAD_REQUEST;
+        return ResponseEntity
+            .status(errorCode.getHttpStatus())
+            .body(ApiResponse.onFailure(
+                errorCode.getCode(),
+                "날짜 형식이 올바르지 않습니다. (yyyy-MM-dd)"
+            ));
     }
 
     /**

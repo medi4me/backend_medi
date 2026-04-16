@@ -7,6 +7,12 @@ plugins {
 dependencies {
     // 부트스트랩 모듈 — api 모듈을 실행 가능한 Spring Boot 앱으로 패키징
     implementation project(':api')
+
+    // 테스트 — 전체 Spring context 로드 검증용
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'com.google.cloud:google-cloud-vision:3.45.0'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 // 이 모듈만 실행 가능한 boot jar 를 생성

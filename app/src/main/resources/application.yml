@@ -52,3 +52,16 @@ coolsms:
     key: ${COOLSMS_API_KEY:}
     secret: ${COOLSMS_API_SECRET:}
     sender: ${COOLSMS_API_SENDER:}
+
+# Actuator / Micrometer
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: mediforme

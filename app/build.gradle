@@ -8,6 +8,9 @@ dependencies {
     // 부트스트랩 모듈 — api 모듈을 실행 가능한 Spring Boot 앱으로 패키징
     implementation project(':api')
 
+    // 메트릭 레지스트리
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     // 테스트 — 전체 Spring context 로드 검증용
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security'

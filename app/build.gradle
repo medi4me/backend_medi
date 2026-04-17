@@ -15,6 +15,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'com.google.cloud:google-cloud-vision:3.45.0'
+    testImplementation 'com.googlecode.json-simple:json-simple:1.1.1'
     testRuntimeOnly 'com.h2database:h2'
 }
 

@@ -58,7 +58,8 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/favicon.ico",
                                 "/error",
-                                "/auth/**"
+                                "/auth/**",
+                                "/actuator/**"
                         ).permitAll()
                     
                         // 온보딩/조회성 API는 GET만 공개

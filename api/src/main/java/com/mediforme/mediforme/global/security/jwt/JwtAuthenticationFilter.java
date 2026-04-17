@@ -52,6 +52,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             "/auth/**",             // 로그인, 회원가입, 토큰 재발급
             "/find/**",             // 아이디/비밀번호 찾기
 
+            // Actuator (관측성 엔드포인트)
+            "/actuator/**",
+
             // 정적 리소스
             "/favicon.ico",
             "/error"

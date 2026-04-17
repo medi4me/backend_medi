@@ -27,6 +27,9 @@ public class MfdsMedicineSearchAdapter implements MedicineSearchPort {
     private final MfdsMedicineClient mfdsClient;
 
     @Override
+    public String name() { return SOURCE; }
+
+    @Override
     public List<MedicineSearchItemDto> searchByName(String itemName) {
         try {
             JSONArray items = mfdsClient.fetchItemsByName(itemName);

@@ -8,4 +8,5 @@ import lombok.Getter;
 public class MedicineSearchItemDto {
     private String name;        // item name
     private String imageUrl;    // item image
+    private String source;      // MFDS / FDA / RxNorm
 }

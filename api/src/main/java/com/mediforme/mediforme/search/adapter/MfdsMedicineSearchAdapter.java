@@ -1,7 +1,5 @@
 package com.mediforme.mediforme.search.adapter;
 
-import com.mediforme.common.exception.CustomApiException;
-import com.mediforme.common.exception.ErrorCode;
 import com.mediforme.mediforme.medicine.dto.MedicineSearchItemDto;
 import com.mediforme.mediforme.medicine.external.client.MfdsMedicineClient;
 import com.mediforme.mediforme.search.port.MedicineSearchPort;
@@ -9,10 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +21,8 @@ import static com.mediforme.mediforme.medicine.external.client.MfdsMedicineClien
 @Component
 @RequiredArgsConstructor
 public class MfdsMedicineSearchAdapter implements MedicineSearchPort {
+
+    private static final String SOURCE = "MFDS";
 
     private final MfdsMedicineClient mfdsClient;
 
@@ -48,13 +46,15 @@ public class MfdsMedicineSearchAdapter implements MedicineSearchPort {
                         getString(item, "itemImage"),
                         getString(item, "ITEM_IMAGE"),
                         "이미지 없음"))
+                    .source(SOURCE)
                     .build());
             }
             return list;
 
-        } catch (IOException | ParseException e) {
+        } catch (Exception e) {
+            // 병렬 호출 실패 격리 - 다른 어댑터 결과는 살림
             log.warn("MFDS search failed. itemName={}", itemName, e);
-            throw new CustomApiException(ErrorCode.INTERNAL_SERVER_ERROR, e);
+            return Collections.emptyList();
         }
     }
 }

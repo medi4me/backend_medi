@@ -3,6 +3,7 @@ package com.mediforme.mediforme.medicine.service.impl;
 import com.mediforme.mediforme.medicine.dto.MedicineRecognitionResultDto;
 import com.mediforme.mediforme.medicine.external.port.OcrPort;
 import com.mediforme.mediforme.medicine.service.MedicineImageRecognitionService;
+import com.mediforme.mediforme.medicine.support.OcrMetrics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class MedicineImageRecognitionServiceImpl implements MedicineImageRecognitionService {
 
     private final OcrPort ocrPort;
+    private final OcrMetrics metrics;
 
     // 후보 최대 개수 (외부 API 호출 폭증 방지)
     private static final int MAX_CANDIDATES = 5;
@@ -65,17 +68,38 @@ public class MedicineImageRecognitionServiceImpl implements MedicineImageRecogni
             return empty();
         }
 
+        long start = System.nanoTime();
         try {
             String fullText = ocrPort.extractText(imageFile.getBytes());
-            if (fullText == null || fullText.isBlank()) return empty();
+            Duration duration = Duration.ofNanos(System.nanoTime() - start);
+
+            if (fullText == null || fullText.isBlank()) {
+                metrics.recordExtract(duration, OcrMetrics.Outcome.EMPTY, 0);
+                log.info("ocr result outcome=empty duration={}ms", duration.toMillis());
+                return empty();
+            }
+
+            List<String> candidates = extractCandidates(fullText);
+            metrics.recordExtract(duration, OcrMetrics.Outcome.SUCCESS, fullText.length());
+            log.info("ocr result raw_length={} candidates={} outcome=success duration={}ms",
+                fullText.length(), candidates.size(), duration.toMillis());
 
             return MedicineRecognitionResultDto.builder()
                 .fullText(fullText)
-                .candidates(extractCandidates(fullText))
+                .candidates(candidates)
                 .build();
 
         } catch (IOException e) {
-            log.warn("Image read failed", e);
+            Duration duration = Duration.ofNanos(System.nanoTime() - start);
+            metrics.recordExtract(duration, OcrMetrics.Outcome.FAILURE, -1);
+            log.warn("ocr image read failed duration={}ms: {}",
+                duration.toMillis(), e.getMessage());
+            return empty();
+        } catch (Exception e) {
+            Duration duration = Duration.ofNanos(System.nanoTime() - start);
+            metrics.recordExtract(duration, OcrMetrics.Outcome.FAILURE, -1);
+            log.warn("ocr unexpected failure duration={}ms: {}",
+                duration.toMillis(), e.getMessage());
             return empty();
         }
     }

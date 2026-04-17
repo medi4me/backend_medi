@@ -13,4 +13,11 @@ public interface MedicineSearchPort {
      * 약 이름을 통한 검색
      */
     List<MedicineSearchItemDto> searchByName(String itemName);
+
+    /**
+     * 어댑터 이름 (메트릭 태그·로깅용)
+     */
+    default String name() {
+        return getClass().getSimpleName();
+    }
 }

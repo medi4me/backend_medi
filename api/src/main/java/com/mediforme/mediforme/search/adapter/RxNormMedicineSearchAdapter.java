@@ -29,6 +29,9 @@ public class RxNormMedicineSearchAdapter implements MedicineSearchPort {
     private final RxNormClient client;
 
     @Override
+    public String name() { return SOURCE; }
+
+    @Override
     public List<MedicineSearchItemDto> searchByName(String itemName) {
         try {
             List<Map<String, Object>> candidates = client.fetchApproximateCandidates(itemName);

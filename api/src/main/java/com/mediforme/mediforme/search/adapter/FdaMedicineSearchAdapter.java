@@ -27,6 +27,9 @@ public class FdaMedicineSearchAdapter implements MedicineSearchPort {
     private final FdaDrugLabelClient client;
 
     @Override
+    public String name() { return SOURCE; }
+
+    @Override
     public List<MedicineSearchItemDto> searchByName(String itemName) {
         try {
             List<Map<String, Object>> openfdas = client.fetchOpenFdaByName(itemName);

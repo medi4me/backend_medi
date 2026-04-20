@@ -21,9 +21,9 @@ from config import GOLDENSET_FILES, RESULTS_DIR  # noqa: E402
 from evaluators import keyword as kw_eval  # noqa: E402
 from evaluators import llm_judge  # noqa: E402
 from loader import load_goldenset  # noqa: E402
-from runners import version_a  # noqa: E402
+from runners import version_a, version_b_anchoring  # noqa: E402
 
-RUNNERS = {"A": version_a}
+RUNNERS = {"A": version_a, "B": version_b_anchoring}
 
 
 def parse_args() -> argparse.Namespace:

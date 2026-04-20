@@ -1,0 +1,343 @@
+{
+  "_meta": {
+    "version": "0.2-modern-foreign",
+    "extends": "goldenset-v0.1.json",
+    "purpose": "v0.1 골든셋의 확장. 최신 약물(GLP-1/GIP, 항코로나)과 해외 미승인·해외 OTC 약물을 포함. 이 카테고리는 LLM 사전학습 데이터의 시점·지역 편향이 크므로 RAG 효과가 가장 분명히 드러남.",
+    "rationale_for_extension": [
+      "LLM 사전학습 컷오프 이후 승인/적응증 변경된 약물 (위고비 비만 적응증, 마운자로/젭바운드 등)",
+      "한국 시장에 부재하거나 처방 체계가 다른 약물 — 환자가 영문 정보를 직접 검색하는 케이스",
+      "약물 상호작용이 매우 복잡한 약물 (팍스로비드의 CYP3A4 광범위 저해)",
+      "위 케이스들은 LLM-only 답변이 가장 자주 틀리는 영역이므로 Before/After 차이가 통계적으로 유의하게 나올 가능성이 높음"
+    ],
+    "categories_added": ["효능", "용법용량", "부작용", "금기", "상호작용", "한국가용성", "비교"],
+    "drugs_covered": [
+      "위고비(세마글루티드 2.4mg, 비만)",
+      "오젬픽(세마글루티드 0.5~2mg, 제2형 당뇨)",
+      "마운자로(티르제파타이드, 제2형 당뇨)",
+      "젭바운드(티르제파타이드, 비만)",
+      "팍스로비드(니르마트렐비르+리토나비르, COVID-19)",
+      "애더럴(암페타민 혼합염, ADHD - 한국 미승인)",
+      "플랜비(레보노르게스트렐 1.5mg, 응급피임 - 미국 OTC/한국 처방)",
+      "레켐비(레카네맙, 알츠하이머 - 한국 미승인)"
+    ],
+    "total_items": 22,
+    "warning": "최신 약물의 라벨 정보는 자주 업데이트됨 (boxed warning 추가, 적응증 확장 등). 검증 시점의 FDA 라벨 버전을 lookup_hint 에 반드시 기록할 것. 한국 미승인 약물은 한국 사용자에게 잘못된 처방·구매 정보를 줄 위험이 있어 정확성이 특히 중요."
+  },
+  "items": [
+    {
+      "id": "wegovy-effect",
+      "drug": {"name_ko": "위고비", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "위고비는 무슨 약이에요?",
+      "expected_answer": "위고비(세마글루티드 2.4mg)는 GLP-1 수용체 작용제 계열의 만성 체중관리 주사제로, BMI 30 이상 또는 27 이상이면서 체중 관련 동반질환이 있는 성인에게 식이·운동 보조요법으로 사용됩니다.",
+      "ground_truth_keywords": ["GLP-1", "체중관리", "비만", "주사", "BMI"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "openFDA brand_name=Wegovy"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "wegovy-dose",
+      "drug": {"name_ko": "위고비", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "용법용량",
+      "question": "위고비는 어떻게 맞아요?",
+      "expected_answer": "주 1회 같은 요일에 피하주사하며, 0.25mg부터 시작해 4주 간격으로 0.5→1.0→1.7→2.4mg까지 점진적으로 증량해 유지용량 2.4mg에 도달합니다.",
+      "ground_truth_keywords": ["주 1회", "피하주사", "0.25mg", "2.4mg", "점진적 증량"],
+      "expected_source": {"type": "fda_label", "section": "dosage_and_administration"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "wegovy-adverse",
+      "drug": {"name_ko": "위고비", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "부작용",
+      "question": "위고비 부작용에는 뭐가 있어요?",
+      "expected_answer": "구역·구토·설사·변비 등 위장관 증상이 가장 흔하며, 드물지만 중대한 부작용으로 췌장염, 담석/담낭염, 신장기능 악화, 갑상선 수질암 위험이 보고됩니다.",
+      "ground_truth_keywords": ["구역", "구토", "설사", "췌장염", "담석"],
+      "expected_source": {"type": "fda_label", "section": "adverse_reactions"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "wegovy-boxed-warning",
+      "drug": {"name_ko": "위고비", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "금기",
+      "question": "위고비 맞으면 안 되는 사람은요?",
+      "expected_answer": "갑상선 수질암(MTC) 본인·가족력이 있거나 다발성 내분비선 종양 2형(MEN 2) 증후군 환자, 세마글루티드 과민반응 병력이 있는 환자는 사용이 금기입니다(미 FDA Boxed Warning).",
+      "ground_truth_keywords": ["갑상선 수질암", "MTC", "MEN 2", "Boxed Warning"],
+      "expected_source": {"type": "fda_label", "section": "contraindications"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "wegovy-insulin-interaction",
+      "drug": {"name_ko": "위고비", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "상호작용",
+      "question": "위고비랑 인슐린이나 다른 당뇨약 같이 써도 되나요?",
+      "expected_answer": "인슐린이나 설포닐우레아 계열과 병용 시 저혈당 위험이 증가하므로 동반 약제의 용량 감량과 혈당 모니터링이 필요하며, 반드시 처방의와 상의해야 합니다.",
+      "ground_truth_keywords": ["인슐린", "설포닐우레아", "저혈당", "감량"],
+      "expected_source": {"type": "fda_label", "section": "drug_interactions"},
+      "difficulty": "hard",
+      "verified": false
+    },
+
+    {
+      "id": "ozempic-vs-wegovy",
+      "drug": {"name_ko": "오젬픽", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "비교",
+      "question": "오젬픽이랑 위고비 차이가 뭐예요?",
+      "expected_answer": "두 제품 모두 성분은 세마글루티드로 동일하나, 오젬픽은 제2형 당뇨 혈당 강하용(0.5~2mg)이고 위고비는 만성 체중관리용(2.4mg)으로 적응증과 최대 용량이 다릅니다.",
+      "ground_truth_keywords": ["같은 성분", "세마글루티드", "당뇨", "체중관리", "용량"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "Ozempic vs Wegovy 두 라벨 모두 조회"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "ozempic-effect",
+      "drug": {"name_ko": "오젬픽", "ingredient_en": "semaglutide", "ingredient_ko": "세마글루티드", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "오젬픽은 어떤 약이에요?",
+      "expected_answer": "오젬픽(세마글루티드)은 주 1회 피하주사 GLP-1 수용체 작용제로 제2형 당뇨 환자의 혈당 조절과 심혈관계 위험 감소에 사용됩니다.",
+      "ground_truth_keywords": ["GLP-1", "제2형 당뇨", "혈당", "주 1회"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage"},
+      "difficulty": "medium",
+      "verified": false
+    },
+
+    {
+      "id": "mounjaro-effect",
+      "drug": {"name_ko": "마운자로", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "마운자로는 무슨 약인가요?",
+      "expected_answer": "마운자로(티르제파타이드)는 GIP와 GLP-1 수용체에 동시에 작용하는 dual agonist로, 제2형 당뇨 환자의 혈당 조절을 위한 주 1회 피하주사제입니다.",
+      "ground_truth_keywords": ["티르제파타이드", "GIP", "GLP-1", "dual", "제2형 당뇨"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "openFDA brand_name=Mounjaro"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "mounjaro-dose",
+      "drug": {"name_ko": "마운자로", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "용법용량",
+      "question": "마운자로 어떻게 맞아요?",
+      "expected_answer": "주 1회 같은 요일에 피하주사하며, 2.5mg으로 4주간 시작 후 5mg으로 증량하고 혈당 반응에 따라 4주 간격으로 2.5mg씩 증량(최대 15mg)합니다.",
+      "ground_truth_keywords": ["주 1회", "피하주사", "2.5mg", "5mg", "15mg"],
+      "expected_source": {"type": "fda_label", "section": "dosage_and_administration"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "mounjaro-adverse",
+      "drug": {"name_ko": "마운자로", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "부작용",
+      "question": "마운자로 부작용 뭐가 있나요?",
+      "expected_answer": "구역, 설사, 식욕 감소, 변비, 복통 등 위장관 증상이 흔하며, 중대한 부작용으로 췌장염, 담석, 당뇨망막병증 합병증, 신기능 악화가 보고됩니다.",
+      "ground_truth_keywords": ["구역", "설사", "식욕 감소", "췌장염", "담석"],
+      "expected_source": {"type": "fda_label", "section": "adverse_reactions"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "mounjaro-contra",
+      "drug": {"name_ko": "마운자로", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "금기",
+      "question": "마운자로 맞으면 안 되는 사람은요?",
+      "expected_answer": "갑상선 수질암(MTC) 본인·가족력자, 다발성 내분비선 종양 2형(MEN 2) 환자, 티르제파타이드 과민반응 병력자는 사용이 금기입니다(Boxed Warning).",
+      "ground_truth_keywords": ["갑상선 수질암", "MTC", "MEN 2"],
+      "expected_source": {"type": "fda_label", "section": "contraindications"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "mounjaro-vs-ozempic",
+      "drug": {"name_ko": "마운자로", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "비교",
+      "question": "마운자로랑 오젬픽 뭐가 달라요?",
+      "expected_answer": "오젬픽은 GLP-1 단일 작용제(세마글루티드)이고 마운자로는 GIP+GLP-1 dual 작용제(티르제파타이드)로 작용 기전과 성분이 다르며, 임상에서 혈당·체중 감소 효과는 마운자로가 더 큰 경향이 보고됩니다.",
+      "ground_truth_keywords": ["GLP-1 단일", "GIP+GLP-1 dual", "티르제파타이드", "세마글루티드"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage"},
+      "difficulty": "hard",
+      "verified": false
+    },
+
+    {
+      "id": "zepbound-effect",
+      "drug": {"name_ko": "젭바운드", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "젭바운드는 마운자로랑 같은 약인가요?",
+      "expected_answer": "젭바운드와 마운자로는 동일 성분(티르제파타이드)이지만, 젭바운드는 만성 체중관리(BMI 30 이상 또는 27 이상+동반질환), 마운자로는 제2형 당뇨로 적응증이 다릅니다.",
+      "ground_truth_keywords": ["같은 성분", "티르제파타이드", "체중관리", "당뇨", "적응증"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "Zepbound 라벨"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "zepbound-dose",
+      "drug": {"name_ko": "젭바운드", "ingredient_en": "tirzepatide", "ingredient_ko": "티르제파타이드", "rx_otc": "RX"},
+      "category": "용법용량",
+      "question": "젭바운드는 어떻게 맞아요?",
+      "expected_answer": "주 1회 피하주사로 2.5mg부터 시작해 4주 간격으로 5→7.5→10→12.5→15mg까지 점진 증량하며, 5mg·10mg·15mg이 권장 유지용량입니다.",
+      "ground_truth_keywords": ["주 1회", "2.5mg", "15mg", "점진 증량"],
+      "expected_source": {"type": "fda_label", "section": "dosage_and_administration"},
+      "difficulty": "hard",
+      "verified": false
+    },
+
+    {
+      "id": "paxlovid-effect",
+      "drug": {"name_ko": "팍스로비드", "ingredient_en": "nirmatrelvir/ritonavir", "ingredient_ko": "니르마트렐비르/리토나비르", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "팍스로비드는 언제 먹는 약이에요?",
+      "expected_answer": "경증~중등증 코로나19 성인 환자 중 중증 진행 위험이 높은 사람을 대상으로, 증상 발현 후 5일 이내에 시작하는 경구 항바이러스제입니다.",
+      "ground_truth_keywords": ["코로나", "COVID-19", "5일 이내", "고위험"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "paxlovid-dose",
+      "drug": {"name_ko": "팍스로비드", "ingredient_en": "nirmatrelvir/ritonavir", "ingredient_ko": "니르마트렐비르/리토나비르", "rx_otc": "RX"},
+      "category": "용법용량",
+      "question": "팍스로비드 어떻게 먹어야 하나요?",
+      "expected_answer": "12시간마다 니르마트렐비르 300mg(150mg 2정) + 리토나비르 100mg(1정)을 5일간 복용하며, 신장기능 저하 시 용량 조정이 필요합니다.",
+      "ground_truth_keywords": ["12시간", "300mg", "100mg", "5일", "신장 조정"],
+      "expected_source": {"type": "fda_label", "section": "dosage_and_administration"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "paxlovid-adverse",
+      "drug": {"name_ko": "팍스로비드", "ingredient_en": "nirmatrelvir/ritonavir", "ingredient_ko": "니르마트렐비르/리토나비르", "rx_otc": "RX"},
+      "category": "부작용",
+      "question": "팍스로비드 부작용으로 뭐가 흔한가요?",
+      "expected_answer": "미각 이상(metallic taste), 설사, 두통, 혈압 상승이 흔하게 보고되며 일반적으로 경증입니다.",
+      "ground_truth_keywords": ["미각 이상", "설사", "두통", "혈압"],
+      "expected_source": {"type": "fda_label", "section": "adverse_reactions"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "paxlovid-interaction",
+      "drug": {"name_ko": "팍스로비드", "ingredient_en": "nirmatrelvir/ritonavir", "ingredient_ko": "니르마트렐비르/리토나비르", "rx_otc": "RX"},
+      "category": "상호작용",
+      "question": "팍스로비드 먹는데 다른 약 같이 먹어도 되나요?",
+      "expected_answer": "리토나비르가 CYP3A4를 강력 저해하여 매우 광범위한 약물상호작용이 발생합니다(스타틴 일부, 항응고제, 항부정맥제, 면역억제제 등 다수가 금기 또는 용량 조정). 복용 전 반드시 의사·약사에게 현재 복용 중인 모든 약을 알려야 합니다.",
+      "ground_truth_keywords": ["CYP3A4", "리토나비르", "광범위", "약사 확인", "스타틴"],
+      "expected_source": {"type": "fda_label", "section": "drug_interactions"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "paxlovid-contra",
+      "drug": {"name_ko": "팍스로비드", "ingredient_en": "nirmatrelvir/ritonavir", "ingredient_ko": "니르마트렐비르/리토나비르", "rx_otc": "RX"},
+      "category": "금기",
+      "question": "팍스로비드 먹으면 안 되는 사람은요?",
+      "expected_answer": "중증 신장애(eGFR <30) 또는 중증 간장애 환자, 성분 과민반응자, 그리고 CYP3A4를 통해 대사되는 특정 약물(예: 리바록사반 일부 용법, 시클로스포린 등) 병용 환자는 금기 또는 신중 사용입니다.",
+      "ground_truth_keywords": ["신장애", "간장애", "CYP3A4", "병용 금기"],
+      "expected_source": {"type": "fda_label", "section": "contraindications"},
+      "difficulty": "hard",
+      "verified": false
+    },
+
+    {
+      "id": "adderall-effect",
+      "drug": {"name_ko": "애더럴", "ingredient_en": "amphetamine/dextroamphetamine", "ingredient_ko": "암페타민/덱스암페타민", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "애더럴은 무슨 약이에요?",
+      "expected_answer": "애더럴은 암페타민과 덱스암페타민의 혼합염으로 미국에서 ADHD와 기면증 치료에 처방되는 중추신경 자극제입니다. 한국에서는 미승인 상태입니다.",
+      "ground_truth_keywords": ["암페타민", "ADHD", "기면증", "한국 미승인"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "DailyMed Adderall"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "adderall-korea",
+      "drug": {"name_ko": "애더럴", "ingredient_en": "amphetamine/dextroamphetamine", "ingredient_ko": "암페타민/덱스암페타민", "rx_otc": "RX"},
+      "category": "한국가용성",
+      "question": "한국에서 애더럴 살 수 있어요?",
+      "expected_answer": "애더럴은 한국에서 미승인 의약품이며 마약류 관리에 관한 법률상 향정신성의약품(암페타민류)으로 분류되어 처방·소지·반입이 엄격히 제한됩니다. 한국 ADHD 환자는 콘서타·메디키넷·스트라테라 등 국내 승인 약을 처방받습니다.",
+      "ground_truth_keywords": ["한국 미승인", "마약류", "향정신성", "콘서타", "스트라테라"],
+      "expected_source": {"type": "mfds", "section": "허가현황", "lookup_hint": "MFDS 의약품통합DB 검색 결과 없음 + 마약류 관리법 분류"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "adderall-adverse",
+      "drug": {"name_ko": "애더럴", "ingredient_en": "amphetamine/dextroamphetamine", "ingredient_ko": "암페타민/덱스암페타민", "rx_otc": "RX"},
+      "category": "부작용",
+      "question": "애더럴 부작용은 뭐가 있나요?",
+      "expected_answer": "식욕 저하, 불면, 심박수·혈압 상승, 두통, 입마름이 흔하며, 중대한 부작용으로 의존·남용 위험, 심혈관 사건, 정신증상이 보고됩니다(Boxed Warning).",
+      "ground_truth_keywords": ["식욕 저하", "불면", "심박수", "의존", "Boxed Warning"],
+      "expected_source": {"type": "fda_label", "section": "adverse_reactions"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "adderall-maoi",
+      "drug": {"name_ko": "애더럴", "ingredient_en": "amphetamine/dextroamphetamine", "ingredient_ko": "암페타민/덱스암페타민", "rx_otc": "RX"},
+      "category": "상호작용",
+      "question": "애더럴은 다른 약이랑 같이 먹으면 안 되나요?",
+      "expected_answer": "MAO 억제제는 복용 중지 후 14일 이내 병용 금기이며, 다른 자극제·세로토닌 약제와 병용 시 고혈압 위기·세로토닌 증후군 위험이 증가합니다.",
+      "ground_truth_keywords": ["MAOI", "14일", "세로토닌", "고혈압"],
+      "expected_source": {"type": "fda_label", "section": "drug_interactions"},
+      "difficulty": "hard",
+      "verified": false
+    },
+
+    {
+      "id": "planb-effect",
+      "drug": {"name_ko": "플랜비", "ingredient_en": "levonorgestrel", "ingredient_ko": "레보노르게스트렐", "rx_otc": "OTC(US)/RX(KR)"},
+      "category": "효능",
+      "question": "플랜비는 무슨 약이에요?",
+      "expected_answer": "플랜비(레보노르게스트렐 1.5mg)는 응급피임약으로 무방비 성관계 또는 피임 실패 후 임신 가능성을 줄이기 위해 사용됩니다. 미국에서는 OTC, 한국에서는 처방이 필요합니다.",
+      "ground_truth_keywords": ["응급피임", "레보노르게스트렐", "1.5mg", "처방"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "planb-timing",
+      "drug": {"name_ko": "플랜비", "ingredient_en": "levonorgestrel", "ingredient_ko": "레보노르게스트렐", "rx_otc": "OTC(US)/RX(KR)"},
+      "category": "용법용량",
+      "question": "플랜비는 언제까지 먹어야 효과가 있어요?",
+      "expected_answer": "성관계 후 가능한 빨리, 늦어도 72시간(3일) 이내 1정을 복용해야 하며, 시간이 지날수록 효과가 감소합니다.",
+      "ground_truth_keywords": ["72시간", "3일", "빨리", "효과 감소"],
+      "expected_source": {"type": "fda_label", "section": "dosage_and_administration"},
+      "difficulty": "medium",
+      "verified": false
+    },
+    {
+      "id": "planb-adverse",
+      "drug": {"name_ko": "플랜비", "ingredient_en": "levonorgestrel", "ingredient_ko": "레보노르게스트렐", "rx_otc": "OTC(US)/RX(KR)"},
+      "category": "부작용",
+      "question": "플랜비 먹으면 부작용 있어요?",
+      "expected_answer": "구역·복통·피로·두통·어지러움이 흔하며, 다음 생리가 빨라지거나 늦어질 수 있습니다. 복용 후 2시간 내 구토 시 재복용이 필요할 수 있습니다.",
+      "ground_truth_keywords": ["구역", "두통", "생리 변화", "구토 시 재복용"],
+      "expected_source": {"type": "fda_label", "section": "adverse_reactions"},
+      "difficulty": "medium",
+      "verified": false
+    },
+
+    {
+      "id": "lekembi-effect",
+      "drug": {"name_ko": "레켐비", "ingredient_en": "lecanemab", "ingredient_ko": "레카네맙", "rx_otc": "RX"},
+      "category": "효능",
+      "question": "레켐비는 무슨 약이에요?",
+      "expected_answer": "레켐비(레카네맙)는 초기 알츠하이머병(경도인지장애 또는 경증 치매) 환자에서 뇌의 아밀로이드 β 응집을 표적하는 단일클론항체 정맥주사제입니다. 한국은 2024년 기준 식약처 심사 단계로 정식 시판 전입니다.",
+      "ground_truth_keywords": ["알츠하이머", "아밀로이드", "단일클론항체", "초기"],
+      "expected_source": {"type": "fda_label", "section": "indications_and_usage", "lookup_hint": "openFDA brand_name=Leqembi"},
+      "difficulty": "hard",
+      "verified": false
+    },
+    {
+      "id": "lekembi-aria",
+      "drug": {"name_ko": "레켐비", "ingredient_en": "lecanemab", "ingredient_ko": "레카네맙", "rx_otc": "RX"},
+      "category": "부작용",
+      "question": "레켐비 부작용 위험한 게 있나요?",
+      "expected_answer": "주입 반응(infusion reaction)과 함께 ARIA(amyloid-related imaging abnormalities) — 뇌 부종(ARIA-E) 및 뇌 미세출혈(ARIA-H) — 가 중대한 부작용으로 보고되어 정기 MRI 모니터링이 요구됩니다(Boxed Warning).",
+      "ground_truth_keywords": ["ARIA", "뇌 부종", "미세출혈", "MRI", "Boxed Warning"],
+      "expected_source": {"type": "fda_label", "section": "warnings_and_precautions"},
+      "difficulty": "hard",
+      "verified": false
+    }
+  ]
+}

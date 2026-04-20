@@ -4,6 +4,7 @@ import com.mediforme.mediforme.chatbot.external.OpenAIConfig;
 import com.mediforme.mediforme.chatbot.dto.ChatbotRequestDto;
 import com.mediforme.mediforme.chatbot.dto.ChatbotQuestionRequestDto;
 import com.mediforme.mediforme.chatbot.dto.ChatbotResponseDto;
+import com.mediforme.mediforme.chatbot.service.ChatbotPromptBuilder;
 import com.mediforme.mediforme.chatbot.service.ChatbotService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Collections;
 
 @Service
 public class ChatbotServiceImpl implements ChatbotService {
@@ -37,10 +36,9 @@ public class ChatbotServiceImpl implements ChatbotService {
 
     @Override
     public ChatbotResponseDto askQuestion(ChatbotQuestionRequestDto requestDto) {
-        ChatbotRequestDto.Message message = new ChatbotRequestDto.Message("user", requestDto.getQuestion());
         ChatbotRequestDto chatGptRequestDto = new ChatbotRequestDto(
                 OpenAIConfig.MODEL,
-                Collections.singletonList(message)
+                ChatbotPromptBuilder.build(requestDto.getQuestion(), requestDto.getMedicineContext())
         );
         return this.getResponse(this.buildHttpEntity(chatGptRequestDto));
     }

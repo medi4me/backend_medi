@@ -1,11 +1,12 @@
-"""LLM-as-judge — Claude Sonnet 으로 정확도/완전성/유용성 1-5 점.
+"""LLM-as-judge — OpenAI gpt-4o 로 정확도/완전성/유용성 1-5 점.
 
-생성기(gpt-3.5-turbo)와 다른 모델을 써서 self-preference bias 를 줄임.
+생성기(gpt-3.5-turbo) 보다 상위 모델을 써서 self-preference bias 를 간접적으로 완화.
+동일 모델 패밀리라는 한계는 있으나, A/B/C 상대 비교 목적에는 충분.
 """
 import json
 import re
 
-from config import ANTHROPIC_API_KEY, JUDGE_MODEL, JUDGE_TIMEOUT
+from config import JUDGE_MODEL, JUDGE_TIMEOUT, OPENAI_API_KEY
 
 _SYSTEM = """\
 당신은 한국 의약품 정보에 대한 챗봇 답변을 평가하는 심사관입니다.
@@ -31,18 +32,19 @@ _SYSTEM = """\
 
 
 def judge(item: dict, answer: str) -> dict:
-    if not ANTHROPIC_API_KEY:
-        raise RuntimeError("ANTHROPIC_API_KEY not set — set env var or use --dry-run")
-    from anthropic import Anthropic  # lazy import
-    client = Anthropic(api_key=ANTHROPIC_API_KEY, timeout=JUDGE_TIMEOUT)
-    prompt = _build_prompt(item, answer)
-    resp = client.messages.create(
+    if not OPENAI_API_KEY:
+        raise RuntimeError("OPENAI_API_KEY not set — set env var or use --dry-run")
+    from openai import OpenAI  # lazy import
+    client = OpenAI(api_key=OPENAI_API_KEY, timeout=JUDGE_TIMEOUT)
+    resp = client.chat.completions.create(
         model=JUDGE_MODEL,
-        max_tokens=512,
-        system=_SYSTEM,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[
+            {"role": "system", "content": _SYSTEM},
+            {"role": "user", "content": _build_prompt(item, answer)},
+        ],
+        response_format={"type": "json_object"},
     )
-    raw = resp.content[0].text if resp.content else ""
+    raw = resp.choices[0].message.content or ""
     return _parse(raw)
 
 

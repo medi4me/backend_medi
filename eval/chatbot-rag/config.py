@@ -18,10 +18,9 @@ GOLDENSET_FILES = [
 RESULTS_DIR = ROOT / "results"
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 
 CHATBOT_MODEL = os.getenv("CHATBOT_MODEL", "gpt-3.5-turbo")
-JUDGE_MODEL = os.getenv("JUDGE_MODEL", "claude-sonnet-4-6")
+JUDGE_MODEL = os.getenv("JUDGE_MODEL", "gpt-4o")
 
 CHATBOT_TIMEOUT = 30
 JUDGE_TIMEOUT = 60

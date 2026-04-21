@@ -1,0 +1,2420 @@
+{
+  "summary": {
+    "version": "B-anchoring",
+    "dry_run": false,
+    "timestamp": "2026-04-21T07:14:38+00:00",
+    "n_items": 82,
+    "metrics": {
+      "keyword_recall_mean": 0.3,
+      "judge_accuracy_mean": 2.915,
+      "judge_completeness_mean": 2.902,
+      "judge_helpfulness_mean": 3.378,
+      "hallucination_rate": 0.598
+    },
+    "operational": {
+      "p50_latency_ms": 2439.8,
+      "p95_latency_ms": 4225.6,
+      "tokens_in_total": 18050,
+      "tokens_out_total": 19814
+    },
+    "by_category": {
+      "효능": {
+        "n": 16,
+        "keyword_recall_mean": 0.397,
+        "judge_accuracy_mean": 2.75
+      },
+      "용법용량": {
+        "n": 12,
+        "keyword_recall_mean": 0.111,
+        "judge_accuracy_mean": 2.583
+      },
+      "부작용": {
+        "n": 14,
+        "keyword_recall_mean": 0.402,
+        "judge_accuracy_mean": 3.143
+      },
+      "금기": {
+        "n": 10,
+        "keyword_recall_mean": 0.108,
+        "judge_accuracy_mean": 2.6
+      },
+      "임신수유": {
+        "n": 8,
+        "keyword_recall_mean": 0.271,
+        "judge_accuracy_mean": 3.625
+      },
+      "상호작용": {
+        "n": 12,
+        "keyword_recall_mean": 0.336,
+        "judge_accuracy_mean": 3.167
+      },
+      "주의보관": {
+        "n": 7,
+        "keyword_recall_mean": 0.512,
+        "judge_accuracy_mean": 3.429
+      },
+      "비교": {
+        "n": 2,
+        "keyword_recall_mean": 0.225,
+        "judge_accuracy_mean": 1
+      },
+      "한국가용성": {
+        "n": 1,
+        "keyword_recall_mean": 0.0,
+        "judge_accuracy_mean": 1
+      }
+    },
+    "by_difficulty": {
+      "easy": {
+        "n": 21,
+        "keyword_recall_mean": 0.482,
+        "judge_accuracy_mean": 3.619
+      },
+      "medium": {
+        "n": 36,
+        "keyword_recall_mean": 0.324,
+        "judge_accuracy_mean": 2.972
+      },
+      "hard": {
+        "n": 25,
+        "keyword_recall_mean": 0.114,
+        "judge_accuracy_mean": 2.24
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "tylenol-effect",
+      "drug": "타이레놀",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "타이레놀은 어떤 증상에 먹는 약인가요?",
+      "answer": "타이레놀(아세트아미노펜)은 일반적으로 통증, 발열 및 열암이 있는 경우에 사용되는 일반 진통 해열제입니다. \n\n- 통증: 두통, 치통, 관절통, 근육통 등 각종 통증\n- 발열: 해열 작용으로 인해 발생하는 열암이나 발열 상태\n\n그러나 타이레놀은 항염증(염증을 완화하는) 효과가 없으므로 염증과 관련된 통증에는 다른 약물이 더 효과적일 수 있습니다. 또한, 개인의 건강 상태와 복용 가능 여부 등에 따라 정확한 복용 방법을 숙지하고, 의사나 약사와 상의해 복용하는 것이 좋습니다.",
+      "latency_ms": 4047.9,
+      "tokens_in": 226,
+      "tokens_out": 263,
+      "keyword": {
+        "keyword_recall": 1.0,
+        "keywords_matched": [
+          "해열",
+          "진통",
+          "통증",
+          "발열"
+        ],
+        "keywords_missed": []
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": true,
+        "rationale": "타이레놀의 효능에 대한 설명은 주로 '진통'과 '해열'에 맞춰져 있어 정확하며, 두통, 치통, 근육통 등을 포함해 대부분 적절한 증상을 다룹니다. 열암이라는 용어는 적절치 않으므로 일부 오해 소지가 있어 accuracy 점수가 약간 낮아졌습니다. 그러나 전반적으로 필요한 정보가 다 포함되어 있고, 환자에게 도움이 될 만한 충고도 포함되어 있습니다."
+      }
+    },
+    {
+      "id": "tylenol-dose",
+      "drug": "타이레놀",
+      "category": "용법용량",
+      "difficulty": "easy",
+      "question": "성인은 타이레놀 한 번에 몇 알 먹어야 해요?",
+      "answer": "일반적으로 성인은 타이레놀을 한 번에 1~2정 정도 복용하는 것이 일반적입니다. 하지만 개인의 상태나 증상에 따라 다를 수 있으므로, 복용량에 대해 더 자세한 정보가 필요하다면 의사나 약사와 상담하시는 것이 좋습니다. 또한 하루 최대 복용량을 넘기지 않도록 주의해야 합니다.",
+      "latency_ms": 5116.5,
+      "tokens_in": 223,
+      "tokens_out": 136,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "500mg",
+          "4시간",
+          "4000mg",
+          "1일 최대"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 성인의 일반적인 복용량을 잘 전달하였으며, 개인 차이가 있을 수 있음을 설명했습니다. 그러나 답변에 500mg, 4시간 간격, 1일 최대 4000mg 등의 핵심 정보가 누락되었습니다."
+      }
+    },
+    {
+      "id": "tylenol-adverse",
+      "drug": "타이레놀",
+      "category": "부작용",
+      "difficulty": "easy",
+      "question": "타이레놀 부작용에는 뭐가 있어요?",
+      "answer": "타이레놀(아세트아미노펜)은 대체로 안전한 약물이지만, 가끔씩 부작용이 발생할 수 있습니다. 주요 부작용은 다음과 같습니다:\n\n1. 위장 문제: 가장 흔한 부작용으로 위통, 구토, 설사 등의 증상이 나타날 수 있습니다.\n2. 알레르기 반응: 피부 발진, 가려움, 발진, 숨이찬다거나 어려움이 있을 수 있습니다.\n3. 간 손상: 과다복용시 간손상이 발생할 수 있습니다.\n4. 혈소판 감소: 드물게 혈소판 감소증이 발생할 수 있습니다.\n\n부작용이나 알레르기 반응이 나타날 경우 즉시 의사와 상담하는 것이 좋습니다. 복용시 주의사항을 잘 숙지하고, 의사나 약사에게 의견을 얻는 것이 중요합니다.",
+      "latency_ms": 3443.3,
+      "tokens_in": 217,
+      "tokens_out": 303,
+      "keyword": {
+        "keyword_recall": 0.75,
+        "keywords_matched": [
+          "간 손상",
+          "알레르기",
+          "발진"
+        ],
+        "keywords_missed": [
+          "간독성"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 간 손상과 알레르기 반응을 언급하며, 일부 핵심 요소를 포함하지만, '위장 문제'와 '혈소판 감소'는 타이레놀의 일반적인 부작용으로 공식적으로 언급되지 않은 요소입니다. 부작용에 대한 안내 중 과다 복용 시 간 손상 가능성을 언급하여 사용자에게 유용한 정보를 제공합니다. 다만, hallucination 요소로 인해 정확성과 완전성이 일부 저하됩니다."
+      }
+    },
+    {
+      "id": "tylenol-contra",
+      "drug": "타이레놀",
+      "category": "금기",
+      "difficulty": "medium",
+      "question": "타이레놀 먹으면 안 되는 사람은 누구인가요?",
+      "answer": "타이레놀(아세트아미노펜)은 일반적으로 안전하게 사용되는 약물이지만, 다음과 같은 경우에는 특히 주의해야 합니다:\n\n1. 아세트아미노펜(타이레놀)에 알레르기가 있는 경우\n2. 간 기능이 저하된 경우\n3. 만성 알코올 소비자\n4. 간질환을 가진 환자\n5. 만성 신부전을 가진 환자\n6. 퇴행성 관절염이 있는 경우\n7. 심각한 신장 질환이 있는 경우\n\n의사나 약사와 상의하여 안전하게 복용할 수 있는지 확인하는 것이 중요합니다. 만약 위의 상황 중 하나에 해당된다면, 반드시 의료 전문가와 상담하시기 바랍니다.",
+      "latency_ms": 3124.1,
+      "tokens_in": 224,
+      "tokens_out": 255,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "간질환"
+        ],
+        "keywords_missed": [
+          "과민",
+          "금기"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 중증 간질환 환자와 아세트아미노펜에 과민반응이 있는 환자에 대해 언급하였으나, 만성 신부전이나 퇴행성 관절염 등은 공식적인 금기에 포함되지 않아 hallucination으로 간주됩니다. 의사와 상의하도록 권장하여 환자에게 유용합니다."
+      }
+    },
+    {
+      "id": "tylenol-pregnancy",
+      "drug": "타이레놀",
+      "category": "임신수유",
+      "difficulty": "medium",
+      "question": "임신 중에 타이레놀 먹어도 괜찮을까요?",
+      "answer": "임신 중에 아세트아미노펜(타이레놀)을 복용하는 것은 일반적으로 안전하다고 알려져 있습니다. 그러나 임신 중에 어떠한 의약품을 복용할 때에는 항상 의사나 약사와 상담하시는 것이 좋습니다. 임신 중에 의약품을 복용할 경우에는 항상 임신 기간과 상태에 맞는 적절한 의약품 및 용량을 사용해야 하며, 임부와 태아의 안전을 최우선으로 고려해야 합니다. 이에 대해 전문가와 상담하여 적절한 결정을 내리는 것이 중요합니다.",
+      "latency_ms": 1967.3,
+      "tokens_in": 224,
+      "tokens_out": 216,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "임신",
+          "안전"
+        ],
+        "keywords_missed": [
+          "의사 상담",
+          "단기간"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 아세트아미노펜의 임신 중 안전성에 대해 정확하게 설명하고 있으며, 전문가와의 상담을 권장하는 등 중요한 요소들을 모두 다루고 있습니다. 구체적인 사용 조건과 의사 상담의 필요성을 명확히 제시하고 있습니다."
+      }
+    },
+    {
+      "id": "tylenol-alcohol",
+      "drug": "타이레놀",
+      "category": "상호작용",
+      "difficulty": "easy",
+      "question": "타이레놀 먹고 술 마셔도 돼요?",
+      "answer": "타이레놀인 아세트아미노펜과 술을 함께 복용하는 것은 권장되지 않습니다. 술과 아세트아미노펜을 함께 복용할 경우 간에 미치는 부담이 증가하여 간 손상을 일으킬 수 있습니다. 또한, 술을 마실 때 아세트아미노펜의 부작용이 더 심해질 수 있습니다. 따라서, 안전하고 건강한 복용을 위해 술을 마실 때는 타이레놀을 복용하지 않는 것이 좋습니다. 만약 질문이 더 있거나 다른 건강 관련 문제가 있다면 의사나 약사와 상담해 보시는 것이 좋습니다.",
+      "latency_ms": 3291.3,
+      "tokens_in": 219,
+      "tokens_out": 232,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "술"
+        ],
+        "keywords_missed": [
+          "알코올",
+          "간독성",
+          "위험"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 술과 아세트아미노펜의 간독성 위험을 강조하며, 정확하고 핵심 요소를 모두 잘 다루고 있습니다. 환자가 행동 결정을 내리는 데 매우 명확한 정보 제공을 하고 있습니다."
+      }
+    },
+    {
+      "id": "tylenol-storage",
+      "drug": "타이레놀",
+      "category": "주의보관",
+      "difficulty": "easy",
+      "question": "타이레놀은 어떻게 보관해야 하나요?",
+      "answer": "타이레놀(아세트아미노펜)을 보관할 때에는 다음과 같은 점을 유의해주셔야 합니다:\n\n1. 보관 환경: 타이레놀은 직사광선을 피하고 건조한 곳에 보관해야 합니다. 습기가 많은 환경을 피하고, 물기를 흡수할 수 있는 곳에서 멀리해야 합니다.\n\n2. 온도: 보관 온도는 15~30도 사이가 적당합니다. 고온이나 저온에서 보관하는 것을 피해주세요. 또한 냉장고에 보관하지 않아도 됩니다.\n\n3. 어린이의 접근: 어린이의 손이 닿지 않는 곳에 보관해야 합니다. 안전잠금이 있는 곳에 보관하는 것이 좋습니다.\n\n이러한 보관 방법을 지켜주시면 타이레놀의 효과를 오랫동안 유지할 수 있습니다.",
+      "latency_ms": 3302.7,
+      "tokens_in": 221,
+      "tokens_out": 307,
+      "keyword": {
+        "keyword_recall": 0.667,
+        "keywords_matched": [
+          "직사광선",
+          "어린이"
+        ],
+        "keywords_missed": [
+          "실온"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 직사광선과 습기를 피하고, 실온에 보관하며, 어린이의 손이 닿지 않는 곳에 보관해야 한다는 점을 정확히 설명하고 있습니다. 이는 expected_answer와 일치하며, 환자가 명확히 이해할 수 있는 정보입니다."
+      }
+    },
+    {
+      "id": "ibuprofen-effect",
+      "drug": "부루펜(이부프로펜)",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "부루펜은 어떤 약이에요?",
+      "answer": "부루펜은 이부프로펜이라는 성분을 함유한 진통제로, 일반감기나 두통, 근육통, 관절통 등의 가벼운 통증을 완화하는 데 사용됩니다. 이 약은 일반 구매가 가능한 OTC(일반약품)에 속하며, 사용 시 주의사항을 잘 숙지하여 복용해야 합니다. 부루펜은 일반적으로 이부프로펜의 상표명 중 하나입니다.",
+      "latency_ms": 2149.8,
+      "tokens_in": 220,
+      "tokens_out": 163,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "진통"
+        ],
+        "keywords_missed": [
+          "NSAID",
+          "소염",
+          "해열",
+          "염증"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 부루펜이 이부프로펜을 함유하고 있으며, 주로 통증 완화에 사용된다는 점에서 factually accurate 합니다. 하지만 '염증'과 '해열'이라는 중요한 효능 키워드가 누락되었습니다. OTC로서의 정보와 주의사항 언급은 helpfulness 를 높입니다."
+      }
+    },
+    {
+      "id": "ibuprofen-dose",
+      "drug": "부루펜(이부프로펜)",
+      "category": "용법용량",
+      "difficulty": "easy",
+      "question": "이부프로펜 성인 용량은 어떻게 되나요?",
+      "answer": "일반적으로 이부프로펜의 성인용 용량은 다음과 같습니다:\n- 일회용량: 200-400mg (한 번에 복용)\n- 1일 최대용량: 1200mg (하루에 세 번까지 복용 가능)\n\n이와 같은 용량을 초과하지 않도록 주의하시고, 가능하다면 의사나 약사의 지시에 따라 복용하시는 것이 좋습니다. 부루펜(이부프로펜)을 복용하실 때는 반드시 사용법을 잘 숙지하시고 복용하시기 바랍니다.",
+      "latency_ms": 2717.3,
+      "tokens_in": 228,
+      "tokens_out": 181,
+      "keyword": {
+        "keyword_recall": 0.75,
+        "keywords_matched": [
+          "200mg",
+          "400mg",
+          "1200mg"
+        ],
+        "keywords_missed": [
+          "4시간"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 성인 1회 200~400mg, 1일 최대 1200mg의 용량 제한을 정확히 설명하고 있으며, 4~6시간 간격에 관한 정보는 누락되어 있지만 '하루에 세 번까지'라는 표현으로 어느 정도 충족하고 있습니다. 전반적으로 정확하고 유용하게 정보가 제공되었습니다."
+      }
+    },
+    {
+      "id": "ibuprofen-adverse",
+      "drug": "부루펜(이부프로펜)",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "이부프로펜 부작용에는 뭐가 있나요?",
+      "answer": "이부프로펜은 일반적으로 대부분의 사람들이 잘 흡수하고 잘 견디지만, 가끔씩 부작용이 발생할 수 있습니다. 주요 부작용에는 다음이 포함될 수 있습니다:\n\n1. 소화관 장애: 소화성 궤양, 소화 불량, 구토, 복통\n2. 신질 효과: 신장 손상, 심부정맥 혈전증, 간 손상\n3. 신경계 장애: 두통, 어지러움\n4. 피부 반응: 발진, 가렵음\n5. 수분 보존: 부종, 고혈압\n\n만약 이부프로펜을 복용하는 동안 위의 증상이 나타나면, 즉시 의사와 상담하여야 합니다. 혹시 부작용이 나타나면, 복용을 중단하고 전문가와 상의해 주시기 바랍니다.",
+      "latency_ms": 2078.4,
+      "tokens_in": 222,
+      "tokens_out": 299,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "신장"
+        ],
+        "keywords_missed": [
+          "위장",
+          "위출혈",
+          "속쓰림"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": true,
+        "rationale": "답변에서 위장 관련 부작용과 신장 기능 저하, 혈압 상승 등이 언급되었지만, 심부정맥 혈전증이나 간 손상은 일반적인 설명에 포함되지 않아 hallucination으로 간주될 수 있습니다. 전반적으로 부작용 목록은 잘 포괄하고 있으며, 환자가 의사에게 상담하도록 안내합니다."
+      }
+    },
+    {
+      "id": "ibuprofen-contra",
+      "drug": "부루펜(이부프로펜)",
+      "category": "금기",
+      "difficulty": "medium",
+      "question": "이부프로펜 복용하면 안 되는 경우가 있나요?",
+      "answer": "네, 이부프로펜을 복용해서는 안 되는 경우가 몇 가지 있습니다. 주요한 경우는 아래와 같습니다:\n1. 이부프로펜에 알레르기 반응이 있는 경우\n2. 충격성 식도염, 위궤양, 식도 혹은 위궤양, 신장 질환, 중대한 심장 질환, 고혈압, 혹은 알콜 중독 등 위장관 또는 심장 관련 질환을 앓고 계신 경우\n3. 임신 중인 경우 또는 임신 가능성 여부가 있는 경우\n4. 심각한 신부전 또는 신장 기능 장애를 앓고 있는 경우\n5. 혈액 응고 장애가 있는 경우\n6. 신경막염의 증상을 보여주는 환자\n\n의사나 약사의 지시에 따라 이부프로펜을 안전하게 복용할 수 있는지 확인하는 것이 중요합니다. 만약 위의 사항 중 하나에 해당된다면, 복용 전에 반드시 전문가와 상담해야 합니다.",
+      "latency_ms": 4887.4,
+      "tokens_in": 224,
+      "tokens_out": 331,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "위궤양",
+          "신부전"
+        ],
+        "keywords_missed": [
+          "임신 후기",
+          "과민"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "예시 답변은 '위궤양', '중증 신부전', '임신 중' 등의 금기 사항을 언급하였으나, '알콜 중독', '충격성 식도염', '신경막염' 등은 근거 없는 주장입니다. 임신 초기가 아닌 임신 후기(20주 이후)가 금기 사항이라는 점이 명확하지 않으며, 항응고 장애는 일반적으로 이부프로펜의 금기가 아닌 주의해야 할 사항입니다."
+      }
+    },
+    {
+      "id": "ibuprofen-pregnancy",
+      "drug": "부루펜(이부프로펜)",
+      "category": "임신수유",
+      "difficulty": "hard",
+      "question": "임신 중에 이부프로펜 먹어도 되나요?",
+      "answer": "임신 중에는 이부프로펜(부루펜)을 섭취하기 전에 의사와 충분한 상담을 하는 것이 중요합니다. 임부의 건강과 태아의 안전을 위해 전문가의 조언을 받아야 합니다. 이부프로펜은 임신 초기에는 특히 주의가 필요하며, 임신 후기에는 더욱 신중히 사용해야 할 수도 있습니다. 의사의 지시에 따라 안전하게 약물을 복용하도록 하세요.",
+      "latency_ms": 2093.4,
+      "tokens_in": 223,
+      "tokens_out": 168,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "20주",
+          "30주",
+          "동맥관",
+          "금기"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 임신 중 이부프로펜 사용에 대해 의사와 상의해야 한다고 언급하고 있지만, 20주 이후와 30주 이후의 명확한 금기 사항을 구체적으로 설명하지 않습니다. 특히 동맥관 조기폐쇄와 관련된 정보를 제공하지 않으므로 핵심 요소의 일부가 누락되었습니다."
+      }
+    },
+    {
+      "id": "ibuprofen-warfarin",
+      "drug": "부루펜(이부프로펜)",
+      "category": "상호작용",
+      "difficulty": "medium",
+      "question": "와파린이랑 이부프로펜 같이 먹어도 되나요?",
+      "answer": "와파린(와파린나트륨)은 혈액 응고를 억제하는 항응고제이며, 이부프로펜은 진통제 및 소염제로 작용하는 약물입니다.\n\n일반적으로 와파린과 이부프로펜을 함께 복용하는 것은 권장되지 않습니다. 와파린은 혈액 응고를 억제하여 용혈증 위험을 감소시키는 반면, 이부프로펜은 혈액 응고를 억제하지 않고 출혈을 유발할 수 있습니다. 또한, 이부프로펜은 와파린의 혈액 응고 효과를 감소시킬 수 있습니다.\n\n따라서 와파린을 복용하고 계신 경우, 이부프로펜 복용 여부에 대해서는 의사나 약사와 상담하시는 것이 중요합니다. 의사나 약사에게 상세한 정보를 제공하여 조언을 받아보시기를 권장드립니다.",
+      "latency_ms": 4787.8,
+      "tokens_in": 229,
+      "tokens_out": 324,
+      "keyword": {
+        "keyword_recall": 1.0,
+        "keywords_matched": [
+          "와파린",
+          "출혈",
+          "위험"
+        ],
+        "keywords_missed": []
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 와파린과 이부프로펜을 함께 복용하는 것이 권장되지 않는다는 점을 명시하여 어느 정도 일치하지만, '출혈 위험 증가'가 주된 이유임을 명확히 언급하지 않았습니다. 또한 '와파린의 혈액 응고 효과를 감소시킬 수 있습니다'라는 부분에서 근거 없는 주장이 제시되어 hallucination이 포함되었습니다."
+      }
+    },
+    {
+      "id": "ibuprofen-food",
+      "drug": "부루펜(이부프로펜)",
+      "category": "주의보관",
+      "difficulty": "easy",
+      "question": "이부프로펜은 식전·식후 언제 먹어요?",
+      "answer": "이부프로펜은 음식과 관계없이 복용하실 수 있습니다. 증상에 따라 의사 또는 약사의 안내에 따라 적절한 방법으로 복용하시면 됩니다. 음식과 함께 복용하거나 식사 전후에 복용하더라도 효과에 큰 차이는 없습니다. 다만, 자세한 복용 방법이나 복용량은 약사나 의사의 지시를 따라주시는 것이 중요합니다. 또한, 빈속 시 복용 시 위장 장애를 유발할 수 있으므로, 음식과 함께 복용하는 것이 좋을 수도 있습니다.",
+      "latency_ms": 2437.1,
+      "tokens_in": 227,
+      "tokens_out": 214,
+      "keyword": {
+        "keyword_recall": 0.667,
+        "keywords_matched": [
+          "음식",
+          "위장"
+        ],
+        "keywords_missed": [
+          "식후"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 이부프로펜 복용 시위장장애 예방을 위해 음식과 함께 복용하는 것을 언급하여 부분적으로 맞습니다. 하지만 '음식과 관계없이 복용'이라는 설명은 정답과 상충합니다. 식후 또는 음식과 함께 복용이 권장된다는 점을 명확히 설명하지 않아 부정확성과 불완전성이 있습니다."
+      }
+    },
+    {
+      "id": "allegra-effect",
+      "drug": "알레그라",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "알레그라는 어떤 증상에 쓰는 약이에요?",
+      "answer": "알레그라는 펙소페나딘이라는 성분이 함유된 약으로서, 주로 알레르기 반응(아토피, 비염 등)으로 인한 콧물, 재채기, 가려움증, 눈가려움 등의 증상 완화에 사용됩니다. 이 약은 일반적으로 가벼운 알러지증상을 완화하는데 효과적입니다. 또한, 알레그라는 일반약으로 판매되어 직접 구입이 가능한 OTC(일반약)에 해당합니다.",
+      "latency_ms": 2812.2,
+      "tokens_in": 222,
+      "tokens_out": 185,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "알레르기",
+          "비염"
+        ],
+        "keywords_missed": [
+          "두드러기",
+          "항히스타민"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 알레르기 비염과 관련된 증상을 정확히 짚고 있지만, 만성 두드러기에 대한 언급이 없고 일반약으로 판매된다는 부분은 근거가 부족한 주장으로 보입니다. 가벼운 알러지증상이라는 단어는 경증만을 의미하지 않으며, 만성 두드러기 증상 완화 기능 역시 포함되어야 합니다."
+      }
+    },
+    {
+      "id": "allegra-dose",
+      "drug": "알레그라",
+      "category": "용법용량",
+      "difficulty": "easy",
+      "question": "알레그라 성인 용량은 어떻게 되나요?",
+      "answer": "알레그라(펙소페나딘)는 일반적으로 다음과 같은 용량으로 성인에게 권장됩니다:\n- 알레그라 180mg 정제: 하루 1회, 1정을 식사와 함께 복용하십시오.\n\n그러나 환경에 따라 개인에게 적합한 용량이 다를 수 있으므로 약사나 의사와 상담하여 정확한 용량을 결정하는 것이 좋습니다. 또한, 알레그라는 처방전이 필요 없이 구매할 수 있는 OTC(일반 구매 가능) 약물이지만, 섭취 전에 꼭 라벨 및 설명서를 참고하시기 바랍니다.",
+      "latency_ms": 1577.8,
+      "tokens_in": 219,
+      "tokens_out": 226,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "180mg"
+        ],
+        "keywords_missed": [
+          "120mg",
+          "1일 1회"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 180mg 용량 정보는 제공하지만, 120mg과 60mg 용량에 대한 정보가 없습니다. 또한 의미 없는 정보로 '식사와 함께' 복용하라는 불필요한 상세가 포함되어 있습니다. 대체적으로 기본적인 정보는 제공되나, 추가적인 정보가 필요합니다."
+      }
+    },
+    {
+      "id": "allegra-adverse",
+      "drug": "알레그라",
+      "category": "부작용",
+      "difficulty": "easy",
+      "question": "알레그라 부작용 뭐 있어요?",
+      "answer": "알레그라(펙소페나딘)는 일반적으로 안전하게 사용되는 약물이지만, 다음과 같은 부작용이 발생할 수 있습니다:\n- 가장 흔한 부작용으로는 졸음, 피부 발진, 소화 장애 등이 있을 수 있습니다.\n- 드물게는 두통, 어지러움, 궤양, 호흡곤란 등이 나타날 수도 있습니다.\n- 심각한 부작용으로는 알레르기 반응, 심장이상, 간 손상 등이 포함될 수 있습니다.\n\n알레그라를 사용하는 동안 위의 부작용이 나타난다면 즉시 의사 또는 약사에게 상담해야 합니다. 또한, 알레그라를 다른 약물과 함께 복용할 때의 상호작용에 대해서도 주의해야 합니다. 불확실한 부분이 있으면 의사나 약사와 상의하시는 것이 좋습니다.",
+      "latency_ms": 3368.2,
+      "tokens_in": 210,
+      "tokens_out": 310,
+      "keyword": {
+        "keyword_recall": 0.667,
+        "keywords_matched": [
+          "두통",
+          "졸음"
+        ],
+        "keywords_missed": [
+          "입마름"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 두통, 졸음, 어지러움 등의 일반적 부작용을 언급하여 어느 정도 정확하나 '입마름'을 빠뜨렸고, 과도하게 심각한 부작용을 제시함으로써 불필요한 불안감을 초래할 수 있습니다. 또한 일부 부작용 설명은 근거가 불확실하여 hallucination으로 flag 했습니다."
+      }
+    },
+    {
+      "id": "allegra-juice",
+      "drug": "알레그라",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "알레그라 먹고 자몽주스 마셔도 돼요?",
+      "answer": "알레그라(펙소페나딘)는 항히스타민 약물로서 알레르기 증상을 완화하기 위해 사용됩니다. 일반적으로 알레그라 복용과 자몽주스 섭취 사이에는 특별한 상호작용이 없습니다. \n\n다만, 자몽주스는 일부 약물과 상호작용할 수 있는 경우가 있으므로 의사나 약사에게 반드시 상세한 정보를 제공한 후 병용 사용 여부를 확인하는 것이 좋습니다. 또한, 알레그라를 복용할 때는 알레르기 증상에 대한 목적으로 정해진 용량과 주기에 맞게 복용하는 것이 중요합니다. 부작용을 피하기 위해 약물 복용 전에는 전문가와 상의해 주시는 것이 좋습니다.",
+      "latency_ms": 2895.9,
+      "tokens_in": 218,
+      "tokens_out": 265,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "자몽",
+          "주스"
+        ],
+        "keywords_missed": [
+          "흡수",
+          "감소"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "'자몽 주스가 펙소페나딘의 흡수를 감소시킨다'는 중요한 정보를 생략했고, '특별한 상호작용이 없다'고 잘못 서술하여 오해를 일으킬 수 있습니다. 약물 상호작용에 대한 올바른 정보 제공이 부족하여 환자에게 혼란을 줄 수 있습니다."
+      }
+    },
+    {
+      "id": "allegra-antacid",
+      "drug": "알레그라",
+      "category": "상호작용",
+      "difficulty": "medium",
+      "question": "알레그라랑 제산제 같이 먹어도 되나요?",
+      "answer": "알레그라(펙소페나딘)는 항히스타민제로서 알레르기 증상, 예를 들어 코막힘, 재채기, 눈가려움, 두드러기 등을 완화하는 데 사용됩니다. 일반적으로 알레그라와 제산제(소다를 포함하는 약물)를 함께 복용해도 괜찮을 수 있지만, 개별 상황에 따라 다를 수 있습니다.\n\n그러나 제산제와 알레그라를 함께 복용하는 경우, 제산제가 알레그라의 흡수를 감소시킬 수 있으므로 최대한 별도로 복용하시는 것이 좋습니다. 가능하다면 약물을 복용하는 시간을 조절하여 간격을 두는 것이 좋습니다. 또한, 알레그라 등의 약물을 복용할 때는 의사나 약사에게 상담을 받는 것이 좋습니다. 자세한 상황에 맞는 조언을 받기 위해서 의사나 약사에게 문의해 보세요.",
+      "latency_ms": 3213.2,
+      "tokens_in": 217,
+      "tokens_out": 340,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "제산제",
+          "흡수"
+        ],
+        "keywords_missed": [
+          "알루미늄",
+          "마그네슘"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변이 제산제가 알레그라의 흡수를 감소시킬 수 있다고 언급했지만, 알루미늄 및 마그네슘 함유 제산제를 특정하지 않았습니다. 또한 '소다를 포함하는 약물' 부분은 근거 없는 언급입니다. 환자에게 의사나 약사와 상담할 것을 권하는 부분은 유익합니다."
+      }
+    },
+    {
+      "id": "allegra-pregnancy",
+      "drug": "알레그라",
+      "category": "임신수유",
+      "difficulty": "medium",
+      "question": "임신 중에 알레그라 먹어도 될까요?",
+      "answer": "임신 중에는 의사나 약사와 상의하여야 합니다. 기본적으로 펙소페나딘이 함유된 알레그라는 임부에게 치명적인 위험이 있는 것으로 알려져 있습니다. 따라서 임신 중에는 알레그라 복용을 피하시는 것이 좋습니다. 아무런 부작용이 없다고 느껴지더라도 반드시 의료 전문가의 지시를 받아야 합니다. 부득이하게 알레그라를 복용해야 할 경우에는 반드시 의사나 약사와 상의하시기 바랍니다.",
+      "latency_ms": 2442.6,
+      "tokens_in": 216,
+      "tokens_out": 189,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "임신"
+        ],
+        "keywords_missed": [
+          "자료",
+          "의사 상담"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 의사나 약사와 상의해야 한다는 점은 정확하지만, '펙소페나딘이 임부에게 치명적인 위험이 있는 것으로 알려져 있다'는 부분은 근거없는 주장인 것 같습니다. 따라서 hallucination_flag를 true로 설정합니다. 또한, 약물 사용 여부에 대한 명확한 조언은 하지 않고 복용을 피하라고만 설명하므로 완전성에서는 부족합니다."
+      }
+    },
+    {
+      "id": "allegra-storage",
+      "drug": "알레그라",
+      "category": "주의보관",
+      "difficulty": "medium",
+      "question": "알레그라는 식사랑 어떻게 먹어요?",
+      "answer": "알레그라는 식사와 함께 먹어도 괜찮습니다. 주로 물과 함께 복용하며, 필요한 경우 약 봉지 또는 의사나 약사의 지시에 따라 섭취하시면 됩니다. 또한, 알레그라는 일반적으로 하루 한 번씩 복용하며, 가능한 같은 시간에 복용하는 것이 좋습니다. 더 자세한 정보는 의사 또는 약사와 상담하시는 것이 좋습니다.",
+      "latency_ms": 1447.8,
+      "tokens_in": 219,
+      "tokens_out": 162,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "물"
+        ],
+        "keywords_missed": [
+          "공복",
+          "주스 금지"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변이 알레그라의 복용에 대하여 일반적인 정보는 제공하지만, 공복에 물과 함께 복용하는 것이 가장 흡수에 좋다는 중요 정보가 누락되어 있습니다. 주스와 함께 먹지 말아야 한다는 지침도 빠져 있어 있습니다."
+      }
+    },
+    {
+      "id": "famotidine-effect",
+      "drug": "가스터(파모티딘)",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "가스터는 무슨 약이에요?",
+      "answer": "가스터는 소화성 궤양, 식도염, 위식도 역류질환, 염증성 식도질환 등 소화기 질환에 사용되는 약물로, 주성분인 파모티딘이 함유되어 있습니다. 가스터는 일반용 의약품으로 판매되며, 위생실신제로 사용되기도 합니다. 이 약은 일반적으로 위산을 줄이고 위내의 염증을 완화하여 소화기 질환을 개선하는데 도움을 줍니다.하지만, 정확한 용법 용량 및 부작용 등은 본인의 상태에 따라 다를 수 있으므로 의사 또는 약사와 상담하시는 것이 좋습니다.",
+      "latency_ms": 2970.0,
+      "tokens_in": 214,
+      "tokens_out": 233,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "위산",
+          "역류"
+        ],
+        "keywords_missed": [
+          "H2",
+          "속쓰림"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 파모티딘이 소화기 질환 등에 사용된다는 점에서 어느 정도 일치하나, H2 수용체 차단제라는 중요한 정보가 누락되어 있습니다. '위생실신제'라는 용어는 부정확하거나 모호하며, 위산 분비와 관련된 구체적인 효능 설명이 부족합니다."
+      }
+    },
+    {
+      "id": "famotidine-dose",
+      "drug": "가스터(파모티딘)",
+      "category": "용법용량",
+      "difficulty": "medium",
+      "question": "가스터 어떻게 먹어야 하나요?",
+      "answer": "가스터(파모티딘)는 소화성 궤양, 식도염, 식도역류질환 등을 치료하기 위해 사용되는 약물입니다. \n\n일반적으로 가스터는 식사 전에 먹는 것이 좋습니다. 의사 또는 약사의 지시에 따라 복용 주기와 용량을 정확히 지켜야 합니다. 약품 성분과 용량에 대한 자세한 정보는 의사 또는 약사와 상담하시는 것이 중요합니다.\n\n가스터를 복용하는 동안에는 응급상황이 발생할 수 있으므로 의사 또는 약사와의 상담을 통해 적절한 처방 및 복용 방법을 확인하는 것이 중요합니다. 또한 약물간 상호작용을 주의해야 합니다. 부작용이나 의도하지 않은 반응이 있을 경우 즉시 의사나 약사에게 연락하여 상담 받는 것이 좋습니다.",
+      "latency_ms": 3494.2,
+      "tokens_in": 218,
+      "tokens_out": 313,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "10mg",
+          "20mg",
+          "1일 1~2회",
+          "14일"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "답변은 가스터의 일반적인 정보와 복용 방법의 중요성을 강조하지만, 구체적인 용법용량 정보가 포함되어 있지 않습니다. 이는 질문의 초점과 관련된 핵심 정보가 누락되었음을 의미합니다. 또한 '식사 전'이라는 복용 시기의 언급은 expected_answer에 명시되지 않은 부분입니다."
+      }
+    },
+    {
+      "id": "famotidine-adverse",
+      "drug": "가스터(파모티딘)",
+      "category": "부작용",
+      "difficulty": "easy",
+      "question": "파모티딘 부작용은요?",
+      "answer": "가스터(파모티딘)의 일반적인 부작용은 다음과 같습니다:\n1. 구역질 또는 구역질감\n2. 가래\n3. 변비\n4. 설사\n5. 떨림 또는 두통\n6. 느린 나흘함 또는 약함\n\n가스터(파모티딘)을 사용하실 때 부작용이 발생한다면 의사나 약사와 상담하시는 것이 좋습니다. 또한, 심각한 알레르기 반응인 발진, 가려움, 호흡곤란, 얼굴, 입, 입술 또는 목의 부기, 일어나면 즉시 의료진과 상담하셔야 합니다.",
+      "latency_ms": 1598.9,
+      "tokens_in": 215,
+      "tokens_out": 231,
+      "keyword": {
+        "keyword_recall": 1.0,
+        "keywords_matched": [
+          "두통",
+          "변비",
+          "설사"
+        ],
+        "keywords_missed": []
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 변비, 설사, 두통을 언급했지만 세부 사항의 정확성(떨림 설명 등)이 떨어지며 일부 부적절한 부작용도 포함되었습니다. 게다가 비타민 B12 흡수의 장기적 가능성에 대한 정보가 누락되었습니다."
+      }
+    },
+    {
+      "id": "famotidine-interaction",
+      "drug": "가스터(파모티딘)",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "가스터랑 같이 먹으면 안 되는 약이 있나요?",
+      "answer": "가스터(파모티딘)은 위산을 줄이는 약물로서, 다른 약물과의 상호작용이 발생할 수 있습니다. 따라서 다른 약물을 복용할 때는 의사나 약사에게 반드시 상담하시는 것이 좋습니다. 특히 혈액희석제나 항생제, 항진통제, 항우울제, 항생제 등과 같이 가스터와의 상호작용에 주의해야 할 약물이 있을 수 있습니다.따라서 다른 약물과 함께 복용 시 주의사항을 확인하기 위해 의사나 약사와 상담하시는 것이 좋습니다.",
+      "latency_ms": 1733.1,
+      "tokens_in": 221,
+      "tokens_out": 214,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "케토코나졸",
+          "항진균제",
+          "흡수"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변에는 일반적인 주의사항이 제시되지만, 구체적으로 가스터와 상호작용이 있을 수 있는 약물인 항진균제나 케토코나졸에 대한 언급이 없습니다. 혈액희석제나 항생제 등과의 특정 상호작용에 대한 언급은 구체적인 근거가 없어서 부정확합니다. 따라서 환자가 명확한 결정을 내리기 어려운 부분이 있습니다."
+      }
+    },
+    {
+      "id": "famotidine-pregnancy",
+      "drug": "가스터(파모티딘)",
+      "category": "임신수유",
+      "difficulty": "medium",
+      "question": "임신 중 가스터 복용해도 괜찮을까요?",
+      "answer": "임신 중에는 의사나 약사와 상담 없이 약물을 복용하는 것을 피하는 것이 좋습니다. 특히 가스터(파모티딘)와 같은 약물은 임신 중 안전성이 충분히 검증되지 않았을 수 있습니다.\n\n따라서 임신 중에 가스터를 복용하고 싶다면, 먼저 담당 의사나 산부인과 전문의와 상담하여 안전한지 여부를 확인하는 것이 중요합니다. 의사나 약사의 지시를 따르는 것이 가장 안전한 선택일 것입니다.",
+      "latency_ms": 2230.5,
+      "tokens_in": 221,
+      "tokens_out": 188,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "임신"
+        ],
+        "keywords_missed": [
+          "자료",
+          "의사 상담"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 임신 중 사용 안전성 자료가 충분치 않음을 언급하고 의사와 상담 후 결정해야 한다고 설명하여 사실적으로 부합합니다. 일부 누락된 요소는 필요시 단기 사용 권장입니다."
+      }
+    },
+    {
+      "id": "famotidine-redflag",
+      "drug": "가스터(파모티딘)",
+      "category": "주의보관",
+      "difficulty": "medium",
+      "question": "가스터 먹다가 병원 가야 하는 경우는 언제인가요?",
+      "answer": "가스터(파모티딘)를 복용하다가 병원을 방문해야 하는 경우는 다음과 같습니다:\n1. 알러지 반응: 가스터를 복용하는 동안 발진, 발령, 가려움증, 호흡 곤란 등의 알러지 반응이 나타날 때\n2. 심각한 부작용: 희귀하게 발생하지만, 심한 두통, 혼란, 빈혈, 출혈 등이 나타날 때\n3. 위장관련 이상 증상 지속: 속쓰림, 소화불량, 복부 통증 등의 위장관련 이상 증상이 계속되거나 심해질 때\n4. 효과 없음: 가스터를 복용해도 증상이 호전되지 않거나 악화될 때\n\n이러한 경우에는 반드시 의사나 약사에게 상담하고 조치를 취해야 합니다. 병원을 방문하여 전문가의 진단과 조언을 받는 것이 중요합니다.",
+      "latency_ms": 3640.3,
+      "tokens_in": 224,
+      "tokens_out": 323,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "병원"
+        ],
+        "keywords_missed": [
+          "혈변",
+          "토혈",
+          "흉통"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 심각한 일부 증상(알러지 반응, 두통 등)과 위장 관련 증상에 대한 주의 필요를 언급하고 있으나, expected_answer에서는 주요하게 삼킴 곤란, 검은색 변/혈변, 토혈, 흉통을 강조하고 있어 이들에 대해 언급이 없어 완전하지 않습니다. 일부 hallucination은 '심한 두통, 혼란, 빈혈' 등에 관한 언급이 근거 없이 주어진 점에 있습니다."
+      }
+    },
+    {
+      "id": "cetirizine-effect",
+      "drug": "지르텍(세티리진)",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "지르텍은 어떤 알레르기에 효과 있나요?",
+      "answer": "지르텍은 흔한 알레르기 질환인 알레르기 비염(퇴행성 비염, 알레르기성 비염)과 두드러기(습진성 피부염, 통령거리, 화놀 등)의 증상을 완화하는데 사용됩니다. 세티리진이라는 활성 성분이 알레르기 반응을 억제하여 가려움, 콧물, 재채기, 눈가려움, 결막염(사용자) 등의 증상을 개선하고 잘 알레르기 반응을 억제하여 가려움, 콧물, 재채기, 눈가려움, 결막염(사용, 두드러기 증상을 완화합니다.\n\n하지만, 지르텍이 모든 유형의 알레르기에 효과적인 것은 아닙니다. 따라서 특정 알레르기 질환에 대해 사용하기 전에 의사나 약사와 상담하여 적합한 치료법을 찾아야 합니다.",
+      "latency_ms": 2503.4,
+      "tokens_in": 225,
+      "tokens_out": 346,
+      "keyword": {
+        "keyword_recall": 0.75,
+        "keywords_matched": [
+          "비염",
+          "두드러기",
+          "알레르기"
+        ],
+        "keywords_missed": [
+          "항히스타민"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 알레르기 비염과 두드러기 완화에 대해 올바른 정보를 제공하나, '퇴행성 비염', '습진성 피부염', 통령거리', '화놀' 등의 표현이 근거 없는 주장입니다. 2세대 항히스타민제 또는 만성 두드러기 언급이 빠졌습니다. 의사나 약사와 상담 필요성은 유익한 정보입니다."
+      }
+    },
+    {
+      "id": "cetirizine-dose",
+      "drug": "지르텍(세티리진)",
+      "category": "용법용량",
+      "difficulty": "easy",
+      "question": "지르텍 성인 하루에 몇 알 먹어요?",
+      "answer": "일반적으로 세티리진을 함유한 지르텍은 성인의 경우 하루에 1회 1정씩 복용하는 것이 권장됩니다. 하지만 개인의 상태나 증상에 따라 다를 수 있으므로, 정확한 복용 방법은 의사나 약사와 상담하는 것이 좋습니다. 또한, 지르텍을 복용하시기 전에 반드시 사용 설명서를 읽고 지시사항에 따라 복용하시기 바랍니다.",
+      "latency_ms": 2065.5,
+      "tokens_in": 220,
+      "tokens_out": 159,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "10mg",
+          "1일 1회",
+          "신장"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 '성인의 경우 하루에 1회 1정씩 복용'이라고 하여 10mg, 1일 1회의 의미를 어느 정도 포함합니다. 그러나 신장 기능 저하 환자에 대한 감량 지침이 누락되어 있고, 다소 일반적인 설명이므로 완전하지 않습니다. 전반적으로 환자에게 명확한 정보를 제공하지만 신장 기능 변에 대한 정보가 빠져 있어 도움이 약간 부족합니다."
+      }
+    },
+    {
+      "id": "cetirizine-drowsiness",
+      "drug": "지르텍(세티리진)",
+      "category": "부작용",
+      "difficulty": "easy",
+      "question": "지르텍 먹으면 졸린가요?",
+      "answer": "일반적으로 지르텍(세티리진)은 적은 수의 사람들에게 졸림을 유발하지 않는 비전통적 항히스타민제로 알려져 있습니다. 그러나 개인에 따라 다르게 작용할 수 있으므로, 졸린 증상이 나타날 수 있는 가능성이 없는 것은 아닙니다. 만약 졸림이나 다른 부작용을 경험한다면, 건강 전문가와 상담하여 다른 대안을 찾아보시는 것이 좋습니다.",
+      "latency_ms": 2038.4,
+      "tokens_in": 215,
+      "tokens_out": 173,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "졸음",
+          "피로",
+          "운전 주의"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "지르텍은 졸음을 유발할 수 있는 가능성이 있는 약물로 설명되어 있으며, 이는 사실에 부합합니다. 하지만 '운전 주의'에 대한 지침이 빠졌습니다. 개인 차이를 강조하고 대안 검사 권유는 환자에게 유용한 정보입니다."
+      }
+    },
+    {
+      "id": "cetirizine-alcohol",
+      "drug": "지르텍(세티리진)",
+      "category": "상호작용",
+      "difficulty": "easy",
+      "question": "지르텍 먹고 술 마셔도 돼요?",
+      "answer": "의사나 약사와 상의하지 않고 약물과 술을 함께 복용하는 것은 권장되지 않습니다. 세티리진과 알코올을 함께 복용할 경우, 중추 신경계의 기능을 억제하는 영향을 증가시킬 수 있습니다. 따라서 알코올을 섭취할 때는 지르텍을 복용하지 않는 것이 좋습니다. 또한, 알코올은 알레르기 증상을 악화시키거나 부작용을 증가시킬 수도 있으므로 주의가 필요합니다. 더 궁금한 사항이 있다면 의사나 약사와 상담하는 것이 좋습니다.",
+      "latency_ms": 2670.5,
+      "tokens_in": 217,
+      "tokens_out": 224,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "알코올",
+          "술"
+        ],
+        "keywords_missed": [
+          "진정",
+          "졸음 증가"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 알코올과 세티리진의 상호작용을 명확히 설명하고 있으며, 중추신경 억제 효과의 증가를 언급하고 있습니다. 또한, 알코올의 일반적인 부작용 가능성도 경고하여 환자가 안전한 결정을 내릴 수 있도록 도와줍니다."
+      }
+    },
+    {
+      "id": "cetirizine-renal",
+      "drug": "지르텍(세티리진)",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "신장이 안 좋은데 지르텍 먹어도 되나요?",
+      "answer": "지르텍(세티리진)은 일반적으로 신장에 영향을 주는 부작용이 거의 없는 안전한 약물입니다. 하지만 개인의 신체 상황에 따라 다를 수 있으므로 안전을 위해 정확한 정보를 위해 의사나 약사와 상담하는 것이 좋습니다. 만약 다른 질문이 있으시다면 언제든지 물어주세요.",
+      "latency_ms": 1598.5,
+      "tokens_in": 221,
+      "tokens_out": 130,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "신부전",
+          "감량",
+          "5mg"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "답변은 중증 신부전 환자에 대한 사용 금기와 중등도 신기능 저하 시 용량 감량 필요성을 전혀 언급하지 않아 사실과 부합하지 않습니다. 환자 안전에 중요한 정보를 제공하지 못하고 있으며, '신장에 영향을 주는 부작용이 거의 없다는' 주장은 근거가 없는 오해의 소지가 있는 정보입니다."
+      }
+    },
+    {
+      "id": "cetirizine-pregnancy",
+      "drug": "지르텍(세티리진)",
+      "category": "임신수유",
+      "difficulty": "medium",
+      "question": "임신 중에 지르텍 복용 가능한가요?",
+      "answer": "임신 중에는 어떤 의약품이든 복용 전에 의사나 약사와 상의하는 것이 가장 안전합니다. 그러나 일반적으로 세티리진을 주요 성분으로 하는 지르텍은 임신 중에도 안전하게 복용할 수 있는 약으로 알려져 있습니다. 그러나 임신 중에는 모든 약물이나 보조제 복용 시에 주의가 필요하므로, 의사나 약사에게 반드시 상담해보시는 것이 좋습니다. 함부로 약을 복용하지 않고 전문가의 조언을 받는 것이 중요합니다.",
+      "latency_ms": 2421.1,
+      "tokens_in": 215,
+      "tokens_out": 189,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "임신"
+        ],
+        "keywords_missed": [
+          "수유",
+          "의사 상담"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 의사와 상담할 것을 지시하여 부분적으로 정확하지만, 지르텍의 임신 중 안전성이 확실하다는 부정확한 정보를 제공합니다. '임신 중에도 안전하게 복용할 수 있는 약'이라는 주장은 근거가 부족하며 hallucination에 해당합니다."
+      }
+    },
+    {
+      "id": "metformin-effect",
+      "drug": "메트포르민",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "메트포르민은 어떤 약인가요?",
+      "answer": "메트포르민은 당뇨병 치료를 위해 사용되는 약물로, 혈당 수치를 낮추고 인슐린 저항성을 개선하는데 도움을 줍니다. 이 약은 혈당 조절을 돕고, 간의 포도당 생성을 억제하여 혈당 수치를 안정화하는 데 도움을 줍니다. 메트포르민은 일반적으로 타입 2 당뇨병 환자들에게 처방되며, 식이요법과 운동만으로 혈당을 제어하기 어려운 경우에 사용됩니다.",
+      "latency_ms": 1735.4,
+      "tokens_in": 217,
+      "tokens_out": 188,
+      "keyword": {
+        "keyword_recall": 0.75,
+        "keywords_matched": [
+          "혈당",
+          "인슐린",
+          "포도당"
+        ],
+        "keywords_missed": [
+          "제2형 당뇨"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 메트포르민의 제2형 당뇨병 치료에 대한 주요 기전인 혈당 수치 감소, 인슐린 저항성 개선, 간의 포도당 생성 억제를 모두 정확히 설명한다. 또한, 식이요법과 운동으로 혈당 조절이 어려운 경우에 사용된다는 추가 정보는 환자가 이해를 돕기에 유용하다."
+      }
+    },
+    {
+      "id": "metformin-dose",
+      "drug": "메트포르민",
+      "category": "용법용량",
+      "difficulty": "medium",
+      "question": "메트포르민 처음 먹을 때 어떻게 시작하나요?",
+      "answer": "메트포르민은 당뇨병 치료나 예방을 위해 사용되는 약물로, 일반적으로 식사와 함께 복용하며 의사의 처방에 따라 복용해야 합니다. 처음 복용 시에는 일반적으로 작은 용량부터 시작하여 천천히 증량하며 복용하는 것이 좋습니다. 이는 부작용을 최소화하고 몸에 약물을 적응시키는 데 도움이 됩니다. \n\n따라서, 메트포르민을 처음 복용할 때는 의사의 지시에 따라 정확한 용량과 복용 방법을 준수하는 것이 중요합니다. 또한, 의사에게 현재 상태와 다른 약물 복용 여부에 대해 상세히 알려주어야 합니다. 만약 복용 중 어떠한 문제가 발생한다면 즉시 의사와 상의하여 조치를 취해야 합니다.",
+      "latency_ms": 3194.8,
+      "tokens_in": 223,
+      "tokens_out": 307,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "식사"
+        ],
+        "keywords_missed": [
+          "500mg",
+          "점진적 증량",
+          "2000mg"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 메트포르민의 시작 용량과 증량하는 방법에 대해 대체로 언급하지만, 구체적인 용량(500mg)과 최대 일반적 용량(2000mg/일)을 제시하지 않았습니다. 식사와 함께 복용해야 한다는 점은 맞으나 용량 부분이 빠져 있어 정보가 불완전합니다."
+      }
+    },
+    {
+      "id": "metformin-adverse",
+      "drug": "메트포르민",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "메트포르민 부작용 뭐가 흔한가요?",
+      "answer": "메트포르민의 일반적인 부작용으로는 소화기 장애가 가장 흔하게 나타납니다. 이는 복부팽만, 복부통, 설사, 구역, 구토 등이 포함될 수 있습니다. 그 외에도 가끔 피부 발진, 민감도 변화, 비타민 B12 부족, 혈당 저하 (저혈당) 등의 부작용이 나타날 수 있습니다. 하지만 이러한 부작용이 나타난다고 해서 모든 사람이 경험하는 것은 아니며, 각 개인의 상황에 따라 부작용이 달라질 수 있습니다. 만약 부작용이 심하다고 느껴진다면 즉시 의사나 약사와 상담해 주시는 것이 좋습니다.",
+      "latency_ms": 2842.2,
+      "tokens_in": 218,
+      "tokens_out": 251,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "설사",
+          "구역"
+        ],
+        "keywords_missed": [
+          "위장장애",
+          "젖산산증"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 메트포르민의 일반적인 부작용인 위장장애(설사, 구역 등)를 잘 설명하지만, 중대한 젖산산증 언급이 없어 완전히 부합하지 않음. '비타민 B12 부족, 저혈당' 등 추가적인 정보를 제공하지만 이는 주요 부작용 목록에서 보통 빠짐."
+      }
+    },
+    {
+      "id": "metformin-contra",
+      "drug": "메트포르민",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "메트포르민 먹으면 안 되는 사람은요?",
+      "answer": "메트포르민은 당뇨병 치료에 널리 사용되는 의약품으로, 대부분의 경우 안전하게 복용할 수 있습니다. 그러나 메트포르민을 복용하면 안 되는 경우도 있습니다. 메트포르민을 복용하면 안 되는 사람의 예시는 다음과 같습니다:\n\n1. 신장 기능이 저하된 사람: 메트포르민은 신장을 통해 배설되므로, 신장 기능이 저하된 경우에는 메트포르민의 부작용이 더욱 심각해질 수 있습니다.\n2. 간기능 장애가 있는 사람: 간기능 장애가 있는 경우 메트포르민의 대사와 배설이 어려워질 수 있습니다.\n3. 중증의 호흡기 질환을 앓고 있는 사람: 호흡기 문제로 인해 산소 부족이 발생할 수 있는데, 이런 경우 메트포르민 약물이 산소를 효과적으로 이용하지 못할 수 있습니다.\n4. 중증의 감염 또는 수술 후 상태에 있는 사람: 메트포르민은 감염이나 수술 후 복구 과정에도 영향을 미칠 수 있으므로 조심해야 합니다.\n\n의약품을 복용하기 전에는 의사나 약사와 상담하여 해당 약물이 본인에게 적합한지 여부를 확인하는 것이 중요합니다.",
+      "latency_ms": 4671.4,
+      "tokens_in": 218,
+      "tokens_out": 476,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "신부전",
+          "eGFR",
+          "대사성 산증"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "중증 신부전(eGFR <30)과 대사성 산증은 언급되지 않았고, 간기능 장애와 중증 호흡기 질환은 직접적인 금기가 아닙니다. 답변의 일부는 사실과 다르거나 과장되어 있어 부정확합니다."
+      }
+    },
+    {
+      "id": "metformin-alcohol",
+      "drug": "메트포르민",
+      "category": "상호작용",
+      "difficulty": "medium",
+      "question": "메트포르민 먹는데 술 마셔도 되나요?",
+      "answer": "메트포르민을 복용 중이신 경우, 술과 함께 섭취하는 것은 권장되지 않습니다. 술을 마시면 혈당 수치가 변동될 수 있고, 메트포르민과 함께 술을 섭취할 경우 부작용이 발생할 수 있습니다. 또한, 술 자체도 혈당 수치를 영향을 줄 수 있으므로 주의해야 합니다. 가능하다면 의사나 약사에게 상담하여 안전하게 약물을 복용하는 것이 좋습니다. 또한, 술과의 복용이 불가피한 경우에는 본인 건강을 가장 우선시하여 가능한 한 술 섭취량을 줄이는 것이 좋습니다.",
+      "latency_ms": 2445.5,
+      "tokens_in": 221,
+      "tokens_out": 230,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "술"
+        ],
+        "keywords_missed": [
+          "알코올",
+          "젖산산증",
+          "저혈당"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 메트포르민과 술의 상호작용에 대한 일반적인 주의사항을 제공하지만, 젖산산증의 위험에 대한 직접적인 언급이 없습니다. 음주 제한을 추천하는 것은 옳으나, 정답에서 특정한 '젖산산증' 및 '저혈당' 요소의 언급이 빠져 있습니다. 또한, 답변은 행동 가능한 권고를 대체로 제공하지만, 주의사항이 약간 일반적입니다."
+      }
+    },
+    {
+      "id": "metformin-contrast",
+      "drug": "메트포르민",
+      "category": "주의보관",
+      "difficulty": "hard",
+      "question": "조영제 검사 받을 때 메트포르민은 어떻게 해야 하나요?",
+      "answer": "조영제 검사를 받을 때 메트포르민을 복용하는 경우, 일반적으로 이러한 절차를 따르는 것이 좋습니다:\n\n1. 의사나 약사에게 상담: 조영제 검사를 받기 전에 의사나 약사와 상담하여 메트포르민 복용에 대한 지시를 받으세요.\n2. 특별한 지시가 없는 한, 일반적으로 메트포르민은 조영제 검사 전후에 복용해도 됩니다. 그러나 의사의 지시에 따라 조절할 수 있습니다.\n3. 조영제 검사 전후에 수분을 충분히 섭취하여 신장에 부작용을 줄일 수 있습니다.\n4. 조영제 검사 후에 메트포르민을 다시 복용할 때에도 의사의 지시에 따라 적절히 조정해야 합니다.\n\n메트포르민 뿐만 아니라 다른 의약품이나 상황에 따라 복용 방법이 달라질 수 있으므로, 의사나 약사의 지시를 꼭 따르시는 것이 중요합니다. 만약 복용 방법에 대해 불분명한 부분이 있다면, 의사나 약사에게 상세하게 문의해 보세요.",
+      "latency_ms": 4202.9,
+      "tokens_in": 227,
+      "tokens_out": 394,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "조영제"
+        ],
+        "keywords_missed": [
+          "중단",
+          "신기능"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 조영제 검사 전후에 메트포르민 복용을 의사와 상의하도록 하고, 신장 관련 주의사항도 언급했으나, '특별한 지시가 없는 한 일반적으로 메트포르민은 조영제 검사 전후에 복용해도 된다'는 부분은 정확하지 않습니다. '일시 중단이 필요할 수 있다'는 지침을 명시적으로 언급하지 않았고, 신기능 저하 시 중단이 필요함을 충분히 설명하지 않아 completeness와 accuracy에서 점수를 잃었습니다."
+      }
+    },
+    {
+      "id": "metformin-pregnancy",
+      "drug": "메트포르민",
+      "category": "임신수유",
+      "difficulty": "hard",
+      "question": "임신성 당뇨인데 메트포르민 먹어도 돼요?",
+      "answer": "임신성 당뇨는 임신 동안 발생하는 당뇨병을 말합니다. 메트포르민은 일반적으로 임신 중에는 특정 상황을 제외하고는 권장되지 않습니다. \n\n임신 중에 메트포르민을 ​​복용해야 하는 경우에는 의사와 충분한 상담을 진행해야 합니다. 의사는 임신 중인 여성의 건강 상태 및 증상을 고려하여 적합한 치료 계획을 수립할 수 있습니다. 임신 중 메트포르민을 계속해서 복용해야 하는 경우, 의사는 가능한 한 안전한 용량과 복용 방법을 결정할 것입니다.\n\n따라서, 임신 중에 메트포르민을 ​​복용해야 하는지 여부에 대해서는 의사와 상담하시는 것이 가장 좋습니다. 의사의 지시에 따라 적절한 조치를 취하시기 바랍니다.",
+      "latency_ms": 2396.5,
+      "tokens_in": 225,
+      "tokens_out": 307,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "임신성 당뇨"
+        ],
+        "keywords_missed": [
+          "인슐린",
+          "전문의"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 임신 중 메트포르민 복용이 권장되지 않는다는 점과 의사와의 상담 필요성을 강조하여 정확성을 유지합니다. 그러나 메트포르민이 임신성 당뇨에 사용될 수 있는 경우가 있음을 명시하지 않았고, 인슐린이 1차 옵션이라는 점이 누락되었습니다. 전반적으로 적절한 행동 지침을 제공하지만, 메트포르민의 임신성 당뇨 사용 관련 정보가 더 구체적이어야 합니다."
+      }
+    },
+    {
+      "id": "aspirin-effect",
+      "drug": "아스피린",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "저용량 아스피린(100mg)은 왜 먹는 거예요?",
+      "answer": "저용량 아스피린(100mg)은 일상적으로 심장 질환 발병 위험이 높은 분들에게 권장되는 의약품입니다. 여러 연구에 따르면 아스피린을 일정량 복용하면 혈소판의 응집을 억제하는 효과가 있어 동맥 경화 및 혈전 형성을 예방하고, 심근경색이나 뇌졸중 등의 위험을 줄일 수 있습니다. 하지만 아스피린 또한 부작용이 있을 수 있으므로 의사나 약사와 상담 후 복용하시는 것이 좋습니다. 복용시에는 주의사항과 적절한 용량을 준수하는 것이 중요합니다.",
+      "latency_ms": 3411.1,
+      "tokens_in": 226,
+      "tokens_out": 240,
+      "keyword": {
+        "keyword_recall": 1.0,
+        "keywords_matched": [
+          "혈소판",
+          "심근경색",
+          "뇌졸중",
+          "예방"
+        ],
+        "keywords_missed": []
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 5,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 저용량 아스피린의 혈소판 응집 억제 효과를 언급하며 심근경색과 뇌졸중 예방을 포함하고 있어 정확합니다. 부작용과 전문가 상담의 중요성을 강조하는 부분도 도움이 됩니다. 단, '일상적으로 권장된다'는 표현이 일반적이지 않고, 의사 처방 기준임을 명확히 해야 합니다."
+      }
+    },
+    {
+      "id": "aspirin-bleeding",
+      "drug": "아스피린",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "아스피린 먹으면 출혈 위험이 있나요?",
+      "answer": "아스피린은 혈소판 응집을 억제하여 혈액이 응고되는 것을 방해하는 효과가 있습니다. 이는 혈전이 생성되는 것을 막아 혈전성 질환이나 혈전혈소판 의존성 혈전혈소판 의존성 혈전성 혈전성 혈전성 혈전성혈전성혈전성혈전성혈전성혈전성에서 사용되는데, 출혈이 병증이 될 수 있습니다. 특히 아스피린을 과량으로 복용할 경우 출혈의 위험이 높아질 수 있으니 권장 용량을 초과하지 않도록 주의해야 합니다. 출혈이나 혈전 관련 증상이 발생할 경우 즉시 의사와 상담하시는 것이 좋습니다.",
+      "latency_ms": 2259.1,
+      "tokens_in": 220,
+      "tokens_out": 259,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "출혈"
+        ],
+        "keywords_missed": [
+          "위장",
+          "흑색 변"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 아스피린이 혈소판 응집 억제 효과로 출혈 위험을 높일 수 있음을 설명하지만, 위장 출혈이나 흑색 변 등 구체적인 부작용이 언급되지 않았습니다. '혈전혈소판 의존성...' 부분은 오류가 있으며 불필요한 반복이 있어 명확성을 감소시킵니다. 전달력에 문제가 있습니다."
+      }
+    },
+    {
+      "id": "aspirin-reye",
+      "drug": "아스피린",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "아이가 감기 걸렸는데 아스피린 줘도 돼요?",
+      "answer": "아스피린(아세틸살리실산)은 소아의 감기 또는 발열에 사용되지 않습니다. 소아에게 아스피린을 투여할 경우 레이의 증후군이 발생할 수 있으며, 이는 심각한 상태로 발전할 수 있습니다. 소아의 감기나 발열은 일반적으로 해열제(예: 아세트아미노펜, 이부프로펜)를 사용하여 증상을 완화하는 것이 좋습니다. 또한, 아이가 감기에 걸렸다면 의사와 상담하여 적절한 처방을 받아야 합니다. 계속해서 아이의 증상이나 치료에 대해 의사와 상의하시는 것이 중요합니다.",
+      "latency_ms": 1878.0,
+      "tokens_in": 224,
+      "tokens_out": 235,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "라이 증후군",
+          "16세",
+          "바이러스",
+          "금기"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 아스피린이 소아의 감기에 사용되지 말아야 한다는 점을 잘 설명합니다. 레이 증후군 위험도 언급되어 있어 주요 위험을 다룹니다. 다만 16세 미만이라는 연령 기준이 명확히 언급되지 않은 점이 아쉽습니다. 전반적으로 소아에게 다른 해열제를 사용하고, 의사와 상의하라는 조언은 매우 유용합니다."
+      }
+    },
+    {
+      "id": "aspirin-pregnancy",
+      "drug": "아스피린",
+      "category": "임신수유",
+      "difficulty": "hard",
+      "question": "임신 중에 아스피린 먹어도 돼요?",
+      "answer": "임신 중에 아스피린을 복용하기 전에는 꼭 의사와 상담해야 합니다. 일반적으로 임신 중에 아스피린을 복용해도 될 수 있지만, 각 개인의 상황에 따라 상담이 필요할 수 있습니다. 특히 임신 초·말기, 고혈압이나 출혈 증상이 있는 경우 아스피린 복용에 대한 추가적인 주의사항이 있습니다. 따라서, 임신 중에 어떤 의약품을 복용해야 하는지에 대한 판단은 의사와 상의하여 결정해야 합니다. ※아스피린은 OTC 의약품으로 요 a추천되지 않는 식품의약품입니다.",
+      "latency_ms": 2313.8,
+      "tokens_in": 217,
+      "tokens_out": 241,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "임신 후기",
+          "동맥관",
+          "금기",
+          "저용량"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 임신 중 아스피린 사용 시 의사와 상의가 필요함을 강조하지만, 임신 후기의 고용량이 금기임을 명시하지 않았습니다. 또한 '아스피린은 OTC 의약품으로 요 a추천되지 않는 식품의약품입니다'는 잘못된 정보입니다. 이로 인해 hallucination_flag를 true로 설정했습니다."
+      }
+    },
+    {
+      "id": "aspirin-nsaid",
+      "drug": "아스피린",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "아스피린이랑 이부프로펜 같이 먹어도 되나요?",
+      "answer": "아스피린과 이부프로펜은 모두 진통, 해열, 항염작용을 가진 약물이지만, 동시에 복용할 경우 위험할 수 있습니다. 이 두 약물을 함께 복용하면 위장 출혈이나 소화관 궤양의 위험이 증가할 수 있습니다. 따라서, 아스피린과 이부프로펜을 함께 복용하기 전에 의사나 약사와 상담하여 안전한 복용 방법을 확인하는 것이 좋습니다. 함께 복용해야 하는 경우에도 의사나 약사의 지시를 따르는 것이 중요합니다.언제든지 더 궁금한 점이 있으시면 말씀해주세요.",
+      "latency_ms": 2168.9,
+      "tokens_in": 226,
+      "tokens_out": 241,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "이부프로펜"
+        ],
+        "keywords_missed": [
+          "항혈소판",
+          "간격"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 두 약물의 부작용에 대해서는 언급하였으나, 아스피린의 항혈소판 효과 상쇄와 일정 간격을 두고 복용해야 한다는 중요한 정보가 빠져 있습니다. 이는 환자가 정확한 복용 간격을 알지 못하게 해 안전성에 영향을 줄 수 있습니다."
+      }
+    },
+    {
+      "id": "aspirin-asthma",
+      "drug": "아스피린",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "천식이 있는데 아스피린 먹으면 안 되나요?",
+      "answer": "천식이 있는 경우, 일부 사람들은 아스피린 또는 비스타민을 복용할 때 알레르기 반응이 나타날 수 있습니다. 이를 알레르기성 천식이라고 합니다. 따라서 천식이 있고 아스피린을 복용하려는 경우, 꼭 의사에게 상담하시는 것이 좋습니다. 의사는 환자의 상태를 고려하여 적절한 처방을 해줄 수 있습니다. 이와 같은 상황에서는 자가 판단보다는 의사와 상담하는 것이 중요합니다.",
+      "latency_ms": 2029.0,
+      "tokens_in": 220,
+      "tokens_out": 187,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "천식"
+        ],
+        "keywords_missed": [
+          "비용종",
+          "NSAID",
+          "과민"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 천식과 아스피린의 관계를 언급하며 일반적인 주의를 제시하나, '비스타민'에 대한 언급은 없는 성분에 대한 착오입니다. 금기 사항인 비용종 환자에 대한 언급이 누락되었습니다. 환자에게 의사 상담을 권장하며 신중한 접근을 하고 있어 도움 되는 정보를 제공하지만, 금기 환자에 대한 명확한 정보가 부족합니다."
+      }
+    },
+    {
+      "id": "aspirin-storage",
+      "drug": "아스피린",
+      "category": "주의보관",
+      "difficulty": "easy",
+      "question": "아스피린은 식사랑 어떻게 먹어야 해요?",
+      "answer": "아스피린은 음식과 함께 섭취하거나 식사 전/후에 복용해도 상관없습니다. 그러나 만약 아스피린을 속이 민감하다거나 위장 장애가 있는 경우, 음식과 함께 복용하면 위장 부작용이 완화될 수도 있습니다. 이 경우 의사나 약사와 상의하여 적절한 복용 방법을 확인하는 것이 좋습니다.",
+      "latency_ms": 2091.5,
+      "tokens_in": 224,
+      "tokens_out": 141,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "위장"
+        ],
+        "keywords_missed": [
+          "식후",
+          "물"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 위장 장애 경감 목적식 후 복용을 추천했으나, 충분한 물과 함께 복용하는 부분이 빠졌습니다. 도움이 될 수 있는 지침을 줬지만 추천 순서와 방법의 명확도가 낮습니다."
+      }
+    },
+    {
+      "id": "ambroxol-effect",
+      "drug": "무코펙트(암브록솔)",
+      "category": "효능",
+      "difficulty": "easy",
+      "question": "무코펙트는 어떤 약이에요?",
+      "answer": "무코펙트는 기침을 억제하고 가래를 풀어주는 기침약으로, 주성분으로 암브록솔을 함유하고 있습니다. 무코펙트는 일반 구매가 가능한 OTC(일반용 의약품) 제품입니다. 기침이 심하거나 가래가 나올 때 사용됩니다. 기침 증상이 지속되거나 심해지면 의사와 상의하여야 합니다.더 궁금한 점이 있으시면 무엇이든 물어보세요.",
+      "latency_ms": 2037.9,
+      "tokens_in": 222,
+      "tokens_out": 171,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "가래"
+        ],
+        "keywords_missed": [
+          "거담",
+          "점액용해",
+          "기관지"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 암브록솔의 일부 효능인 '기침을 억제하고 가래를 풀어준다'를 언급하지만, '점액용해제'라는 키워드를 포함하지 않아 효능 설명이 불완전합니다. 또한, 무코펙트가 '기침을 억제'한다는 설명은 정확하지 않으며, 이는 점액 용해 원리를 설명하는 것이 사실에 부합합니다. 이로 인해 일부 정보가 오류이며, 환자에게 약물 사용을 알려주는 정보로는 충분하지 않습니다."
+      }
+    },
+    {
+      "id": "ambroxol-dose",
+      "drug": "무코펙트(암브록솔)",
+      "category": "용법용량",
+      "difficulty": "easy",
+      "question": "무코펙트 성인 용량 어떻게 되나요?",
+      "answer": "무코펙트(암브록솔)의 성인용 용량은 보통 성인 병원 또는 세포 성인용에 추천 용량인데, 보통 1회 3회까지 1일 만 열번까지 복용 가능하며, 청소년 병원 추천 용량을 초과하거나 의사의 지시에 따라 달라질 수 있습니다.\n하지만 그렇기에 이 약의 용량을 결정하는 영향 앞에서 마지막 판단은 의사의 지시를 받아야 됩니다. 꼭 자신에게 맞는 해 필요합니다. ",
+      "latency_ms": 1974.3,
+      "tokens_in": 227,
+      "tokens_out": 196,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "30mg",
+          "1일 3회",
+          "식후"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "The answer does not provide the specific dosage of 30mg, 1 day 3 times, and after meals, which are the core elements of the expected answer. It also contains unclear and incorrect statements about the frequency and context of use, deviating significantly from the expected answer."
+      }
+    },
+    {
+      "id": "ambroxol-adverse",
+      "drug": "무코펙트(암브록솔)",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "암브록솔 부작용에는 뭐가 있나요?",
+      "answer": "암브록솔(암브록솔 한약 포함시)은 일반적으로 경구용 제제로 널리 사용되는 보편적인 진통제이며, 대부분의 사용자들이 부작용 없이 잘 투약할 수 있습니다. 그러나 모든 의약품과 마찬가지로 암브록솔도 부작용이 발생할 수 있습니다. 주요 부작용으로는 다음과 같은 것들이 있을 수 있습니다:\n- 소화불량, 구역, 복통 또는 설사\n- 가려움, 발진 또는 두드러기\n- 두통, 혼미감 또는 어지러움\n- 소변색의 변화\n- 부종\n\n부작용이나 알러지 반응을 경험할 경우, 즉시 의사 또는 약사에게 상담하여 조언을 받아야 합니다.특히 알러지 반응으로 호흡곤란, 흉통, 발진 또는 부종 등 심각한 증상이 발생할 경우 즉시 의료진과 상의해야 합니다.",
+      "latency_ms": 3698.9,
+      "tokens_in": 221,
+      "tokens_out": 339,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "발진"
+        ],
+        "keywords_missed": [
+          "위장장애",
+          "피부반응"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 위장장애와 발진 같은 부작용을 언급하여 일부 정확한 정보를 제공하지만, 암브록솔이 진통제로 설명된 부분은 부정확한 정보입니다. 심각한 부작용인 스티븐스-존슨 증후군과 같은 중증 피부반응은 언급되지 않았습니다."
+      }
+    },
+    {
+      "id": "ambroxol-cough",
+      "drug": "무코펙트(암브록솔)",
+      "category": "상호작용",
+      "difficulty": "medium",
+      "question": "무코펙트랑 기침약(진해제) 같이 먹어도 되나요?",
+      "answer": "무코펙트(암브록솔)는 기침에 도움을 주는 약으로, 감기, 기관지염, 기관지 천식 등으로 인한 기침 증상을 완화해주는 역할을 합니다. 진해제는 기침을 억제하는 약으로, 기침을 억제하여 기분 나쁜 기침을 줄여주는 역할을 합니다. \n\n따라서, 두 약을 동시에 복용할 경우에는 상호 작용이 있을 수 있으며, 이를 통해 부작용이 발생할 수 있습니다. 무코펙트와 진해제를 함께 복용할 경우에는 의사나 약사와 상담하여 안전한 복용 방법을 확인하는 것이 좋습니다. 또한, 항상 처방전 또는 의사의 지시에 따라 약을 복용하는 것이 중요합니다. 이러한 상황에서는 의사나 약사와 상의하여 안전한 복용 방법을 확인하시기 바랍니다.",
+      "latency_ms": 3649.5,
+      "tokens_in": 233,
+      "tokens_out": 306,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "진해제"
+        ],
+        "keywords_missed": [
+          "코데인",
+          "가래",
+          "병용 주의"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 무코펙트와 진해제를 병용할 경우 상호작용이 있을 수 있으며, 부작용 가능성을 언급하고 있다. 하지만, '가래 배출 억제'와 관련된 구체적인 위험을 언급하지 않아서 완전하지 않다. 전반적으로 상담을 권장하며 유용한 정보를 제공하지만, 세부사항이 부족하다."
+      }
+    },
+    {
+      "id": "ambroxol-pregnancy",
+      "drug": "무코펙트(암브록솔)",
+      "category": "임신수유",
+      "difficulty": "medium",
+      "question": "임신 1기인데 무코펙트 먹어도 되나요?",
+      "answer": "임신 1기에는 의사 또는 약사와 상의한 후 안전한 의약품만 복용하는 것이 좋습니다. 무코펙트(암브록솔)은 일반적으로 가벼운 기침이나 가래를 제거하는 데 사용되지만, 임신 중에 안전한지 여부에 대해서는 전문가와 상의해야 합니다. 임신 중에 의약품을 복용할 경우 태아에 미치는 영향을 고려해야 하므로, 자가 판단보다는 의사 또는 약사의 조언을 따르는 것이 중요합니다. 따라서 임신 중에 무코펙트를 복용하고자 한다면 반드시 의사와 상의하시기 바랍니다.",
+      "latency_ms": 2829.6,
+      "tokens_in": 227,
+      "tokens_out": 237,
+      "keyword": {
+        "keyword_recall": 0.333,
+        "keywords_matched": [
+          "임신 1기"
+        ],
+        "keywords_missed": [
+          "권장 안 됨",
+          "의사 상담"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 임신 1기에는 의사와 상의하라고 강조하며 전반적으로 정확하나 '임신 1기에는 사용을 권장하지 않는다'는 부분이 명시적이지 않음. 그러나 의사 상담의 중요성을 잘 전달하여 환자의 행동 결정을 잘 안내하고 있음."
+      }
+    },
+    {
+      "id": "ambroxol-storage",
+      "drug": "무코펙트(암브록솔)",
+      "category": "주의보관",
+      "difficulty": "easy",
+      "question": "무코펙트는 어떻게 보관하나요?",
+      "answer": "무코펙트(암브록솔)은 실온(15-30도)에서 보관하는 것이 좋습니다. 습기나 직사광선을 피해 보관하고, 어린이 손이 닿지 않는 곳에 보관하는 것이 좋습니다. 뚜껑을 꼭 닫아 보관하여야 합니다. 만약 약병에 특별한 보관 조건이 필요하다면 약사나 의사에게 상담해보시는 것이 좋습니다.",
+      "latency_ms": 2035.9,
+      "tokens_in": 224,
+      "tokens_out": 157,
+      "keyword": {
+        "keyword_recall": 1.0,
+        "keywords_matched": [
+          "실온",
+          "직사광선",
+          "어린이"
+        ],
+        "keywords_missed": []
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "답변은 실온 보관, 직사광선 및 습기 피하기, 어린이 손이 닿지 않는 곳에 보관 등 기본적인 보관 조건에 부합합니다. 사용 기한이 지난 약에 대한 폐기 언급이 빠져 completeness에서 감점되었습니다."
+      }
+    },
+    {
+      "id": "ambroxol-contra",
+      "drug": "무코펙트(암브록솔)",
+      "category": "금기",
+      "difficulty": "medium",
+      "question": "암브록솔 먹으면 안 되는 경우는요?",
+      "answer": "암브록솔(암브록솔)은 기침, 가래 등 기도 질환에 사용되는 의약품으로, 대부분의 성인에게 안전하게 사용할 수 있지만, 개별적인 상황에 따라 사용을 피해야 할 때가 있습니다. \n\n암브록솔을 먹으면 안 되는 경우는 다음과 같습니다:\n1. 암브록솔에 포함된 성분에 알레르기가 있는 경우\n2. 기침이 심한 환자나 기침으로 인한 가래를 제거할 수 없을 정도로 가래가 심한 경우 (의사의 지시 없이 사용하지 마세요)\n3. 다른 기침약이나 해열제, 진해제 등의 약물과 함께 복용할 경우 (상처약물 상호작용 주의)\n\n암브록솔을 사용하기 전에, 자세한 의약품 정보 및 본인의 건강 상태에 따른 적절한 복용 방법에 대해 의사나 약사와 상담하시는 것이 좋습니다. 만약 특이한 증상이나 불편함을 느낄 경우에는 즉시 전문가의 조언을 구하는 것이 중요합니다.",
+      "latency_ms": 3934.3,
+      "tokens_in": 220,
+      "tokens_out": 365,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "과민",
+          "궤양",
+          "신중"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 알레르기에 대한 정보는 맞지만, 위·십이지장 궤양 환자에 대한 내용이 누락되었습니다. 또한 '기침으로 인한 가래를 제거할 수 없을 정도'와 '다른 기침약이나 해열제와의 복용'에 대한 언급은 근거 없는 주장으로 보입니다. 따라서 hallucination flag를 true로 설정했습니다."
+      }
+    },
+    {
+      "id": "wegovy-effect",
+      "drug": "위고비",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "위고비는 무슨 약이에요?",
+      "answer": "위고비는 세마글루티드라는 성분을 함유한 의사처방전(RX) 약물입니다. 이 약은 위장관통증이나 역류성식도염과 같은 위장 관련 질환에 사용될 수 있습니다. 세부적인 사용 방법은 의사의 처방에 따라 달라질 수 있으므로, 약을 복용하기 전에 의사의 지시에 따라야 합니다. 만약 위고비에 대해 더 자세한 정보가 필요하다면 의사와 상의해보는 것이 좋습니다.",
+      "latency_ms": 1471.6,
+      "tokens_in": 206,
+      "tokens_out": 177,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "GLP-1",
+          "체중관리",
+          "비만",
+          "주사",
+          "BMI"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "답변은 위고비의 주성분인 세마글루티드에 대해 언급하지만, 실제 효능과 적응증을 잘못 설명합니다. 위고비는 체중 관리에 사용되는 약이지 위장 관련 질환에 사용하는 약이 아닙니다. 사용 방법 관련 조언은 포함되었으나, 정확한 효능 정보가 크게 부족하여 환자가 혼동할 수 있습니다."
+      }
+    },
+    {
+      "id": "wegovy-dose",
+      "drug": "위고비",
+      "category": "용법용량",
+      "difficulty": "medium",
+      "question": "위고비는 어떻게 맞아요?",
+      "answer": "위고비는 세미글루티드란 성분으로 제조된 약물로, 일반적으로 의사가 처방한 대로 복용해야 합니다. 위고비를 정확히 어떻게 복용해야 하는지에 대해서는 의사의 지시를 따라야 합니다. 이 약에 대한 자세한 복용 방법이나 의문 사항이 있을 경우에는 의사나 약사와 상담하시는 것이 좋습니다. 또한, 약품의 안전한 복용을 위해 처방전 및 약통에 표기된 지시 사항을 준수하는 것이 중요합니다.",
+      "latency_ms": 2141.4,
+      "tokens_in": 207,
+      "tokens_out": 195,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "주 1회",
+          "피하주사",
+          "0.25mg",
+          "2.4mg",
+          "점진적 증량"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": false,
+        "rationale": "답변은 환자가 의사의 지시를 따르라고 권고하지만, 구체적인 용법이나 용량에 대해 설명하지 않아 정확성이 낮습니다. 중요한 용법 및 용량 정보가 완전히 누락되었습니다. 환자에게 행동 지침을 주지 않아 유용성이 낮습니다."
+      }
+    },
+    {
+      "id": "wegovy-adverse",
+      "drug": "위고비",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "위고비 부작용에는 뭐가 있어요?",
+      "answer": "위고비는 세마글루티드라는 성분을 함유하고 있는 처방전 약제입니다. 일반적인 부작용에는 소화불량, 복통, 구역, 설사, 식욕부진 등이 포함될 수 있습니다. 하지만 이 부작용들이 모두 나타나지는 않습니다. 더 심각한 부작용이 발생할 경우 의사 또는 약사와 상담해야 합니다. 부작용이나 걱정되는 사항이 있으면 의사와 상의하는 것이 중요합니다.",
+      "latency_ms": 1958.7,
+      "tokens_in": 207,
+      "tokens_out": 167,
+      "keyword": {
+        "keyword_recall": 0.4,
+        "keywords_matched": [
+          "구역",
+          "설사"
+        ],
+        "keywords_missed": [
+          "구토",
+          "췌장염",
+          "담석"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 구역, 설사와 같이 일반적인 위장관 증상을 잘 언급했으나 변비와 같은 증상을 포함하지 않았고, 췌장염, 담석 같은 중대한 부작용이 빠져있습니다. 전반적으로 정보는 정확하지만 중대한 부작용에 관련된 정보가 누락되었습니다."
+      }
+    },
+    {
+      "id": "wegovy-boxed-warning",
+      "drug": "위고비",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "위고비 맞으면 안 되는 사람은요?",
+      "answer": "위고비는 세마글루티드라는 성분을 함유한 약으로, 개인의 특정 알러지나 다른 의약품과의 상호작용 등으로 인해 특정 환자에게는 적합하지 않을 수 있습니다. 그러므로 아래의 경우에는 위고비를 복용하지 말아야 합니다:\n1. 세마글루티드나 이 약에 포함된 다른 성분에 알레르기 반응이 있는 경우\n2. 다른 의약품과 상호작용이 우려되는 경우\n3. 기저질환이 있거나 특정 조건을 가진 환자의 경우\n따라서, 제대로 된 처방과 상담을 위해 의사나 약사와 상담하셔서 복용에 대한 안전 여부를 확인하시는 것이 중요합니다.",
+      "latency_ms": 1816.2,
+      "tokens_in": 207,
+      "tokens_out": 257,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "갑상선 수질암",
+          "MTC",
+          "MEN 2",
+          "Boxed Warning"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 세마글루티드에 대한 알레르기 반응에 대해서만 언급하였으며, 실제 주요 금기 사항인 갑상선 수질암(MTC) 및 다발성 내분비선 종양 2형(MEN 2)에 대한 언급이 없습니다. 대신 '다른 의약품과의 상호작용'과 같은 근거 없는 내용을 포함하여 부정확성을 드러내고 있습니다."
+      }
+    },
+    {
+      "id": "wegovy-insulin-interaction",
+      "drug": "위고비",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "위고비랑 인슐린이나 다른 당뇨약 같이 써도 되나요?",
+      "answer": "위고비는 당뇨병 치료에 사용되는 약물 중 하나이며, 세마글루티드라는 성분을 함유하고 있습니다. 일반적으로 위고비는 다른 당뇨약과 함께 사용될 수 있지만, 식사와 운동 등 생활습관 개선의 한 부분으로 사용됩니다. 따라서, 당뇨병 치료를 위해 위고비와 인슐린 또는 다른 당뇨약을 함께 사용할 경우에는 의사 또는 당뇨 전문 의사의 처방에 따라야 합니다. 직접적인 의약품 복용 방법은 전문 의사의 지시에 따라야 하며, 개별적인 증상과 상황에 따라 조절될 수 있습니다. 부가적인 질문이 있으시다면, 추가로 안내해 드리겠습니다.",
+      "latency_ms": 4047.9,
+      "tokens_in": 223,
+      "tokens_out": 280,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "인슐린"
+        ],
+        "keywords_missed": [
+          "설포닐우레아",
+          "저혈당",
+          "감량"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 다른 당뇨약과 함께 사용할 수 있으며, 의사의 관리를 받을 필요성을 언급하여 부분적으로 정확합니다. 그러나 인슐린이나 설포닐우레아 계열의 약물과 병용 시 저혈당 위험, 용량 조절 필요성 등 중요한 안전 정보를 포함하지 않았습니다."
+      }
+    },
+    {
+      "id": "ozempic-vs-wegovy",
+      "drug": "오젬픽",
+      "category": "비교",
+      "difficulty": "hard",
+      "question": "오젬픽이랑 위고비 차이가 뭐예요?",
+      "answer": "오젬픽이랑 위고비는 서로 다른 약물입니다. \n\n- 오젬픽은 세마글루티드라는 성분을 함유한 약으로, 주로 고지혈증 치료에 사용되는 약물입니다. 의사의 처방이 필요한 약이며, 혈중 콜레스테롤 수치를 낮추는 효과가 있습니다.\n\n- 반면에 위고비는 다른 성분을 함유한 약으로, 소화성궤양, 식도염, 위염 등 소화기 질환의 치료에 사용됩니다. 위고비는 경구용 약으로, 위산을 중화시켜 소화기관의 염산에 의한 손상을 완화하는 작용을 합니다.\n\n따라서, 오젬픽과 위고비는 각각 다른 성분을 함유하고 다른 증상을 치료하기 위해 사용되는 약물이라는 점에서 차이가 있습니다.원하신다면 각 약물에 대한 자세한 정보나 사용방법에 대해 더 알고 싶으시다면 의사나 약사와 상담하시는 것을 권장드립니다.",
+      "latency_ms": 3845.9,
+      "tokens_in": 217,
+      "tokens_out": 364,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "세마글루티드"
+        ],
+        "keywords_missed": [
+          "같은 성분",
+          "당뇨",
+          "체중관리",
+          "용량"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "답변은 오젬픽과 위고비에 대해 잘못된 정보를 제공하고 있습니다. 오젬픽과 위고비는 모두 같은 성분인 세마글루티드를 포함하지만, 적응증과 용량이 다릅니다. 오젬픽은 제2형 당뇨병 치료에, 위고비는 체중 관리에 사용됩니다. 답변은 두 약물이 같은 성분이라는 중요한 정보를 누락했고, 각기 다른 약물처럼 설명하여 사실과 다릅니다."
+      }
+    },
+    {
+      "id": "ozempic-effect",
+      "drug": "오젬픽",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "오젬픽은 어떤 약이에요?",
+      "answer": "오젬픽은 세마글루티드라는 성분을 함유한 의약품입니다. 이 약은 처방전(RX)으로 판매되며, 여러 가지 건강 문제에 사용될 수 있습니다. 세마글루티드는 류마티스 관절염과 같은 염증성 질환의 치료에 효과적일 수 있습니다. 그러나 질병의 심각성과 환자의 상태에 따라 적절한 용법과 용량은 의사의 처방을 받아야 합니다. 이 약에 대해 더 자세히 알고 싶으시다면, 의사나 약사와 상담해보시는 것이 좋습니다.",
+      "latency_ms": 1638.8,
+      "tokens_in": 213,
+      "tokens_out": 225,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "GLP-1",
+          "제2형 당뇨",
+          "혈당",
+          "주 1회"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "The provided answer contains incorrect information about Ozempic. It incorrectly states that semaglutide is used for inflammatory diseases like rheumatoid arthritis, which is not a labeled use for Ozempic. The expected uses related to type 2 diabetes and cardiovascular risk reduction are missing, making the answer inaccurate and incomplete. Additionally, the information does not help a patient understand the purpose of Ozempic."
+      }
+    },
+    {
+      "id": "mounjaro-effect",
+      "drug": "마운자로",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "마운자로는 무슨 약인가요?",
+      "answer": "마운자로는 티르제파타이드(tirzepatide)이라는 성분을 함유한 처방전 약물로, 당뇨병 치료에 사용됩니다. 이 약은 혈당 조절을 향상시키고 체중 감량에도 도움을 줄 수 있습니다. 마운자로는 의사의 처방을 받아야 하며, 정확한 용법 및 용량을 따르는 것이 중요합니다. 부작용이나 주의사항에 대해서는 의사 또는 약사와 상의하시는 것이 좋습니다.",
+      "latency_ms": 2092.3,
+      "tokens_in": 210,
+      "tokens_out": 184,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "티르제파타이드"
+        ],
+        "keywords_missed": [
+          "GIP",
+          "GLP-1",
+          "dual",
+          "제2형 당뇨"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 마운자로가 당뇨병 치료에 사용되는 약물이라는 점에서 정확하지만, 'GIP'와 'GLP-1' 수용체에 작용하는 dual agonist라는 중요한 정보가 누락되었습니다. 체중 감량에 도움을 줄 수 있다는 언급은 있으나, 이 역시 정확한 메커니즘 설명이 빠져 있습니다."
+      }
+    },
+    {
+      "id": "mounjaro-dose",
+      "drug": "마운자로",
+      "category": "용법용량",
+      "difficulty": "medium",
+      "question": "마운자로 어떻게 맞아요?",
+      "answer": "마운자로는 티르제파타이드라는 성분을 함유하고 있는 처방전 약물로, 주사 형태로 투여됩니다. 보통 의사나 간호사가 환자에게 마운자로를 투여해 주는데, 근육 또는 피하층으로 주입될 수 있습니다. 마운자로를 사용하는 방법과 용량은 의사의 처방에 따라 다를 수 있으므로, 정확한 사용법은 의사의 지시에 따라야 합니다. 또한, 마운자로를 투여받기 전에 반드시 의사와 상의하시기 바랍니다. 혹시 마운자로를 처방받은 경우, 의사의 지시에 따라 정확히 사용하셔야 합니다.",
+      "latency_ms": 2741.9,
+      "tokens_in": 210,
+      "tokens_out": 245,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "주 1회",
+          "피하주사",
+          "2.5mg",
+          "5mg",
+          "15mg"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "답변이 '주 1회', '피하주사', '2.5mg', '5mg', '15mg' 등의 핵심 정보를 포함하지 않아 completeness가 낮습니다. 또한 '근육 또는 피하층으로 주입'이라는 부분은 근거 없이 추가된 정보로 보이며, 이는 halluctination으로 간주됩니다. 전반적으로 환자에게 명확한 사용법을 제시하지 않아 helpfulness가 낮습니다."
+      }
+    },
+    {
+      "id": "mounjaro-adverse",
+      "drug": "마운자로",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "마운자로 부작용 뭐가 있나요?",
+      "answer": "마운자로의 주요 부작용은 다음과 같습니다:\n\n1. 소화관 장애: 구토, 복통, 설사 등 소화계통 부작용이 발생할 수 있습니다.\n2. 피부반응: 발진, 가려움, 발진, 건조함 등 피부 반응이 발생할 수 있습니다.\n3. 두통: 약을 복용한 후 두통이 발생할 수 있습니다.\n4. 체중감소: 체중 감소가 발생할 수 있습니다.\n\n만약 위의 부작용 중 어떠한 증상도 나타나지 않는다면, 대부분의 사용자들은 마운자로를 잘 흡수하고 부작용이 발생하지 않습니다. 그러나 부작용이 나타날 경우 의사나 약사와 상담하여 적절한 조치를 취하는 것이 중요합니다. 추가로 관련된 부작용이나 의료 정보가 필요하신 경우 의사나 약사에게 상담하시길 권유드립니다.",
+      "latency_ms": 3232.6,
+      "tokens_in": 209,
+      "tokens_out": 306,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "설사"
+        ],
+        "keywords_missed": [
+          "구역",
+          "식욕 감소",
+          "췌장염",
+          "담석"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "제공된 답변은 위장관 증상인 구토, 복통, 설사 등 일부를 언급하고 있지만, 핵심적인 '구역', '식욕 감소', '췌장염', '담석' 등이 빠져 있습니다. 또한, 피부반응과 두통은 주요 부작용으로 공식적으로 언급되지 않아 근거 없는 추가 정보에 해당할 수 있습니다."
+      }
+    },
+    {
+      "id": "mounjaro-contra",
+      "drug": "마운자로",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "마운자로 맞으면 안 되는 사람은요?",
+      "answer": "마운자로는 티르제파타이드라는 성분을 함유한 의약품으로, 다음과 같은 경우에는 특별한 주의가 필요합니다:\n1. 티르제파타이드에 알러지가 있는 경우\n2. 중증의 신장 질환을 가진 경우\n3. 임신 중이거나 수유 중인 경우\n4. 18세 미만의 어린이나 청소년\n따라서 마운자로를 복용하기 전에 의사나 약사와 상담하여 안전하게 복용할 수 있는지 확인하는 것이 중요합니다.",
+      "latency_ms": 1981.4,
+      "tokens_in": 211,
+      "tokens_out": 182,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "갑상선 수질암",
+          "MTC",
+          "MEN 2"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변에서는 티르제파타이드에 대한 알러지를 언급했으나, 갑상선 수질암, MTC, MEN 2 와 같은 금기 사항은 전혀 언급되지 않았습니다. 따라서 accuracy와 completeness가 낮습니다. 답변이 구체적인 금기를 놓치고 있고, 임신, 수유, 신장 질환, 미성년자에 관한 정보는 hallucination으로 간주됩니다."
+      }
+    },
+    {
+      "id": "mounjaro-vs-ozempic",
+      "drug": "마운자로",
+      "category": "비교",
+      "difficulty": "hard",
+      "question": "마운자로랑 오젬픽 뭐가 달라요?",
+      "answer": "마운자로(Mountara)와 오젬픽(Ozempic)은 둘 다 티르제파타이드(Tirzepatide)를 주성분으로 하는 식사 후 혈당 조절을 돕는 약물입니다. 하지만 이 두 약은 다른 제조사에서 생산하는 제품으로, 브랜드명이 다른 것뿐만 아니라 성분의 용량이나 제형 등에서도 조금씩 차이가 있을 수 있습니다. \n\n의사나 약사와 상의한 후 약을 처방받아 사용하는 것이 중요하며, 마운자로와 오젬픽이 개인에게 어떤 차이를 보일지에 대해서는 전문가의 조언을 따르는 것이 가장 안전합니다.",
+      "latency_ms": 2486.4,
+      "tokens_in": 215,
+      "tokens_out": 231,
+      "keyword": {
+        "keyword_recall": 0.25,
+        "keywords_matched": [
+          "티르제파타이드"
+        ],
+        "keywords_missed": [
+          "GLP-1 단일",
+          "GIP+GLP-1 dual",
+          "세마글루티드"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "답변은 오젬픽이 티르제파타이드를 주성분으로 한다고 잘못 기술했으며, 두 약물의 작용 기전 차이를 설명하지 않습니다. 오히려 제조사와 제형에 대한 비구체적인 정보만 제공하고 있어 명확성도 떨어집니다."
+      }
+    },
+    {
+      "id": "zepbound-effect",
+      "drug": "젭바운드",
+      "category": "효능",
+      "difficulty": "hard",
+      "question": "젭바운드는 마운자로랑 같은 약인가요?",
+      "answer": "젭바운드와 마운자로랑은 서로 다른 약입니다. \n\n- 젭바운드의 주요 성분은 티르제파타이드이며 우울증의 치료에 사용됩니다.\n- 마운자로랑은 레보디팜이라는 성분을 포함하고, 호흡기 질환인 만성폐쇄성폐질환(COPD) 및 천식의 치료에 사용됩니다.\n\n의사나 약사와 상담하여 자세한 정보를 확인하시는 것이 좋습니다.",
+      "latency_ms": 2464.2,
+      "tokens_in": 217,
+      "tokens_out": 162,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "티르제파타이드"
+        ],
+        "keywords_missed": [
+          "같은 성분",
+          "체중관리",
+          "당뇨",
+          "적응증"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "답변이 전혀 사실과 맞지 않습니다. 젭바운드와 마운자로는 동일한 성분인 티르제파타이드를 포함하며, 적응증만 다릅니다. 우울증이나 COPD에 대한 내용은 근거가 없는 주장입니다."
+      }
+    },
+    {
+      "id": "zepbound-dose",
+      "drug": "젭바운드",
+      "category": "용법용량",
+      "difficulty": "hard",
+      "question": "젭바운드는 어떻게 맞아요?",
+      "answer": "젭바운드(티르제파타이드)는 처방전에 따라 다르지만 일반적으로 주로 피하에 주사로 사용됩니다. 주사를 맞는 방법 및 빈도는 의사의 처방에 따라 다를 수 있으니, 꼭 의사의 지시에 따라 사용하시는 것이 중요합니다. 또한 처방 전반적인 안전 및 사용 방법에 대해 의사와 상의하는 것이 좋습니다. 혹여 부작용이나 불편을 느끼실 경우 즉시 의사나 약사와 상담하시는 것이 좋습니다.",
+      "latency_ms": 1653.8,
+      "tokens_in": 214,
+      "tokens_out": 193,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "주 1회",
+          "2.5mg",
+          "15mg",
+          "점진 증량"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": false,
+        "rationale": "답변은 젭바운드가 일반적으로 피하주사로 사용된다고 언급하며 의사의 처방을 따를 것을 강조하지만, 정확한 용량과 주기는 제공하지 않습니다."
+      }
+    },
+    {
+      "id": "paxlovid-effect",
+      "drug": "팍스로비드",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "팍스로비드는 언제 먹는 약이에요?",
+      "answer": "팍스로비드는 주로 식사와 함께 복용하는 것이 좋습니다. 의사나 약사의 처방에 따라 먹는 시간이 달라질 수 있으므로, 처방전에 기재된 복용 방법을 정확히 따르는 것이 중요합니다. 먹는 시간에 관해 의문이 있다면 의사나 약사에게 상담해보는 것이 좋습니다.",
+      "latency_ms": 1789.5,
+      "tokens_in": 225,
+      "tokens_out": 129,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "코로나",
+          "COVID-19",
+          "5일 이내",
+          "고위험"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "답변은 약물의 식사 여부와 복용 방법에 대해 언급하고 있지만, 팍스로비드의 주요 효능인 '경증~중등증 코로나19 성인 환자 중 중증 진행 위험이 높은 사람'을 대상으로 한다는 정보와, '증상 발현 후 5일 이내에 시작'해야 한다는 중요한 사항을 다루지 않았습니다. 따라서 정확성과 완전성 모두 부족하며, 근거 없는 주장이 포함되어 있다."
+      }
+    },
+    {
+      "id": "paxlovid-dose",
+      "drug": "팍스로비드",
+      "category": "용법용량",
+      "difficulty": "hard",
+      "question": "팍스로비드 어떻게 먹어야 하나요?",
+      "answer": "팍스로비드는 의사의 처방에 따라 복용해야 합니다. 보통 하루에 2회씩 식사와 함께 복용하며, 의사가 다르게 지시하지 않는 한 권장 용량을 초과하지 않아야 합니다. 또한, 약물 복용 전후로 반드시 물을 충분히 섭취하는 것이 좋습니다. 만약 약 복용에 대한 자세한 내용이 필요하다면 의사나 약사와 상담하시는 것이 바람직합니다.",
+      "latency_ms": 1498.7,
+      "tokens_in": 226,
+      "tokens_out": 172,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "12시간",
+          "300mg",
+          "100mg",
+          "5일",
+          "신장 조정"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 팍스로비드 복용 방법에 대한 일반적인 지침을 제공하지만, 12시간마다 니르마트렐비르 300mg 및 리토나비르 100mg을 복용한다는 구체적인 용량 정보와 5일간 복용한다는 기간, 신장 기능 저하 시 용량 조정이 필요하다는 사항이 포함되어 있지 않습니다."
+      }
+    },
+    {
+      "id": "paxlovid-adverse",
+      "drug": "팍스로비드",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "팍스로비드 부작용으로 뭐가 흔한가요?",
+      "answer": "팍스로비드의 흔한 부작용으로는 일반적으로 소화불량, 구역, 설사, 두통, 근육통 등이 있을 수 있습니다. 하지만 모든 사람이 발생하는 것은 아니며, 각 개인의 상황에 따라 부작용이 다를 수 있습니다. 더 자세한 정보나 부작용이 지속되는 경우에는 당신이 처방을 받은 의사나 약사와 상담하시는 것이 좋습니다. 혹은 알러지 반응이나 심각한 부작용을 경험할 경우 즉시 의료진에게 연락하는 것이 중요합니다.",
+      "latency_ms": 1488.7,
+      "tokens_in": 225,
+      "tokens_out": 195,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "설사",
+          "두통"
+        ],
+        "keywords_missed": [
+          "미각 이상",
+          "혈압"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 일부 흔한 부작용을 포함하지만, 미각 이상과 혈압 상승을 명확히 언급하지 않아 accuracy와 completeness가 떨어진다. 부작용이 발생할 경우 의료진과 상담하라는 지침은 유용하지만, '근육통'이란 부작용은 근거 없는 정보이므로 hallucination로 고려된다."
+      }
+    },
+    {
+      "id": "paxlovid-interaction",
+      "drug": "팍스로비드",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "팍스로비드 먹는데 다른 약 같이 먹어도 되나요?",
+      "answer": "팍스로비드는 니르마트렐비르와 리토나비르이라는 성분으로 이루어진 처방전 의약품입니다. 다른 약과 함께 복용 시 상호작용이 발생할 수 있으므로, 다른 약을 함께 복용하기 전에 꼭 당신의 의사나 약사에게 상담해보시는 것이 좋습니다. 의사나 약사가 당신의 상황을 파악하여 적절한 조언을 해줄 수 있습니다. 안전을 위해 의사나 약사와 상담하시는 것을 권해드립니다.",
+      "latency_ms": 2146.5,
+      "tokens_in": 232,
+      "tokens_out": 191,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "리토나비르"
+        ],
+        "keywords_missed": [
+          "CYP3A4",
+          "광범위",
+          "약사 확인",
+          "스타틴"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 2,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변에서 CYP3A4와 리토나비르에 대한 구체적인 언급은 없으나, 의사나 약사에게 상담하라는 권장 사항은 맞습니다. 그러나 약물상호작용의 광범위성이나 금기 사항의 구체적인 예시는 부족합니다."
+      }
+    },
+    {
+      "id": "paxlovid-contra",
+      "drug": "팍스로비드",
+      "category": "금기",
+      "difficulty": "hard",
+      "question": "팍스로비드 먹으면 안 되는 사람은요?",
+      "answer": "팍스로비드는 니르마트렐비르와 리토나비르이라는 성분을 함유한 약물로, 일반적으로 사용하기 전에 의사 또는 약사에게 상담하시는 것이 좋습니다. \n\n팍스로비드를 복용하면 안 되는 사람들은 다음과 같은 경우가 있을 수 있습니다:\n1. 약물에 포함된 성분에 알레르기 반응을 보이는 경우\n2. 해당 약물과 상호작용이 발생하는 다른 약물을 복용 중인 경우\n3. 심각한 간 또는 신부전 질환을 앓고 있는 경우\n4. 임부나 수유 중인 여성\n\n따라서, 팍스로비드를 복용할 때는 꼭 의사의 처방을 받고, 이에 따라 안전하게 복용하는 것이 중요합니다. 또한, 다른 약물을 동시에 복용하고 있는 경우 의사나 약사와 상의하여 안전성을 확인하는 것이 좋습니다.",
+      "latency_ms": 3755.8,
+      "tokens_in": 224,
+      "tokens_out": 315,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "신장애",
+          "간장애",
+          "CYP3A4",
+          "병용 금기"
+        ]
+      },
+      "judge": {
+        "accuracy": 4,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": false,
+        "rationale": "답변은 신장애, 간장애, 성분 과민반응, 그리고 일부 약물과의 상호작용에서 주의해야 한다는 점을 언급하며 정확히 기술하고 있습니다. 그러나 CYP3A4를 통해 대사되는 약물과의 구체적 상호작용 부분에서 더 상세한 정보가 부족합니다. 임부나 수유 중인 여성에 대한 언급은 추가적인 안전 우려를 반영하였으나, 금기와 직접적으로 관련된 내용은 아닙니다."
+      }
+    },
+    {
+      "id": "adderall-effect",
+      "drug": "애더럴",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "애더럴은 무슨 약이에요?",
+      "answer": "애더럴은 암페타민 또는 덱스암페타민이라는 활성 성분을 포함하고 있는 의약품으로, 주로 주의력결핍 과잉행동 장애(ADHD)나 나르콜렙시(수면 장애) 치료에 사용됩니다. 암페타민과 덱스암페타민은 중추신경계를 자극하여 신경전달물질의 양을 증가시키고 행동 및 주의력을 향상시킵니다. 이 약은 처방전(RX)이 필요한 약물로, 의사의 처방에 따라 안전하게 사용해야 합니다.",
+      "latency_ms": 2759.4,
+      "tokens_in": 223,
+      "tokens_out": 227,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "암페타민",
+          "ADHD"
+        ],
+        "keywords_missed": [
+          "기면증",
+          "한국 미승인"
+        ]
+      },
+      "judge": {
+        "accuracy": 5,
+        "completeness": 4,
+        "helpfulness": 5,
+        "hallucination_flag": false,
+        "rationale": "정답에는 애더럴이 ADHD와 기면증 치료에 사용된다고 명시되어 있어 답변이 정확합니다. 그러나 한국 미승인 상태라는 부분이 누락되었습니다. 이 외에 환자가 의사의 처방에 따라 안전하게 사용할 필요가 있다는 점이 명확히 설명되어 있어 도움이 됩니다."
+      }
+    },
+    {
+      "id": "adderall-korea",
+      "drug": "애더럴",
+      "category": "한국가용성",
+      "difficulty": "hard",
+      "question": "한국에서 애더럴 살 수 있어요?",
+      "answer": "애더럴은 암페타민 혹은 덱스암페타민이라는 성분이 포함된 주사전약으로, 한국에서는 처방전이 필요한 제품입니다. 즉, 의사의 처방을 받아야만 애더럴을 구입하고 복용할 수 있습니다. 애더럴을 구입하기 위해서는 의사와의 상담을 통해 처방 받으셔야 합니다. 의사의 지시에 따라 약을 적절히 복용하시기 바랍니다. 만약 애더럴에 대해 궁금한 점이 있다면, 의사나 약사와 상담해보시는 것이 좋습니다.",
+      "latency_ms": 2233.6,
+      "tokens_in": 224,
+      "tokens_out": 215,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "한국 미승인",
+          "마약류",
+          "향정신성",
+          "콘서타",
+          "스트라테라"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 2,
+        "hallucination_flag": true,
+        "rationale": "애더럴은 한국에서 미승인된 약물이고, 향정신성의약품으로 분류되어 있어 처방받을 수 없습니다. 해당 답변은 한국에서 처방 받을 수 있다고 잘못된 정보를 제공하고 있습니다."
+      }
+    },
+    {
+      "id": "adderall-adverse",
+      "drug": "애더럴",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "애더럴 부작용은 뭐가 있나요?",
+      "answer": "애더럴(암페타민/덱스암페타민)은 주로 주의력결핍 과다행동장애(ADHD)나 나르콜렙시(수면통) 등을 치료하기 위해 사용되는 약물입니다. 이 약에는 다양한 부작용이 있을 수 있습니다. 주요 부작용으로는 다음과 같은 것들이 있습니다:\n\n1. 신체적 부작용: 두통, 심장 구조나 기능에 영향을 줄 수 있는 고혈압, 심부전, 가슴 통증, 심근경색, 빠른 심박동, 손 떨림, 구강건조증 등이 있을 수 있습니다.\n2. 정신적 부작용: 불안, 흥분, 강박증, 헷갈림, 불면, 우울감, 호흡곤란, 정신질환이 발생할 수 있습니다.\n3. 소화기계 부작용: 소화불량, 구역, 구토, 복통, 변비가 나타날 수 있습니다.\n\n애더럴을 복용 중에 이러한 부작용이 나타난다면 즉시 의사나 약사와 상담하시는 것이 좋습니다. 또한, 알러지 반응이나 중대한 부작용이 나타날 경우 즉각적인 의료 도움이 필요할 수 있습니다.",
+      "latency_ms": 4226.8,
+      "tokens_in": 223,
+      "tokens_out": 430,
+      "keyword": {
+        "keyword_recall": 0.2,
+        "keywords_matched": [
+          "불면"
+        ],
+        "keywords_missed": [
+          "식욕 저하",
+          "심박수",
+          "의존",
+          "Boxed Warning"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 4,
+        "helpfulness": 4,
+        "hallucination_flag": true,
+        "rationale": "답변은 대부분 정확하지만, '의존'과 'Boxed Warning' 사항을 명시적으로 언급하지 않았습니다. 주요 부작용인 심박수 상승이나 '의존'의 위험도 주요하지 않게 취급되었으며, '심부전'이나 '심근경색'은 일반 부작용이 아닌 중대한 부작용으로 Boxed Warning에 포함돼야 합니다."
+      }
+    },
+    {
+      "id": "adderall-maoi",
+      "drug": "애더럴",
+      "category": "상호작용",
+      "difficulty": "hard",
+      "question": "애더럴은 다른 약이랑 같이 먹으면 안 되나요?",
+      "answer": "애더럴(암페타민/덱스암페타민)은 다른 약과의 병용 사용에 대한 안전성에 대해 의사 또는 약사와 상의해야 합니다. 다른 약물과의 상호작용 가능성이 있기 때문에, 의사나 약사에게 현재 복용 중인 약물에 대한 정보를 제공하고, 애더럴과 함께 복용해도 안전한지 여부를 확인하는 것이 좋습니다. 이는 애더럴을 포함한 모든 처방 약물에 대해 동일하게 적용되는 권장사항입니다. 함께 복용해도 안전한 약물이 있을 수 있지만, 상황에 따라 다를 수 있기 때문에 반드시 전문가와 상담하는 것이 중요합니다.",
+      "latency_ms": 2524.1,
+      "tokens_in": 231,
+      "tokens_out": 253,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "MAOI",
+          "14일",
+          "세로토닌",
+          "고혈압"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": false,
+        "rationale": "답변은 일반적인 약물 상호작용에 대한 조언을 제공하지만, MAO 억제제와의 병용 금기나 세로토닌 증후군과 관련된 정보가 누락되었습니다. 약물 상호작용을 피하기 위해 전문가와 상담하라는 일반 권장사항은 맞지만, 구체적이고 필수적인 약물 상호작용 정보가 주어지지 않았습니다."
+      }
+    },
+    {
+      "id": "planb-effect",
+      "drug": "플랜비",
+      "category": "효능",
+      "difficulty": "medium",
+      "question": "플랜비는 무슨 약이에요?",
+      "answer": "플랜비는 피임 효과를 가진 경구피임약으로, 주성분인 레보노르게스트렐을 함유하고 있습니다. 레보노르게스트렐은 외래 방문을 통해 처방받아 사용해야 하는 전문의 전용 의약품(RX)입니다. 플랜비는 임신을 예방하고 피임을 위한 약으로 사용되며, 사용 방법과 주의사항을 잘 따라야 합니다. 부작용이나 사용 시 주의할 점이 있을 수 있으니 의사나 약사와 상담하신 후 사용하시는 것이 좋습니다.",
+      "latency_ms": 2276.0,
+      "tokens_in": 221,
+      "tokens_out": 197,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "레보노르게스트렐",
+          "처방"
+        ],
+        "keywords_missed": [
+          "응급피임",
+          "1.5mg"
+        ]
+      },
+      "judge": {
+        "accuracy": 2,
+        "completeness": 2,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "답변은 플랜비의 주성분인 레보노르게스트렐을 언급하지만, 구체적인 용량 '1.5mg'과 '응급피임'의 용도로 사용된다는 사실을 명시하지 않았습니다. 한국에서 처방이 필요하다는 점은 맞지만 미국에서 OTC인 점은 언급되지 않았습니다. 일부 내용이 부정확하거나 과장된 점이 있어 hallucination_flag를 설정했습니다."
+      }
+    },
+    {
+      "id": "planb-timing",
+      "drug": "플랜비",
+      "category": "용법용량",
+      "difficulty": "medium",
+      "question": "플랜비는 언제까지 먹어야 효과가 있어요?",
+      "answer": "플랜비(레보노르게스트렐)는 경구피임약으로, 피임 효과를 유지하려면 규칙적으로 복용해야 합니다. 플랜비를 복용하는 동안 피임 효과가 유지되므로, 꼭 처방된 대로 복용하고 규칙적으로 먹어야 합니다. 의사나 약사의 지시에 따라 정기적으로 처방을 갱신하고 복용해야 합니다. 만약 인과 관계가 생겨 처방의 변경이 필요하다면 의사나 약사와 상담하여 안내를 받아야 합니다.",
+      "latency_ms": 2317.1,
+      "tokens_in": 231,
+      "tokens_out": 201,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "72시간",
+          "3일",
+          "빨리",
+          "효과 감소"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "답변은 플랜비를 경구피임약으로 묘사하고 규칙적 복용을 언급하고 있지만, 플랜비는 사후피임약으로 성관계 후 72시간 이내에 1회 복용해야 효과적입니다. 답변은 질문의 핵심 요소를 다루지 못했고, 잘못된 정보가 포함되어 있습니다."
+      }
+    },
+    {
+      "id": "planb-adverse",
+      "drug": "플랜비",
+      "category": "부작용",
+      "difficulty": "medium",
+      "question": "플랜비 먹으면 부작용 있어요?",
+      "answer": "플랜비는 레보노르게스트렐이라는 성분을 함유한 약제로서, 임신을 방지하는 피임약으로 사용됩니다. 대부분의 사용자들이 부작용 없이 안전하게 복용할 수 있지만, 드물게 경구피임약을 복용할 때 부작용이 발생할 수도 있습니다. 주요 부작용은 일반적으로 가벼우며, 이를테면 두통, 구역, 가슴 통증, 메스토로 혈액 낭종의 발생 등이 있을 수 있습니다. \n\n그러나 중요한 것은 모든 사람이 부작용을 경험하는 것은 아니며, 각인의 상태나 체질에 따라 부작용이 다를 수 있다는 점을 염두에 두어야 합니다. 만약 플랜비를 복용하면서 부작용이 느껴진다면, 즉시 의사나 약사와 상담하여 조언을 구하는 것이 좋습니다. 또한, 급격한 체중 감소, 요통, 흉통, 다리부종 등 심각한 부작용을 느끼거나 생기면, 즉시 의료진에게 병원을 방문하는 것이 중요합니다.",
+      "latency_ms": 4133.4,
+      "tokens_in": 221,
+      "tokens_out": 385,
+      "keyword": {
+        "keyword_recall": 0.5,
+        "keywords_matched": [
+          "구역",
+          "두통"
+        ],
+        "keywords_missed": [
+          "생리 변화",
+          "구토 시 재복용"
+        ]
+      },
+      "judge": {
+        "accuracy": 3,
+        "completeness": 3,
+        "helpfulness": 3,
+        "hallucination_flag": true,
+        "rationale": "플랜비의 일반적인 부작용으로 구역, 두통이 언급되었지만 '가슴 통증', '메스토로 혈액 낭종' 등은 근거 없는 주장입니다. 구체적인 복용 후 대처 방법(재복용 필요성)이 빠져있습니다. 기본적인 부작용 정보는 일부 포함되어 있으나, 생리 변화 언급과 다른 부작용에 대한 구체적인 설명이 부족합니다."
+      }
+    },
+    {
+      "id": "lekembi-effect",
+      "drug": "레켐비",
+      "category": "효능",
+      "difficulty": "hard",
+      "question": "레켐비는 무슨 약이에요?",
+      "answer": "레켐비는 레카네맙이라는 성분으로 구성된 처방전(RX) 약물입니다. 레카네맙은 HIV 감염을 치료하거나 예방하는 데 사용되는 항바이러스 약물입니다. 이 약을 사용하기 전에 의사의 처방을 받아야 하며, 정확한 용법 및 용량을 지켜야 합니다. 레켐비를 사용하기 전에 의사와 충분한 상담을 진행하는 것이 중요합니다.",
+      "latency_ms": 1414.3,
+      "tokens_in": 211,
+      "tokens_out": 166,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "알츠하이머",
+          "아밀로이드",
+          "단일클론항체",
+          "초기"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "The answer incorrectly states that Leqembi (lecanemab) is used for HIV treatment and prevention, which is false. Leqembi is a monoclonal antibody targeting amyloid beta for early Alzheimer's disease. The answer contains hallucinations and lacks relevant information."
+      }
+    },
+    {
+      "id": "lekembi-aria",
+      "drug": "레켐비",
+      "category": "부작용",
+      "difficulty": "hard",
+      "question": "레켐비 부작용 위험한 게 있나요?",
+      "answer": "레켐비의 주요 성분인 레카네맙은 감염을 예방하거나 치료하는 데 사용되는 항균 제제입니다. 일반적으로 레카네맙은 대부분의 사람들이 잘 흡수하고 처리하며 부작용이 적습니다. 그러나 모든 약물은 부작용을 일으킬 위험이 있으므로 주의해야 합니다.\n\n가장 일반적인 부작용으로는 소화 장애, 구강 부작용, 피부 발진 등이 있을 수 있습니다. 또한 드물게 감염이나 알레르기 반응이 발생할 수 있습니다.\n\n하지만 이러한 부작용이 발생할 가능성은 비교적 낮으며 대부분의 환자가 레카네맙을 안전하게 사용할 수 있습니다. 그러나 개인에 따라 부작용이 발생할 수 있으며, 부작용이 발생할 경우 즉시 의사나 약사에게 상담하는 것이 중요합니다.",
+      "latency_ms": 3062.3,
+      "tokens_in": 213,
+      "tokens_out": 310,
+      "keyword": {
+        "keyword_recall": 0.0,
+        "keywords_matched": [],
+        "keywords_missed": [
+          "ARIA",
+          "뇌 부종",
+          "미세출혈",
+          "MRI",
+          "Boxed Warning"
+        ]
+      },
+      "judge": {
+        "accuracy": 1,
+        "completeness": 1,
+        "helpfulness": 1,
+        "hallucination_flag": true,
+        "rationale": "답변이 레카네맙의 성격이나 부작용을 정확하게 설명하지 않고 있으며, 특히 ARIA 관련 중대한 부작용을 언급하지 않습니다. 심각한 부작용인 ARIA와 뇌 부종 및 미세출혈과 같은 정보를 누락하였고, 오히려 레카네맙을 항균제로 잘못 설명하고 있습니다."
+      }
+    }
+  ]
+}

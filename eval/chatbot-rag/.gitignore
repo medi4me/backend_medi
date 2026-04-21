@@ -1,5 +1,5 @@
-results/*.json
 results/*.md
+results/*-run-log.txt
 !results/.gitkeep
 .venv/
 __pycache__/

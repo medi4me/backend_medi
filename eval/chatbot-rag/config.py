@@ -24,3 +24,8 @@ JUDGE_MODEL = os.getenv("JUDGE_MODEL", "gpt-4o")
 
 CHATBOT_TIMEOUT = 30
 JUDGE_TIMEOUT = 60
+
+# Version C(RAG) — mediforme-chatbot-rag 검색 서비스
+RAG_SERVICE_URL = os.getenv("RAG_SERVICE_URL", "http://localhost:8000")
+RAG_TOP_K = int(os.getenv("RAG_TOP_K", "5"))
+RAG_TIMEOUT = 15

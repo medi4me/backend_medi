@@ -24,6 +24,10 @@ from config import (
 
 VERSION_NAME = "C-rag"
 
+# 생성 모델(gpt-3.5-turbo, 16385 토큰) 한도를 넘지 않도록 컨텍스트 토큰 예산을 둔다.
+# 표·화학명 많은 라벨은 토큰 밀도가 높아 top_k 청크가 한도를 넘길 수 있다.
+_CONTEXT_TOKEN_BUDGET = 12000
+
 _SYSTEM_TEMPLATE = (
     "당신은 한국 사용자에게 의약품 정보를 설명하는 보조 챗봇입니다.\n"
     "현재 대화는 아래 약에 대한 질문이므로, 이 약의 범위를 벗어난 일반론으로 빗나가지 마세요.\n"
@@ -106,10 +110,33 @@ def _retrieve(question: str, drug_id: str) -> list[dict]:
 def _format_context(chunks: list[dict]) -> str:
     if not chunks:
         return "(검색 결과 없음 — 컨텍스트 없이 답변)"
-    parts = []
+    encoder = _get_encoder()
+    parts: list[str] = []
+    used = 0
     for i, c in enumerate(chunks, 1):
-        parts.append(f"{i}. [{c['drug_name']} / {c['section']}]\n{c['text']}")
+        block = f"{i}. [{c['drug_name']} / {c['section']}]\n{c['text']}"
+        cost = _count_tokens(encoder, block)
+        # 유사도 상위 청크부터 채우고, 토큰 예산을 넘기는 이후 청크는 생략
+        if parts and used + cost > _CONTEXT_TOKEN_BUDGET:
+            break
+        parts.append(block)
+        used += cost
     return "\n\n".join(parts)
+
+
+def _get_encoder() -> Any:
+    try:
+        import tiktoken
+
+        return tiktoken.get_encoding("cl100k_base")
+    except Exception:
+        return None
+
+
+def _count_tokens(encoder: Any, text: str) -> int:
+    if encoder is None:
+        return len(text) // 2  # tiktoken 없을 때 보수적 추정 (2 chars/token)
+    return len(encoder.encode(text))
 
 
 def _dry_answer(item: dict) -> dict:

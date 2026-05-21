@@ -2,6 +2,7 @@ package com.mediforme.mediforme.chatbot.service;
 
 import com.mediforme.mediforme.chatbot.dto.ChatbotRequestDto.Message;
 import com.mediforme.mediforme.chatbot.dto.MedicineContextDto;
+import com.mediforme.mediforme.chatbot.external.port.RagChunk;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -108,5 +109,40 @@ class ChatbotPromptBuilderTest {
         assertThat(rxIdx).isGreaterThan(ingredientIdx);
         assertThat(indIdx).isGreaterThan(rxIdx);
         assertThat(warnIdx).isGreaterThan(indIdx);
+    }
+
+    @Test
+    void RAG_시스템_프롬프트에_검색_청크가_포함된다() {
+        MedicineContextDto ctx = MedicineContextDto.builder()
+                .nameKo("타이레놀")
+                .ingredientKo("아세트아미노펜")
+                .build();
+        List<RagChunk> chunks = List.of(
+                new RagChunk("간 손상 위험이 있으므로 음주 시 주의", "Pain Reliever", "warnings", "fda_label", 0.9),
+                new RagChunk("두통·발열 완화에 사용", "Pain Reliever", "indications_and_usage", "fda_label", 0.8)
+        );
+
+        String sys = ChatbotPromptBuilder.buildRagSystemContent(ctx, chunks);
+
+        assertThat(sys).contains("[검색된 라벨 컨텍스트]");
+        assertThat(sys).contains("간 손상 위험");
+        assertThat(sys).contains("두통·발열 완화");
+        assertThat(sys).contains("의사·약사와 상담");
+        assertThat(sys).contains("추측하지 마세요");
+    }
+
+    @Test
+    void RAG_메시지는_system_과_user_로_구성된다() {
+        List<RagChunk> chunks = List.of(
+                new RagChunk("부작용 정보", "WEGOVY", "adverse_reactions", "fda_label", 0.7)
+        );
+
+        List<Message> messages = ChatbotPromptBuilder.buildRag("부작용 뭐 있어?", null, chunks);
+
+        assertThat(messages).hasSize(2);
+        assertThat(messages.get(0).getRole()).isEqualTo("system");
+        assertThat(messages.get(0).getContent()).contains("부작용 정보");
+        assertThat(messages.get(1).getRole()).isEqualTo("user");
+        assertThat(messages.get(1).getContent()).isEqualTo("부작용 뭐 있어?");
     }
 }

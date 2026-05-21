@@ -38,6 +38,8 @@ api:
     base-url: "https://api.fda.gov"
   rxnorm:
     base-url: "https://rxnav.nlm.nih.gov/REST"
+  rag:  # Chatbot RAG 검색 서비스 (mediforme-chatbot-rag)
+    base-url: ${RAG_SERVICE_URL:http://localhost:8000}
 
 
 

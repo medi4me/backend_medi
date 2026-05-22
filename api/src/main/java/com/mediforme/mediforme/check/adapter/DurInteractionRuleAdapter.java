@@ -38,10 +38,11 @@ public class DurInteractionRuleAdapter implements InteractionRulePort {
             Set<String> contraindicated = new LinkedHashSet<>();
             for (Object o : items) {
                 if (!(o instanceof JSONObject it)) continue;
-                // 병용금기 상대 약/성분명 (명세 버전에 따라 필드명이 달라질 수 있어 방어적으로 추출)
+                // 병용금기 상대 성분명 우선 (같은 성분의 제품이 여러 개라 성분 기준이 간결).
+                // 성분명이 없으면 품목명 → 영문 성분명 순으로 fallback
                 String mix = MfdsMedicineClient.firstNonBlank(
-                    MfdsMedicineClient.getString(it, "MIXTURE_ITEM_NAME"),
                     MfdsMedicineClient.getString(it, "MIXTURE_INGR_KOR_NAME"),
+                    MfdsMedicineClient.getString(it, "MIXTURE_ITEM_NAME"),
                     MfdsMedicineClient.getString(it, "MIXTURE_INGR_ENG_NAME")
                 );
                 if (mix != null && !mix.isBlank()) {

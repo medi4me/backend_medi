@@ -40,6 +40,9 @@ api:
     base-url: "https://rxnav.nlm.nih.gov/REST"
   rag:  # Chatbot RAG 검색 서비스 (mediforme-chatbot-rag)
     base-url: ${RAG_SERVICE_URL:http://localhost:8000}
+  dur:  # 식약처 DUR 병용금기 (data.go.kr 15059486) — 서비스키는 MFDS 키 재사용
+    service-url: "https://apis.data.go.kr/1471000/DURPrdlstInfoService03/getUsjntTabooInfoList03"
+    service-key: ${MFDS_API_KEY}
 
 
 

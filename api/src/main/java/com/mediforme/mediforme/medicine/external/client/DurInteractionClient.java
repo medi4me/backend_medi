@@ -29,7 +29,8 @@ import java.nio.charset.StandardCharsets;
 public class DurInteractionClient {
 
     private static final int CONNECT_TIMEOUT_MS = 2000;
-    private static final int READ_TIMEOUT_MS = 3000;
+    // 병용금기가 많은 약(예: 와파린)은 응답이 커서 여유 있는 read timeout 필요
+    private static final int READ_TIMEOUT_MS = 6000;
     private static final int DEFAULT_PAGE_NO = 1;
     private static final int DEFAULT_NUM_OF_ROWS = 100;
 

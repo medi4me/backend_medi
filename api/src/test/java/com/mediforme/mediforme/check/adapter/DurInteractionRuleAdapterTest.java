@@ -19,8 +19,8 @@ class DurInteractionRuleAdapterTest {
     void DUR_병용금기를_경고_문자열로_매핑한다() throws Exception {
         DurInteractionClient client = mock(DurInteractionClient.class);
         JSONArray items = new JSONArray();
-        items.add(item("와파린정"));
-        items.add(item("아스피린장용정"));
+        items.add(item("메토트렉세이트"));
+        items.add(item("케토롤락트로메타민"));
         when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
 
         DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
@@ -29,8 +29,8 @@ class DurInteractionRuleAdapterTest {
         assertThat(rules).hasSize(1);
         assertThat(rules.get(0).getName()).isEqualTo("이부프로펜");
         assertThat(rules.get(0).getInteractionWarnings())
-            .contains("와파린정")
-            .contains("아스피린장용정");
+            .contains("메토트렉세이트")
+            .contains("케토롤락트로메타민");
     }
 
     @Test
@@ -54,9 +54,9 @@ class DurInteractionRuleAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static JSONObject item(String mixtureItemName) {
+    private static JSONObject item(String mixtureIngrKorName) {
         JSONObject o = new JSONObject();
-        o.put("MIXTURE_ITEM_NAME", mixtureItemName);
+        o.put("MIXTURE_INGR_KOR_NAME", mixtureIngrKorName);
         return o;
     }
 }

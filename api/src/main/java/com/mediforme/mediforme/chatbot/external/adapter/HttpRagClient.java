@@ -5,6 +5,7 @@ import com.mediforme.mediforme.chatbot.external.port.ChatbotRagClient;
 import com.mediforme.mediforme.chatbot.external.port.RagChunk;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -25,8 +26,11 @@ public class HttpRagClient implements ChatbotRagClient {
     private final RestClient restClient;
 
     public HttpRagClient(RagApiConfig config) {
+        // 기본 요청 팩토리(JDK HttpClient)는 HTTP/2 협상을 시도해 uvicorn(HTTP/1.1) 대상
+        // POST 가 깨진다(빈 body → 422). HTTP/1.1 전용 팩토리로 고정한다.
         this.restClient = RestClient.builder()
                 .baseUrl(config.getBaseUrl())
+                .requestFactory(new SimpleClientHttpRequestFactory())
                 .build();
     }
 

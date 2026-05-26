@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -51,6 +52,30 @@ class DurInteractionRuleAdapterTest {
         DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
 
         assertThat(adapter.lookupByMedicineName("이부프로펜")).isEmpty();
+    }
+
+    @Test
+    void 병용금기_상대_성분_집합을_반환한다() throws Exception {
+        DurInteractionClient client = mock(DurInteractionClient.class);
+        JSONArray items = new JSONArray();
+        items.add(item("메토트렉세이트"));
+        items.add(item("와파린"));
+        when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
+
+        DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
+        Set<String> contraindicated = adapter.lookupContraindicatedIngredients("이부프로펜");
+
+        assertThat(contraindicated).containsExactlyInAnyOrder("메토트렉세이트", "와파린");
+    }
+
+    @Test
+    void 예외시_성분_집합도_비어있다() throws Exception {
+        DurInteractionClient client = mock(DurInteractionClient.class);
+        when(client.fetchUsjntTabooByName(anyString())).thenThrow(new RuntimeException("network"));
+
+        DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
+
+        assertThat(adapter.lookupContraindicatedIngredients("이부프로펜")).isEmpty();
     }
 
     @SuppressWarnings("unchecked")

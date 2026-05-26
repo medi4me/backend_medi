@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +40,7 @@ class InteractionEngineTest {
     @Test
     @DisplayName("새 약의 병용금기 성분이 없으면 경고 없음")
     void evaluate_noContraindication_returnsEmpty() {
-        given(rulePort.lookupContraindicatedIngredients("이부프로펜")).willReturn(Set.of());
+        given(rulePort.lookupContraindicatedIngredients("이부프로펜")).willReturn(Map.of());
         MedicineInteractionDto med = MedicineInteractionDto.builder()
             .medicineName("타이레놀").component("아세트아미노펜").build();
 
@@ -48,23 +48,42 @@ class InteractionEngineTest {
     }
 
     @Test
-    @DisplayName("기존 약 성분이 새 약의 병용금기에 있으면 경고 생성")
-    void evaluate_componentInContraindicated_producesAlert() {
+    @DisplayName("충돌 시 경고 문구에 사유(PROHBT_CONTENT)를 괄호로 부착")
+    void evaluate_includesReasonInWarning() {
         given(rulePort.lookupContraindicatedIngredients("이부프로펜"))
-            .willReturn(Set.of("메토트렉세이트", "와파린"));
+            .willReturn(Map.of("메토트렉세이트", "혈액학적 독성", "와파린", "출혈 위험"));
         MedicineInteractionDto med = MedicineInteractionDto.builder()
             .medicineName("메토잘").component("메토트렉세이트").build();
 
         List<String> result = engine.evaluate(List.of(med), "이부프로펜");
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).contains("메토잘").contains("이부프로펜").contains("병용금기");
+        assertThat(result.get(0))
+            .contains("메토잘")
+            .contains("이부프로펜")
+            .contains("병용금기입니다(혈액학적 독성)");
+    }
+
+    @Test
+    @DisplayName("사유가 비어 있으면 경고는 사유 없이 생성")
+    void evaluate_emptyReason_warningWithoutSuffix() {
+        given(rulePort.lookupContraindicatedIngredients("이부프로펜"))
+            .willReturn(Map.of("메토트렉세이트", ""));
+        MedicineInteractionDto med = MedicineInteractionDto.builder()
+            .medicineName("메토잘").component("메토트렉세이트").build();
+
+        List<String> result = engine.evaluate(List.of(med), "이부프로펜");
+
+        assertThat(result).hasSize(1);
+        // 사유가 비면 "병용금기입니다(...)." 가 아니라 "병용금기입니다." 로 마침표가 바로 뒤따름
+        assertThat(result.get(0)).contains("병용금기입니다.");
     }
 
     @Test
     @DisplayName("성분 표기 차이(용량·공백)는 정규화로 매칭")
     void evaluate_normalizesComponent() {
-        given(rulePort.lookupContraindicatedIngredients("이부프로펜")).willReturn(Set.of("메토트렉세이트"));
+        given(rulePort.lookupContraindicatedIngredients("이부프로펜"))
+            .willReturn(Map.of("메토트렉세이트", "혈액학적 독성"));
         MedicineInteractionDto med = MedicineInteractionDto.builder()
             .medicineName("메토잘정").component("메토트렉세이트 2.5mg").build();
 
@@ -74,7 +93,8 @@ class InteractionEngineTest {
     @Test
     @DisplayName("충돌하지 않는 성분은 경고 없음")
     void evaluate_noConflict_returnsEmpty() {
-        given(rulePort.lookupContraindicatedIngredients("이부프로펜")).willReturn(Set.of("메토트렉세이트"));
+        given(rulePort.lookupContraindicatedIngredients("이부프로펜"))
+            .willReturn(Map.of("메토트렉세이트", "혈액학적 독성"));
         MedicineInteractionDto med = MedicineInteractionDto.builder()
             .medicineName("타이레놀").component("아세트아미노펜").build();
 
@@ -84,7 +104,8 @@ class InteractionEngineTest {
     @Test
     @DisplayName("component 가 없으면 약 이름으로 매칭")
     void evaluate_fallsBackToMedicineName() {
-        given(rulePort.lookupContraindicatedIngredients("이부프로펜")).willReturn(Set.of("와파린"));
+        given(rulePort.lookupContraindicatedIngredients("이부프로펜"))
+            .willReturn(Map.of("와파린", "출혈 위험"));
         MedicineInteractionDto med = MedicineInteractionDto.builder().medicineName("와파린").build();
 
         assertThat(engine.evaluate(List.of(med), "이부프로펜")).hasSize(1);

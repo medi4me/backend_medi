@@ -10,9 +10,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * 식약처 DUR 병용금기 기반 {@link InteractionRulePort} 구현
@@ -29,25 +30,33 @@ public class DurInteractionRuleAdapter implements InteractionRulePort {
 
     @Override
     public List<MedicineInteractResponseDto> lookupByMedicineName(String medicineName) {
-        Set<String> contraindicated = lookupContraindicatedIngredients(medicineName);
+        Map<String, String> contraindicated = lookupContraindicatedIngredients(medicineName);
         if (contraindicated.isEmpty()) {
             return List.of();
         }
+        // /info 표시용 문자열: 성분(사유) 포맷으로 결합. 사유가 비면 성분만
+        List<String> entries = new ArrayList<>();
+        for (Map.Entry<String, String> e : contraindicated.entrySet()) {
+            entries.add(e.getValue() == null || e.getValue().isBlank()
+                ? e.getKey()
+                : e.getKey() + "(" + e.getValue() + ")");
+        }
         return List.of(MedicineInteractResponseDto.builder()
             .name(medicineName)
-            .interactionWarnings(String.join(", ", contraindicated))
+            .interactionWarnings(String.join(", ", entries))
             .build());
     }
 
     @Override
-    public Set<String> lookupContraindicatedIngredients(String medicineName) {
+    public Map<String, String> lookupContraindicatedIngredients(String medicineName) {
         try {
             JSONArray items = client.fetchUsjntTabooByName(medicineName);
             if (items == null || items.isEmpty()) {
-                return Set.of();
+                return Map.of();
             }
 
-            Set<String> contraindicated = new LinkedHashSet<>();
+            // 같은 상대 성분에 여러 사유가 등재돼 있을 수 있어 첫 사유를 채택(putIfAbsent)
+            Map<String, String> contraindicated = new LinkedHashMap<>();
             for (Object o : items) {
                 if (!(o instanceof JSONObject it)) continue;
                 // 병용금기 상대 성분명 우선 (같은 성분의 제품이 여러 개라 성분 기준이 간결).
@@ -57,15 +66,15 @@ public class DurInteractionRuleAdapter implements InteractionRulePort {
                     MfdsMedicineClient.getString(it, "MIXTURE_ITEM_NAME"),
                     MfdsMedicineClient.getString(it, "MIXTURE_INGR_ENG_NAME")
                 );
-                if (mix != null && !mix.isBlank()) {
-                    contraindicated.add(mix);
-                }
+                if (mix == null || mix.isBlank()) continue;
+                String reason = MfdsMedicineClient.getString(it, "PROHBT_CONTENT");
+                contraindicated.putIfAbsent(mix, reason == null ? "" : reason);
             }
             return contraindicated;
 
         } catch (Exception e) {
             log.warn("DUR 병용금기 조회 실패 medicineName={}: {}", medicineName, e.getMessage());
-            return Set.of();
+            return Map.of();
         }
     }
 }

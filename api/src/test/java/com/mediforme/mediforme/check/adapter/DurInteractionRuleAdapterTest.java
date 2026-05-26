@@ -7,9 +7,10 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,11 +18,11 @@ import static org.mockito.Mockito.when;
 class DurInteractionRuleAdapterTest {
 
     @Test
-    void DUR_병용금기를_경고_문자열로_매핑한다() throws Exception {
+    void info_응답은_성분과_사유를_괄호로_묶어_노출한다() throws Exception {
         DurInteractionClient client = mock(DurInteractionClient.class);
         JSONArray items = new JSONArray();
-        items.add(item("메토트렉세이트"));
-        items.add(item("케토롤락트로메타민"));
+        items.add(item("메토트렉세이트", "혈액학적 독성"));
+        items.add(item("케토롤락트로메타민", "위장관 출혈 위험"));
         when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
 
         DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
@@ -30,8 +31,21 @@ class DurInteractionRuleAdapterTest {
         assertThat(rules).hasSize(1);
         assertThat(rules.get(0).getName()).isEqualTo("이부프로펜");
         assertThat(rules.get(0).getInteractionWarnings())
-            .contains("메토트렉세이트")
-            .contains("케토롤락트로메타민");
+            .contains("메토트렉세이트(혈액학적 독성)")
+            .contains("케토롤락트로메타민(위장관 출혈 위험)");
+    }
+
+    @Test
+    void 사유가_없으면_성분명만_노출한다() throws Exception {
+        DurInteractionClient client = mock(DurInteractionClient.class);
+        JSONArray items = new JSONArray();
+        items.add(item("메토트렉세이트", null));
+        when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
+
+        DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
+
+        assertThat(adapter.lookupByMedicineName("이부프로펜").get(0).getInteractionWarnings())
+            .isEqualTo("메토트렉세이트");
     }
 
     @Test
@@ -55,21 +69,38 @@ class DurInteractionRuleAdapterTest {
     }
 
     @Test
-    void 병용금기_상대_성분_집합을_반환한다() throws Exception {
+    void 병용금기_상대_성분과_사유_매핑을_반환한다() throws Exception {
         DurInteractionClient client = mock(DurInteractionClient.class);
         JSONArray items = new JSONArray();
-        items.add(item("메토트렉세이트"));
-        items.add(item("와파린"));
+        items.add(item("메토트렉세이트", "혈액학적 독성"));
+        items.add(item("와파린", "출혈 위험"));
         when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
 
         DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
-        Set<String> contraindicated = adapter.lookupContraindicatedIngredients("이부프로펜");
+        Map<String, String> reasons = adapter.lookupContraindicatedIngredients("이부프로펜");
 
-        assertThat(contraindicated).containsExactlyInAnyOrder("메토트렉세이트", "와파린");
+        assertThat(reasons).containsOnly(
+            entry("메토트렉세이트", "혈액학적 독성"),
+            entry("와파린", "출혈 위험")
+        );
     }
 
     @Test
-    void 예외시_성분_집합도_비어있다() throws Exception {
+    void 같은_성분이_여러번_나오면_첫_사유를_채택한다() throws Exception {
+        DurInteractionClient client = mock(DurInteractionClient.class);
+        JSONArray items = new JSONArray();
+        items.add(item("메토트렉세이트", "혈액학적 독성"));
+        items.add(item("메토트렉세이트", "신독성"));
+        when(client.fetchUsjntTabooByName("이부프로펜")).thenReturn(items);
+
+        DurInteractionRuleAdapter adapter = new DurInteractionRuleAdapter(client);
+
+        assertThat(adapter.lookupContraindicatedIngredients("이부프로펜"))
+            .containsOnly(entry("메토트렉세이트", "혈액학적 독성"));
+    }
+
+    @Test
+    void 예외시_성분_매핑도_비어있다() throws Exception {
         DurInteractionClient client = mock(DurInteractionClient.class);
         when(client.fetchUsjntTabooByName(anyString())).thenThrow(new RuntimeException("network"));
 
@@ -79,9 +110,12 @@ class DurInteractionRuleAdapterTest {
     }
 
     @SuppressWarnings("unchecked")
-    private static JSONObject item(String mixtureIngrKorName) {
+    private static JSONObject item(String mixtureIngrKorName, String prohbtContent) {
         JSONObject o = new JSONObject();
         o.put("MIXTURE_INGR_KOR_NAME", mixtureIngrKorName);
+        if (prohbtContent != null) {
+            o.put("PROHBT_CONTENT", prohbtContent);
+        }
         return o;
     }
 }

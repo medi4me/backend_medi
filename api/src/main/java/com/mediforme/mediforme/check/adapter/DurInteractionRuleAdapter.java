@@ -29,10 +29,22 @@ public class DurInteractionRuleAdapter implements InteractionRulePort {
 
     @Override
     public List<MedicineInteractResponseDto> lookupByMedicineName(String medicineName) {
+        Set<String> contraindicated = lookupContraindicatedIngredients(medicineName);
+        if (contraindicated.isEmpty()) {
+            return List.of();
+        }
+        return List.of(MedicineInteractResponseDto.builder()
+            .name(medicineName)
+            .interactionWarnings(String.join(", ", contraindicated))
+            .build());
+    }
+
+    @Override
+    public Set<String> lookupContraindicatedIngredients(String medicineName) {
         try {
             JSONArray items = client.fetchUsjntTabooByName(medicineName);
             if (items == null || items.isEmpty()) {
-                return List.of();
+                return Set.of();
             }
 
             Set<String> contraindicated = new LinkedHashSet<>();
@@ -49,19 +61,11 @@ public class DurInteractionRuleAdapter implements InteractionRulePort {
                     contraindicated.add(mix);
                 }
             }
-
-            if (contraindicated.isEmpty()) {
-                return List.of();
-            }
-
-            return List.of(MedicineInteractResponseDto.builder()
-                .name(medicineName)
-                .interactionWarnings(String.join(", ", contraindicated))
-                .build());
+            return contraindicated;
 
         } catch (Exception e) {
             log.warn("DUR 병용금기 조회 실패 medicineName={}: {}", medicineName, e.getMessage());
-            return List.of();
+            return Set.of();
         }
     }
 }
